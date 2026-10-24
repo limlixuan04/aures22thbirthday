@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import { levels as levelText } from '../content/content';
+import { useChoices, levelTextFor } from '../lib/choices';
+import Level06Poker from '../levels/Level06Poker';
 import { useProgress } from '../lib/progress';
 import { navigate } from '../lib/router';
 import { sfx } from '../lib/sound';
@@ -10,6 +11,7 @@ import Finale from '../levels/Level11Finale';
 
 export function LevelScreen({ level }: { level: number }) {
   const { canAccess, isCompleted, completeLevel } = useProgress();
+  const choices = useChoices();
   const [done, setDone] = useState(false);
   const allowed = canAccess(level);
   const alreadyBeaten = isCompleted(level);
@@ -29,8 +31,8 @@ export function LevelScreen({ level }: { level: number }) {
 
   if (level === 11) return <Finale onComplete={() => completeLevel(11)} />;
 
-  const Game = LEVEL_COMPONENTS[level];
-  const text = levelText[level];
+  const Game = level === 6 && choices.level6 === 'poker' ? Level06Poker : LEVEL_COMPONENTS[level];
+  const text = levelTextFor(level, choices);
   return (
     <LevelShell
       level={level}
@@ -46,7 +48,7 @@ export function LevelScreen({ level }: { level: number }) {
         navigate(level === 1 ? { name: 'home' } : { name: 'level', level: level - 1 });
       }}
     >
-      <Game onComplete={onComplete} />
+      <Game key={level === 6 ? choices.level6 : choices.memoryCards} onComplete={onComplete} />
     </LevelShell>
   );
 }

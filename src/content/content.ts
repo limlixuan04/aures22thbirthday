@@ -298,6 +298,41 @@ export const whackAMole = {
 };
 
 /* ----------------------------------------------------------------------------
+ *  Game choices — pick between versions of a level
+ *  (In `npm run dev` / the preview you can also flip these in the 🛠 Dev panel.)
+ * ------------------------------------------------------------------------- */
+export const gameChoices: {
+  /** Level 6: 'poker' = Beat Baozers' Hand, 'whack' = Whack-a-Bao */
+  level6: 'poker' | 'whack';
+  /** Level 4 card look: 'poker' = playing cards, 'classic' = pink basketball cards */
+  memoryCards: 'poker' | 'classic';
+} = {
+  level6: 'poker',
+  memoryCards: 'poker',
+};
+
+/* ----------------------------------------------------------------------------
+ *  Level 6 (poker version) — Beat Baozers' Hand
+ * ------------------------------------------------------------------------- */
+export const pokerLevelText: LevelText = {
+  title: 'Beat Baozers’ Hand',
+  emoji: '♠️',
+  instructions: 'Five-card draw! Baozers is showing her hand. Tap the cards you want to keep (HOLD), then draw new ones for the rest. Beat her hand to win the level!',
+  success: 'Read ’em and weep, Baozers. 😎♠️',
+};
+
+export const pokerGame = {
+  /** Baozers' hand — card codes: rank (2–9, T, J, Q, K, A) + suit (S, H, D, C). Pair of 7s is a friendly target. */
+  baozersHand: ['7H', '7S', 'KD', '9C', '2S'],
+  /** After this many lost rounds, the next deal is secretly lucky (starts with a high pair). */
+  luckyAfterLosses: 2,
+  winLines: ['Read ’em and weep! 😎', 'Okay poker face, I see you. 👀', 'Beginner’s luck… or is it? 🤨'],
+  loseLines: ['Baozers takes this round. 😏', 'Ooh, unlucky! Deal again?', 'The house always wins… not for long though.'],
+  tieLine: 'Split pot! Exactly the same hand. Deal again!',
+  luckyHint: 'Psst… the deck feels lucky this time. 🍀',
+};
+
+/* ----------------------------------------------------------------------------
  *  Level 7 — Timeline   ✏️ SAMPLE — list in the CORRECT (oldest-first) order.
  *  They are shuffled automatically in the game.
  * ------------------------------------------------------------------------- */

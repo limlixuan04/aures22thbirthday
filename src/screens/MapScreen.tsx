@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import { levels, finale } from '../content/content';
+import { finale } from '../content/content';
+import { levelTextFor, useChoices } from '../lib/choices';
 import { useProgress } from '../lib/progress';
 import { navigate } from '../lib/router';
 import { TOTAL_LEVELS } from '../lib/progressCore';
@@ -7,6 +8,7 @@ import { sfx } from '../lib/sound';
 
 export function MapScreen() {
   const { isCompleted, canAccess, nextLevel, completed } = useProgress();
+  const choices = useChoices();
   return (
     <div className="mx-auto max-w-5xl px-4 pb-16 pt-8">
       <h1 className="text-center text-4xl font-bold text-berry-600 sm:text-5xl">The Adventure Map 🗺️</h1>
@@ -19,7 +21,7 @@ export function MapScreen() {
           const done = isCompleted(l);
           const open = canAccess(l);
           const current = l === nextLevel && !done;
-          const t = levels[l];
+          const t = levelTextFor(l, choices);
           return (
             <motion.li key={l} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }} className={l === 11 ? 'col-span-2 sm:col-span-3 lg:col-span-1' : ''}>
               <button

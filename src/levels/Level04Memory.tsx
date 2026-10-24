@@ -3,12 +3,18 @@ import { memoryCards, memoryFlipBackDelay } from '../content/content';
 import { shuffle } from '../lib/random';
 import { sfx } from '../lib/sound';
 import { Basketball } from '../art/Decor';
+import { CardBack, CardFace } from '../art/PlayingCard';
+import { useChoices } from '../lib/choices';
 import type { LevelProps } from '.';
 
 interface Card {
   uid: number;
   pair: number;
 }
+
+// Poker look: each pair gets its own playing-card rank and suit.
+const POKER_RANKS = ['A', 'K', 'Q', 'J', '10', '9', '8', '7'];
+const POKER_SUITS = ['♥', '♠', '♦', '♣'];
 
 const deal = (): Card[] => shuffle(memoryCards.flatMap((_, pair) => [{ uid: pair * 2, pair }, { uid: pair * 2 + 1, pair }]));
 
@@ -20,6 +26,7 @@ export default function Level04Memory({ onComplete }: LevelProps) {
   const [lastMatch, setLastMatch] = useState<string | null>(null);
   const timer = useRef<number>();
   const done = matched.size === memoryCards.length;
+  const poker = useChoices().memoryCards === 'poker';
 
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
@@ -81,15 +88,36 @@ export default function Level04Memory({ onComplete }: LevelProps) {
               data-pair={card.pair}
             >
               <div className="flip-inner relative h-full w-full">
-                <div className="flip-face absolute inset-0 grid place-items-center overflow-hidden rounded-2xl border-4 border-berry-600 bg-blush-300 shadow-pop">
-                  <div className="absolute inset-2 rounded-xl border-2 border-dashed border-cream-50/70" />
-                  <div className="absolute inset-0 opacity-30" style={{ backgroundImage: 'radial-gradient(#fff 2px, transparent 2px)', backgroundSize: '14px 14px' }} />
-                  <Basketball className="relative h-12 w-12 sm:h-16 sm:w-16" />
-                </div>
-                <div className={`flip-face flip-back absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-2xl border-4 p-2 shadow-card ${isMatched ? 'border-sage-500 bg-sage-200' : 'border-blush-400 bg-cream-50'}`}>
-                  <span className="text-4xl sm:text-6xl">{content.emoji}</span>
-                  <span className="text-center font-display text-xs font-semibold leading-tight text-berry-600 sm:text-base">{content.label}</span>
-                </div>
+                {poker ? (
+                  <>
+                    <div className="flip-face absolute inset-0">
+                      <CardBack />
+                    </div>
+                    <div className={`flip-face flip-back absolute inset-0 text-sm sm:text-xl ${isMatched ? 'drop-shadow-[0_0_6px_rgba(127,182,133,0.9)]' : ''}`}>
+                      <CardFace
+                        label={POKER_RANKS[card.pair % POKER_RANKS.length]}
+                        suit={POKER_SUITS[card.pair % POKER_SUITS.length]}
+                        red={card.pair % 2 === 0}
+                        className={isMatched ? 'border-[3px] border-sage-400' : ''}
+                      >
+                        <span className="text-[2em] leading-none sm:text-[2.2em]">{content.emoji}</span>
+                        <span className="mt-1 text-center font-display text-[0.6em] font-semibold leading-tight text-berry-600 sm:text-[0.7em]">{content.label}</span>
+                      </CardFace>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flip-face absolute inset-0 grid place-items-center overflow-hidden rounded-2xl border-4 border-berry-600 bg-blush-300 shadow-pop">
+                      <div className="absolute inset-2 rounded-xl border-2 border-dashed border-cream-50/70" />
+                      <div className="absolute inset-0 opacity-30" style={{ backgroundImage: 'radial-gradient(#fff 2px, transparent 2px)', backgroundSize: '14px 14px' }} />
+                      <Basketball className="relative h-12 w-12 sm:h-16 sm:w-16" />
+                    </div>
+                    <div className={`flip-face flip-back absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-2xl border-4 p-2 shadow-card ${isMatched ? 'border-sage-500 bg-sage-200' : 'border-blush-400 bg-cream-50'}`}>
+                      <span className="text-4xl sm:text-6xl">{content.emoji}</span>
+                      <span className="text-center font-display text-xs font-semibold leading-tight text-berry-600 sm:text-base">{content.label}</span>
+                    </div>
+                  </>
+                )}
               </div>
             </button>
           );
