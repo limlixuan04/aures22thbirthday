@@ -8,6 +8,13 @@ const settle = (balls: Ball[]) => {
 };
 
 describe('pool physics', () => {
+  it('racks a full set (7 colours + 8-ball) without overlaps', () => {
+    const full = rack(7);
+    expect(full).toHaveLength(9);
+    for (let i = 0; i < full.length; i++)
+      for (let j = i + 1; j < full.length; j++) expect(Math.hypot(full[i].x - full[j].x, full[i].y - full[j].y)).toBeGreaterThanOrEqual(2 * R);
+  });
+
   it('racks the cue ball, 5 colours and the 8-ball without overlaps', () => {
     const b = rack(5);
     expect(b.map((x) => x.id).sort((a, c) => a - c)).toEqual([0, 1, 2, 3, 4, 5, 8]);

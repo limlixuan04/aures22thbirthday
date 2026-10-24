@@ -5,8 +5,8 @@ import Level03Claw from './Level03Claw';
 import Level04Memory from './Level04Memory';
 import Level05Jigsaw from './Level05Jigsaw';
 import Level06Kitchen from './Level06Kitchen';
-import Level07Timeline from './Level07Timeline';
-import Level08SpotDiff from './Level08SpotDiff';
+import Level07Whack from './Level07Whack';
+import Level08SpotBao from './Level08SpotBao';
 import Level09Pool from './Level09Pool';
 import Level10Cake from './Level10Cake';
 
@@ -22,8 +22,8 @@ export const LEVEL_COMPONENTS: Record<number, ComponentType<LevelProps>> = {
   4: Level04Memory,
   5: Level05Jigsaw,
   6: Level06Kitchen,
-  7: Level07Timeline,
-  8: Level08SpotDiff,
+  7: Level07Whack,
+  8: Level08SpotBao,
   9: Level09Pool,
   10: Level10Cake,
 };

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { scoreGuess, keyboardStates, normaliseGuess, isValidGuess } from './wordle';
 import { countSolutions, findConflicts, isSolved } from './sudoku';
 import { canAccess, nextLevel, withCompleted } from './progressCore';
-import { sudoku, sudoku4, sudoku9, wordle, quiz, timeline, memoryCards, spotTheDifference } from '../content/content';
+import { sudoku, sudoku4, sudoku9, wordle, quiz, memoryCards, spotTheBao, whackAMole } from '../content/content';
 
 describe('wordle', () => {
   it('scores an exact match', () => {
@@ -68,9 +68,16 @@ describe('content sanity', () => {
       expect(q.correctIndex).toBeLessThan(4);
     });
   });
-  it('has 5 timeline items, 6 memory pairs and 5 differences', () => {
-    expect(timeline.length).toBeGreaterThanOrEqual(3);
+  it('has 6 memory pairs, 11 hidden baos and a friend for every whack round', () => {
     expect(memoryCards.length).toBeGreaterThanOrEqual(3);
-    expect(spotTheDifference.differences).toHaveLength(5);
+    expect(spotTheBao.baos).toHaveLength(11);
+    spotTheBao.baos.forEach((b) => {
+      expect(b.x).toBeGreaterThanOrEqual(0);
+      expect(b.x).toBeLessThanOrEqual(100);
+      expect(b.y).toBeGreaterThanOrEqual(0);
+      expect(b.y).toBeLessThanOrEqual(100);
+    });
+    expect(whackAMole.friends.length).toBeGreaterThanOrEqual(1);
+    expect(whackAMole.rounds.length).toBeGreaterThanOrEqual(1);
   });
 });

@@ -13,12 +13,21 @@ const FROSTINGS = [
   { name: 'Matcha', color: '#B9D8A7' },
   { name: 'Ube', color: '#CDB4E6' },
   { name: 'Berry', color: '#B4466A' },
+  { name: 'Neon pink', color: '#FF5FA8' },
+  { name: 'Electric blue', color: '#5EC8FF' },
+  { name: 'Lemon', color: '#FFE45C' },
+  { name: 'Mint', color: '#9BE8C8' },
+  { name: 'RAINBOW', color: 'rainbow' },
 ];
 const DRIPS = [
   { name: 'White choc', color: '#FFFDF8' },
   { name: 'Dark choc', color: '#5A3626' },
   { name: 'Pink', color: '#E2688A' },
   { name: 'Honey', color: '#F5CD6E' },
+  { name: 'Gold glitter', color: '#E9B44C' },
+  { name: 'Neon green', color: '#9BEA5A' },
+  { name: 'Blue raspberry', color: '#3FA7F5' },
+  { name: 'Rainbow', color: 'rainbow' },
 ];
 const TOPPINGS = [
   { id: 'sprinkles', label: 'Sprinkles', emoji: '🌈' },
@@ -26,8 +35,30 @@ const TOPPINGS = [
   { id: 'hearts', label: 'Hearts', emoji: '💗' },
   { id: 'pearls', label: 'Pearls', emoji: '🤍' },
   { id: 'stars', label: 'Stars', emoji: '⭐' },
+  { id: 'glitter', label: 'Glitter', emoji: '✨' },
+  { id: 'gems', label: 'Gems', emoji: '💎' },
+  { id: 'flowers', label: 'Flowers', emoji: '🌸' },
+  { id: 'cherries', label: 'Cherries', emoji: '🍒' },
+  { id: 'confetti', label: 'Confetti', emoji: '🎉' },
+  { id: 'eyes', label: 'Googly eyes', emoji: '👀' },
+] as const;
+const TOPPERS = [
+  { id: 'none', label: 'None', emoji: '🚫' },
+  { id: 'unicorn', label: 'Unicorn horn', emoji: '🦄' },
+  { id: 'crown', label: 'Crown', emoji: '👑' },
+  { id: 'disco', label: 'Disco ball', emoji: '🪩' },
+  { id: 'rainbow', label: 'Rainbow', emoji: '🌈' },
   { id: 'ball', label: 'Basketball', emoji: '🏀' },
 ] as const;
+type TopperId = (typeof TOPPERS)[number]['id'];
+const CANDLE_STYLES = [
+  { id: 'classic', label: 'Classic', emoji: '🕯️' },
+  { id: 'sparkler', label: 'Sparklers', emoji: '🎇' },
+  { id: 'neon', label: 'Neon', emoji: '💡' },
+] as const;
+type CandleStyle = (typeof CANDLE_STYLES)[number]['id'];
+const NEON = ['#FF5FA8', '#5EC8FF', '#9BEA5A', '#FFE45C', '#B28DFF', '#FF8A3C'];
+const RAINBOW = ['#FF6B8B', '#FFB347', '#FFE066', '#7ED957', '#6EC6FF', '#B28DFF'];
 type ToppingId = (typeof TOPPINGS)[number]['id'];
 const CANDLE_COLOURS = ['#7EC8E3', '#F6B3C4', '#F5CD6E', '#A9D2A6', '#CDB4E6', '#FFFDF8'];
 
@@ -70,6 +101,8 @@ export default function Level10Cake({ onComplete }: LevelProps) {
   const [frosting, setFrosting] = useState(FROSTINGS[0].color);
   const [drip, setDrip] = useState(DRIPS[0].color);
   const [toppings, setToppings] = useState<Set<ToppingId>>(new Set(['sprinkles']));
+  const [topper, setTopper] = useState<TopperId>('none');
+  const [candleStyle, setCandleStyle] = useState<CandleStyle>('classic');
   const [candles, setCandles] = useState<Candle[]>([]);
   const [phase, setPhase] = useState<'decorate' | 'lit' | 'blown'>('decorate');
   const [tip, setTip] = useState<string | null>(null);
@@ -87,6 +120,17 @@ export default function Level10Cake({ onComplete }: LevelProps) {
         rot: r() * 180,
         c: ['#E2688A', '#F5CD6E', '#7EC8E3', '#A9D2A6', '#fff', '#CDB4E6'][Math.floor(r() * 6)],
       };
+    });
+  }, []);
+  const sparkles = useMemo(() => {
+    const r = seeded(29);
+    return Array.from({ length: 30 }, () => ({ x: 60 + r() * 280, y: 110 + r() * 220, s: 0.35 + r() * 0.45, d: r() * 2 })).filter((g) => !(g.x > 100 && g.x < 300 && g.y > 240 && g.y < 300));
+  }, []);
+  const confetti = useMemo(() => {
+    const r = seeded(41);
+    return Array.from({ length: 34 }, () => {
+      const lower = r() > 0.35;
+      return { x: lower ? 76 + r() * 248 : 118 + r() * 164, y: lower ? 226 + r() * 88 : 140 + r() * 62, c: RAINBOW[Math.floor(r() * RAINBOW.length)] };
     });
   }, []);
 
@@ -180,7 +224,11 @@ export default function Level10Cake({ onComplete }: LevelProps) {
     setCandles((cs) => cs.map((c) => ({ ...c, lit: false })));
   };
 
-  const side = shade(frosting, -0.12);
+  const isRainbow = frosting === 'rainbow';
+  const side = isRainbow ? 'url(#cake-rainbow)' : shade(frosting, -0.12);
+  const topFill = isRainbow ? 'url(#cake-rainbow-top)' : frosting;
+  const dripFill = drip === 'rainbow' ? 'url(#drip-rainbow)' : drip;
+  const swatch = (c: string) => (c === 'rainbow' ? { background: `linear-gradient(135deg, ${RAINBOW.join(', ')})` } : { background: c });
   const sorted = [...candles].sort((a, b) => a.y - b.y);
 
   return (
@@ -203,14 +251,35 @@ export default function Level10Cake({ onComplete }: LevelProps) {
                 <stop offset="0" stopColor="#FFD98A" stopOpacity=".55" />
                 <stop offset="1" stopColor="#FFD98A" stopOpacity="0" />
               </radialGradient>
+              <linearGradient id="cake-rainbow" x1="0" y1="0" x2="0" y2="1">
+                {RAINBOW.map((c, i) => [
+                  <stop key={`a${i}`} offset={i / RAINBOW.length} stopColor={c} />,
+                  <stop key={`b${i}`} offset={(i + 1) / RAINBOW.length} stopColor={c} />,
+                ])}
+              </linearGradient>
+              <linearGradient id="cake-rainbow-top" x1="0" y1="0" x2="1" y2="0">
+                {RAINBOW.map((c, i) => (
+                  <stop key={i} offset={i / (RAINBOW.length - 1)} stopColor={c} stopOpacity=".75" />
+                ))}
+              </linearGradient>
+              <linearGradient id="drip-rainbow" x1="0" y1="0" x2="1" y2="0">
+                {RAINBOW.map((c, i) => (
+                  <stop key={i} offset={i / (RAINBOW.length - 1)} stopColor={c} />
+                ))}
+              </linearGradient>
+              <radialGradient id="disco" cx="0.35" cy="0.35" r="0.8">
+                <stop offset="0" stopColor="#FFFFFF" />
+                <stop offset="0.5" stopColor="#C9CBD3" />
+                <stop offset="1" stopColor="#7D7F8C" />
+              </radialGradient>
             </defs>
             {phase === 'lit' && <ellipse cx="200" cy="110" rx="190" ry="140" fill="url(#candle-glow)" />}
             {/* plate */}
             <ellipse cx="200" cy="334" rx="172" ry="28" fill="#fff" stroke="#E6D7CF" strokeWidth="3" />
             {/* bottom tier */}
             <path d="M70 212 L70 318 A130 24 0 0 0 330 318 L330 212Z" fill={side} />
-            <ellipse cx="200" cy="212" rx="130" ry="26" fill={frosting} />
-            <path d={dripPath(200, 212, 130, 26, 3)} fill={drip} />
+            <ellipse cx="200" cy="212" rx="130" ry="26" fill={topFill} />
+            <path d={dripPath(200, 212, 130, 26, 3)} fill={dripFill} />
             {/* plaque */}
             <rect x="110" y="252" width="180" height="40" rx="14" fill="#FFFDF8" stroke="#C25B7A" strokeWidth="2.5" />
             <text x="200" y="279" textAnchor="middle" fontFamily="Caveat, cursive" fontWeight="700" fontSize="23" fill="#7A1F3D">
@@ -218,8 +287,12 @@ export default function Level10Cake({ onComplete }: LevelProps) {
             </text>
             {/* top tier */}
             <path d="M114 122 L114 206 A86 18 0 0 0 286 206 L286 122Z" fill={side} />
-            <ellipse cx="200" cy="122" rx="86" ry="18" fill={frosting} />
-            <path d={dripPath(200, 122, 86, 18, 8)} fill={drip} />
+            <ellipse cx="200" cy="122" rx="86" ry="18" fill={topFill} />
+            <path d={dripPath(200, 122, 86, 18, 8)} fill={dripFill} />
+            {drip === '#E9B44C' &&
+              sparkles.slice(0, 12).map((g, i) => (
+                <circle key={`gd${i}`} cx={g.x} cy={i % 2 ? 128 + (i % 5) * 4 : 218 + (i % 5) * 5} r="1.6" fill="#FFF6C9" className="animate-pulse" style={{ animationDelay: `${g.d}s` }} />
+              ))}
 
             {has('sprinkles') &&
               sprinkles
@@ -267,26 +340,171 @@ export default function Level10Cake({ onComplete }: LevelProps) {
                   <circle cx="0" cy="0" r=".9" fill="#FFE9A8" />
                 </g>
               ))}
-            {has('ball') && (
-              <g transform="translate(176 160)">
+            {has('confetti') && confetti.filter((c) => !(c.x > 108 && c.x < 292 && c.y > 248 && c.y < 296)).map((c, i) => <circle key={`cf${i}`} cx={c.x} cy={c.y} r="2.6" fill={c.c} />)}
+            {has('gems') &&
+              Array.from({ length: 8 }, (_, i) => ({ x: 128 + i * 20.5, y: 198 + Math.sin((Math.PI * i) / 7) * 9, c: ['#5EC8FF', '#FF5FA8', '#9BEA5A', '#B28DFF'][i % 4] })).map((g, i) => (
+                <g key={`gem${i}`} transform={`translate(${g.x} ${g.y})`}>
+                  <path d="M0 -7 L6 -2 L0 8 L-6 -2Z" fill={g.c} stroke="#fff" strokeWidth="1" />
+                  <path d="M-6 -2 L6 -2 M0 -7 L-2 -2 L0 8 M0 -7 L2 -2" stroke="#fff" strokeWidth=".6" opacity=".8" />
+                </g>
+              ))}
+            {has('flowers') &&
+              [
+                [86, 252, '#FF5FA8'],
+                [314, 252, '#FFE45C'],
+                [100, 302, '#B28DFF'],
+                [300, 302, '#5EC8FF'],
+                [128, 170, '#FFFDF8'],
+                [272, 170, '#FF8A3C'],
+              ].map(([x, y, c], i) => (
+                <g key={`fl${i}`} transform={`translate(${x} ${y})`}>
+                  {[0, 72, 144, 216, 288].map((a) => (
+                    <ellipse key={a} cx="0" cy="-6" rx="4.2" ry="6" fill={c as string} stroke="#00000022" transform={`rotate(${a})`} />
+                  ))}
+                  <circle r="3.6" fill="#F5CD6E" />
+                </g>
+              ))}
+            {has('cherries') &&
+              [148, 176, 224, 252].map((x, i) => (
+                <g key={`ch${i}`} transform={`translate(${x} ${134 + (i % 2) * 3})`}>
+                  <path d="M0 -4 Q3 -14 9 -16" stroke="#5E9A66" strokeWidth="1.6" fill="none" />
+                  <circle r="6" fill="#D7263D" stroke="#8E1428" strokeWidth="1.2" />
+                  <circle cx="-2" cy="-2" r="1.6" fill="#fff" opacity=".7" />
+                </g>
+              ))}
+            {has('eyes') && (
+              <g>
+                {[178, 222].map((x) => (
+                  <g key={x}>
+                    <circle cx={x} cy="174" r="11" fill="#fff" stroke="#2A1A20" strokeWidth="2" />
+                    <circle cx={x + (x < 200 ? 3 : -2)} cy="178" r="5" fill="#2A1A20" />
+                  </g>
+                ))}
+                <path d="M186 192 Q200 202 214 192" stroke="#2A1A20" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+              </g>
+            )}
+            {has('glitter') &&
+              sparkles.map((g, i) => (
+                <path
+                  key={`gl${i}`}
+                  transform={`translate(${g.x} ${g.y}) scale(${g.s}) translate(-12 -12)`}
+                  d="M12 0 C13 8 16 11 24 12 C16 13 13 16 12 24 C11 16 8 13 0 12 C8 11 11 8 12 0Z"
+                  fill={i % 3 ? '#FFF6C9' : '#F5CD6E'}
+                  className="animate-pulse"
+                  style={{ animationDelay: `${g.d}s` }}
+                />
+              ))}
+
+            {/* topper */}
+            {topper === 'ball' && (
+              <g transform="translate(176 72)">
                 <circle cx="24" cy="24" r="21" fill="#EE8A3C" stroke="#5A2A12" strokeWidth="2.5" />
                 <path d="M24 3 V45 M3 24 H45 M9.5 8.5 C17 15 17 33 9.5 39.5 M38.5 8.5 C31 15 31 33 38.5 39.5" stroke="#5A2A12" strokeWidth="2.2" fill="none" />
                 <ellipse cx="15" cy="13" rx="5" ry="3" fill="#fff" opacity=".35" transform="rotate(-35 15 13)" />
+              </g>
+            )}
+            {topper === 'unicorn' && (
+              <g>
+                <path d="M170 116 L176 92 L188 110Z M230 116 L224 92 L212 110Z" fill="#FFD1E3" stroke="#C25B7A" strokeWidth="2" strokeLinejoin="round" />
+                <path d="M188 118 L200 38 L212 118Z" fill="#FBE3A6" stroke="#C8901A" strokeWidth="2" strokeLinejoin="round" />
+                <path d="M191 100 L209 94 M193 84 L207 78 M196 66 L204 62" stroke="#E9B44C" strokeWidth="2.5" />
+                {['#FF6B8B', '#B28DFF', '#6EC6FF'].map((c, i) => (
+                  <circle key={c} cx={184 + i * 16} cy={116} r="5" fill={c} stroke="#fff" />
+                ))}
+              </g>
+            )}
+            {topper === 'crown' && (
+              <g>
+                <path d="M164 116 L160 76 L180 96 L200 66 L220 96 L240 76 L236 116Z" fill="#F5CD6E" stroke="#C8901A" strokeWidth="2.5" strokeLinejoin="round" />
+                <rect x="164" y="106" width="72" height="10" fill="#E9B44C" />
+                {[
+                  [180, 106, '#D7263D'],
+                  [200, 104, '#5EC8FF'],
+                  [220, 106, '#9BEA5A'],
+                ].map(([x, y, c]) => (
+                  <circle key={String(x)} cx={x as number} cy={y as number} r="4.5" fill={c as string} stroke="#fff" />
+                ))}
+                {[160, 200, 240].map((x, i) => (
+                  <circle key={x} cx={x} cy={[76, 66, 76][i]} r="4" fill="#FFF6C9" stroke="#C8901A" />
+                ))}
+              </g>
+            )}
+            {topper === 'disco' && (
+              <g>
+                <line x1="200" y1="30" x2="200" y2="66" stroke="#7D7F8C" strokeWidth="2" />
+                <circle cx="200" cy="90" r="26" fill="url(#disco)" stroke="#5A5A66" strokeWidth="2" />
+                {Array.from({ length: 5 }, (_, i) => (
+                  <ellipse key={`h${i}`} cx="200" cy="90" rx="26" ry={5 + i * 5} fill="none" stroke="#5A5A66" strokeOpacity=".35" />
+                ))}
+                {Array.from({ length: 4 }, (_, i) => (
+                  <ellipse key={`v${i}`} cx="200" cy="90" rx={5 + i * 7} ry="26" fill="none" stroke="#5A5A66" strokeOpacity=".35" />
+                ))}
+                {[
+                  [168, 70],
+                  [236, 78],
+                  [226, 112],
+                  [172, 108],
+                ].map(([x, y], i) => (
+                  <path key={i} className="animate-pulse" style={{ animationDelay: `${i * 0.3}s` }} transform={`translate(${x - 6} ${y - 6}) scale(.5)`} d="M12 0 C13 8 16 11 24 12 C16 13 13 16 12 24 C11 16 8 13 0 12 C8 11 11 8 12 0Z" fill="#FFF" />
+                ))}
+              </g>
+            )}
+            {topper === 'rainbow' && (
+              <g>
+                {RAINBOW.map((c, i) => (
+                  <path key={c} d={`M${200 - (62 - i * 7)} 118 A${62 - i * 7} ${62 - i * 7} 0 0 1 ${200 + (62 - i * 7)} 118`} stroke={c} strokeWidth="7" fill="none" />
+                ))}
+                {[138, 262].map((x) => (
+                  <g key={x} fill="#fff">
+                    <circle cx={x - 8} cy="116" r="9" />
+                    <circle cx={x + 6} cy="114" r="11" />
+                    <circle cx={x + 16} cy="118" r="7" />
+                  </g>
+                ))}
               </g>
             )}
 
             {/* candles */}
             {sorted.map((c) => (
               <g key={c.id} onClick={(e) => (phase === 'lit' ? (e.stopPropagation(), blowOne(c.id)) : undefined)} style={{ cursor: phase === 'lit' ? 'pointer' : undefined }}>
-                <rect x={c.x - 4} y={c.y - 38} width="8" height="38" rx="3" fill={c.color} stroke={shade(c.color, -0.3)} strokeWidth="1.2" />
-                <path d={`M${c.x - 4} ${c.y - 30} l8 -5 M${c.x - 4} ${c.y - 18} l8 -5 M${c.x - 4} ${c.y - 6} l8 -5`} stroke="#fff" strokeWidth="1.8" opacity=".7" />
-                <line x1={c.x} y1={c.y - 38} x2={c.x} y2={c.y - 43} stroke="#45101F" strokeWidth="1.5" />
-                {c.lit && (
-                  <g className="animate-flicker" style={{ transformOrigin: `${c.x}px ${c.y - 42}px`, transformBox: 'view-box' } as React.CSSProperties}>
-                    <ellipse cx={c.x} cy={c.y - 52} rx="9" ry="13" fill="#F5CD6E" opacity=".35" />
-                    <path d={`M${c.x} ${c.y - 64} C${c.x + 7} ${c.y - 54} ${c.x + 5} ${c.y - 44} ${c.x} ${c.y - 43} C${c.x - 5} ${c.y - 44} ${c.x - 7} ${c.y - 54} ${c.x} ${c.y - 64}Z`} fill="#FFB43C" />
-                    <path d={`M${c.x} ${c.y - 56} C${c.x + 3} ${c.y - 51} ${c.x + 2} ${c.y - 46} ${c.x} ${c.y - 45} C${c.x - 2} ${c.y - 46} ${c.x - 3} ${c.y - 51} ${c.x} ${c.y - 56}Z`} fill="#FFF6C9" />
-                  </g>
+                {candleStyle === 'sparkler' ? (
+                  <>
+                    <line x1={c.x} y1={c.y} x2={c.x} y2={c.y - 46} stroke="#8C8C94" strokeWidth="2.5" strokeLinecap="round" />
+                    <line x1={c.x} y1={c.y - 30} x2={c.x} y2={c.y - 46} stroke="#5A5A66" strokeWidth="4" strokeLinecap="round" />
+                    {c.lit && (
+                      <g className="animate-spin" style={{ transformOrigin: `${c.x}px ${c.y - 48}px`, transformBox: 'view-box', animationDuration: '0.6s' } as React.CSSProperties}>
+                        <circle cx={c.x} cy={c.y - 48} r="9" fill="#FFF6C9" opacity=".55" />
+                        {Array.from({ length: 10 }, (_, k) => (
+                          <line key={k} x1={c.x} y1={c.y - 48} x2={c.x + Math.cos((k * Math.PI) / 5) * (10 + (k % 3) * 5)} y2={c.y - 48 + Math.sin((k * Math.PI) / 5) * (10 + (k % 3) * 5)} stroke={k % 2 ? '#F5CD6E' : '#FFFFFF'} strokeWidth="1.6" strokeLinecap="round" />
+                        ))}
+                      </g>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <rect
+                      x={c.x - 4}
+                      y={c.y - 38}
+                      width="8"
+                      height="38"
+                      rx="3"
+                      fill={candleStyle === 'neon' ? NEON[c.id % NEON.length] : c.color}
+                      stroke={candleStyle === 'neon' ? '#fff' : shade(c.color, -0.3)}
+                      strokeWidth="1.2"
+                      style={candleStyle === 'neon' ? { filter: `drop-shadow(0 0 4px ${NEON[c.id % NEON.length]})` } : undefined}
+                    />
+                    {candleStyle === 'classic' && (
+                      <path d={`M${c.x - 4} ${c.y - 30} l8 -5 M${c.x - 4} ${c.y - 18} l8 -5 M${c.x - 4} ${c.y - 6} l8 -5`} stroke="#fff" strokeWidth="1.8" opacity=".7" />
+                    )}
+                    <line x1={c.x} y1={c.y - 38} x2={c.x} y2={c.y - 43} stroke="#45101F" strokeWidth="1.5" />
+                    {c.lit && (
+                      <g className="animate-flicker" style={{ transformOrigin: `${c.x}px ${c.y - 42}px`, transformBox: 'view-box' } as React.CSSProperties}>
+                        <ellipse cx={c.x} cy={c.y - 52} rx="9" ry="13" fill="#F5CD6E" opacity=".35" />
+                        <path d={`M${c.x} ${c.y - 64} C${c.x + 7} ${c.y - 54} ${c.x + 5} ${c.y - 44} ${c.x} ${c.y - 43} C${c.x - 5} ${c.y - 44} ${c.x - 7} ${c.y - 54} ${c.x} ${c.y - 64}Z`} fill="#FFB43C" />
+                        <path d={`M${c.x} ${c.y - 56} C${c.x + 3} ${c.y - 51} ${c.x + 2} ${c.y - 46} ${c.x} ${c.y - 45} C${c.x - 2} ${c.y - 46} ${c.x - 3} ${c.y - 51} ${c.x} ${c.y - 56}Z`} fill="#FFF6C9" />
+                      </g>
+                    )}
+                  </>
                 )}
                 {!c.lit && phase !== 'decorate' && (
                   <motion.path
@@ -313,7 +531,7 @@ export default function Level10Cake({ onComplete }: LevelProps) {
       </div>
 
       {/* Controls */}
-      <div className="w-full max-w-sm">
+      <div className="w-full max-w-md">
         <AnimatePresence mode="wait">
           {phase === 'decorate' ? (
             <motion.div key="deco" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex flex-col gap-5">
@@ -331,8 +549,8 @@ export default function Level10Cake({ onComplete }: LevelProps) {
                       aria-pressed={frosting === f.color}
                       aria-label={`${f.name} frosting`}
                       title={f.name}
-                      className={`h-11 w-11 rounded-full border-4 transition hover:scale-110 ${frosting === f.color ? 'scale-110 border-berry-600' : 'border-white shadow'}`}
-                      style={{ background: f.color }}
+                      className={`h-10 w-10 rounded-full border-4 transition hover:scale-110 ${frosting === f.color ? 'scale-110 border-berry-600' : 'border-white shadow'}`}
+                      style={swatch(f.color)}
                     />
                   ))}
                 </div>
@@ -351,22 +569,41 @@ export default function Level10Cake({ onComplete }: LevelProps) {
                       aria-pressed={drip === d.color}
                       aria-label={`${d.name} drip`}
                       title={d.name}
-                      className={`h-11 w-11 rounded-full border-4 transition hover:scale-110 ${drip === d.color ? 'scale-110 border-berry-600' : 'border-white shadow'}`}
-                      style={{ background: d.color }}
+                      className={`h-10 w-10 rounded-full border-4 transition hover:scale-110 ${drip === d.color ? 'scale-110 border-berry-600' : 'border-white shadow'}`}
+                      style={swatch(d.color)}
                     />
                   ))}
                 </div>
               </fieldset>
               <fieldset>
-                <legend className="mb-2 font-display font-semibold text-berry-600">Toppings</legend>
-                <div className="grid grid-cols-2 gap-2">
+                <legend className="mb-2 font-display font-semibold text-berry-600">Cake topper</legend>
+                <div className="grid grid-cols-3 gap-2">
+                  {TOPPERS.map((t) => (
+                    <button
+                      key={t.id}
+                      type="button"
+                      onClick={() => {
+                        sfx.pop();
+                        setTopper(t.id);
+                      }}
+                      aria-pressed={topper === t.id}
+                      className={`flex items-center gap-1.5 rounded-2xl border-2 px-2.5 py-1.5 text-left font-display text-sm font-medium transition ${topper === t.id ? 'border-berry-500 bg-blush-200 text-berry-700' : 'border-blush-200 bg-white text-berry-500 hover:bg-blush-50'}`}
+                    >
+                      <span>{t.emoji}</span> {t.label}
+                    </button>
+                  ))}
+                </div>
+              </fieldset>
+              <fieldset>
+                <legend className="mb-2 font-display font-semibold text-berry-600">Decorations</legend>
+                <div className="grid grid-cols-3 gap-2">
                   {TOPPINGS.map((t) => (
                     <button
                       key={t.id}
                       type="button"
                       onClick={() => toggle(t.id)}
                       aria-pressed={has(t.id)}
-                      className={`flex items-center gap-2 rounded-2xl border-2 px-3 py-2 text-left font-display font-medium transition ${has(t.id) ? 'border-berry-500 bg-blush-200 text-berry-700' : 'border-blush-200 bg-white text-berry-500 hover:bg-blush-50'}`}
+                      className={`flex items-center gap-1.5 rounded-2xl border-2 px-2.5 py-1.5 text-left font-display text-sm font-medium transition ${has(t.id) ? 'border-berry-500 bg-blush-200 text-berry-700' : 'border-blush-200 bg-white text-berry-500 hover:bg-blush-50'}`}
                     >
                       <span>{t.emoji}</span> {t.label}
                     </button>
@@ -375,6 +612,22 @@ export default function Level10Cake({ onComplete }: LevelProps) {
               </fieldset>
               <fieldset>
                 <legend className="mb-2 font-display font-semibold text-berry-600">Candles ({candles.length})</legend>
+                <div className="mb-2 grid grid-cols-3 gap-2">
+                  {CANDLE_STYLES.map((c) => (
+                    <button
+                      key={c.id}
+                      type="button"
+                      onClick={() => {
+                        sfx.click();
+                        setCandleStyle(c.id);
+                      }}
+                      aria-pressed={candleStyle === c.id}
+                      className={`flex items-center gap-1.5 rounded-2xl border-2 px-2.5 py-1.5 text-left font-display text-sm font-medium transition ${candleStyle === c.id ? 'border-berry-500 bg-blush-200 text-berry-700' : 'border-blush-200 bg-white text-berry-500 hover:bg-blush-50'}`}
+                    >
+                      <span>{c.emoji}</span> {c.label}
+                    </button>
+                  ))}
+                </div>
                 <div className="flex flex-wrap gap-2">
                   <button type="button" className="btn-soft px-4 py-2 text-base" onClick={() => {
                     const s = randomSpot();

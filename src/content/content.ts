@@ -128,21 +128,21 @@ export const levels: Record<number, LevelText> = {
     success: 'Congratulations, Chef Aure. You’ve earned your first Michelin star in making Bao happy.',
   },
   7: {
-    title: 'Our Relationship Timeline',
-    emoji: '📅',
-    instructions: 'Put our special moments in the right order, oldest at the top. Drag the cards, or use the ▲ ▼ buttons, then press “Check my order”.',
-    success: 'Every one of these moments is one of my favourites. 💗',
+    title: 'Whack-a-Bao: Friends Edition',
+    emoji: '🔨',
+    instructions: 'Our friends are trying to crash your birthday! Whack them back into their holes. Score 22 points in each of the 3 mini levels, and it gets faster every time!',
+    success: 'Party crashers handled. They’ll be back for cake though. 🔨😂',
   },
   8: {
-    title: 'Spot the Difference',
+    title: 'Spot the Bao',
     emoji: '🔍',
-    instructions: 'Someone has been messing with our picnic! Find the 5 differences between the two pictures. Click them on either picture.',
-    success: 'Eagle eyes! Nothing gets past you. 🦅',
+    instructions: '11 tiny baos are hiding in this picture. Find them all! Tap a bao when you spot it. (Use the zoom button if your eyes need help.)',
+    success: 'Bao radar: fully operational. (The best Bao is right here though. 🥰)',
   },
   9: {
     title: 'Our 8-Ball Showdown',
     emoji: '🎱',
-    instructions: 'Rack ’em up! Sink all the coloured balls, then finish with the 8-ball. Drag back from the white ball like a slingshot to aim and set your power, then let go.',
+    instructions: 'Pot the balls IN ORDER: 1, 2, 3… all the way to 7, then the black 8-ball. Pot the wrong one and it’s a re-rack! Drag back from the white ball like a slingshot, then let go.',
     success: '8-ball, corner pocket. Called it. 😎 (I’m still winning the next real one though.)',
   },
   10: {
@@ -414,42 +414,51 @@ export const gameChoices: {
 };
 
 /* ----------------------------------------------------------------------------
- *  Level 7 — Timeline   ✏️ SAMPLE — list in the CORRECT (oldest-first) order.
- *  They are shuffled automatically in the game.
+ *  Level 7 — Whack-a-Bao: Friends Edition
+ *  One friend per mini level. Photos live in public/photos/ (square crops work best).
  * ------------------------------------------------------------------------- */
-export const timeline: { date: string; title: string; emoji: string; note: string }[] = [
-  { date: 'December 24, 2025', title: 'Our first date', emoji: '🎄', note: 'A Christmas Eve I will never forget.' },
-  { date: 'January 16, 2026', title: 'We officially became a couple', emoji: '💑', note: 'The best yes of my life.' },
-  { date: 'July 15, 2026', title: 'Our six-month anniversary', emoji: '🥂', note: 'Half a year of us!' },
-  { date: 'September 2026', title: 'Lixuan left for exchange in the UK', emoji: '🇬🇧', note: 'Far away, but never apart.' },
-  { date: 'October 28, 2026', title: 'Aure’s 22nd birthday', emoji: '🎂', note: 'Today! Happy birthday, my love.' },
-];
+export const whackAMole = {
+  /** 4 × 4 = 16 holes */
+  gridSize: 4,
+  friends: [
+    { name: 'Friend 1', photo: '/photos/friend-1.jpg' },
+    { name: 'Friend 2', photo: '/photos/friend-2.jpg' },
+    { name: 'Friend 3', photo: '/photos/friend-3.jpg' },
+  ],
+  /** One entry per mini level. visibleMs = how long a face stays up; spawnEveryMs = how often a new one pops up. */
+  rounds: [
+    { seconds: 30, targetScore: 22, visibleMs: 1150, spawnEveryMs: 560, maxUp: 3 },
+    { seconds: 30, targetScore: 22, visibleMs: 900, spawnEveryMs: 450, maxUp: 4 },
+    { seconds: 30, targetScore: 22, visibleMs: 720, spawnEveryMs: 370, maxUp: 4 },
+  ],
+  hitLines: ['BONK!', 'Back in your hole!', 'Not invited!', 'Shoo!', 'Bye!', 'Nope!'],
+};
 
 /* ----------------------------------------------------------------------------
- *  Level 8 — Spot the difference
- *
- *  By default this uses the built-in illustrated picnic scene (drawn in
- *  src/art/PicnicScene.tsx). To use your OWN two images instead:
- *    1. Put them in public/photos/, e.g. spot-a.jpg and spot-b.jpg
- *    2. Set imageA / imageB below, and aspectRatio to width ÷ height
- *    3. Update `differences`: x and y are % across / down the image,
- *       r is the click radius in % of the image width.
+ *  Level 8 — Spot the Bao
+ *  Tiny baos are drawn on top of the photo. x / y are % across / down the
+ *  picture; rot tilts the bao. Move them around to make it easier or harder.
  * ------------------------------------------------------------------------- */
-export const spotTheDifference: {
-  imageA: string | null;
-  imageB: string | null;
-  aspectRatio: number;
-  differences: { x: number; y: number; r: number; label: string }[];
-} = {
-  imageA: null,
-  imageB: null,
-  aspectRatio: 4 / 3,
-  differences: [
-    { x: 85, y: 16, r: 9, label: 'The sun got some cool sunglasses 😎' },
-    { x: 16, y: 21, r: 8, label: 'The balloon changed colour 🎈' },
-    { x: 49, y: 14, r: 9, label: 'The cloud turned into a heart ☁️💗' },
-    { x: 21, y: 84, r: 8, label: 'The duck swam away 🦆' },
-    { x: 40, y: 50, r: 7, label: 'Aure lost his party hat 🥳' },
+export const spotTheBao = {
+  image: '/photos/spot-bao.jpg',
+  /** width ÷ height of the photo */
+  aspectRatio: 1104 / 1232,
+  /** Bao size, in % of the picture width. Smaller = harder. */
+  baoSize: 2.8,
+  /** How close (in % of the picture width) a tap must be to count. */
+  hitRadius: 3.2,
+  baos: [
+    { x: 27, y: 6, rot: -20 },
+    { x: 8, y: 13, rot: 15 },
+    { x: 49, y: 10.5, rot: 0 },
+    { x: 80, y: 4.5, rot: 25 },
+    { x: 61, y: 25.5, rot: -10 },
+    { x: 91, y: 29, rot: 12 },
+    { x: 17, y: 33, rot: -25 },
+    { x: 4, y: 41, rot: 8 },
+    { x: 47, y: 58, rot: 18 },
+    { x: 4, y: 88, rot: -12 },
+    { x: 57, y: 95, rot: 30 },
   ],
 };
 
@@ -457,13 +466,15 @@ export const spotTheDifference: {
  *  Level 9 — 8-ball pool
  * ------------------------------------------------------------------------- */
 export const poolGame = {
-  /** How many coloured balls to sink before the 8-ball (1–7). Fewer = easier. */
-  colouredBalls: 5,
-  startMessage: 'Break shot! Give it some power. 💪',
+  /** Balls 1…N must be potted in order, then the 8-ball. 7 = a full set. Fewer = easier. */
+  colouredBalls: 7,
+  startMessage: 'Break shot! Then pot them in order: 1, 2, 3… then the 8. 💪',
   potMessages: ['Nice shot! 🎯', 'In the pocket! 😎', 'Ooh, smooth. 💗', 'Show-off. 🙄💕', 'Pool shark alert! 🦈'],
   missMessages: ['So close!', 'Unlucky! Try again.', 'Hmm, the pockets are over there. 😜', 'Line up the dotted line with a pocket!'],
-  nowTheEight: 'All coloured balls down! Now sink the 8-ball. 🎱',
-  eightTooEarly: 'Whoa, not yet! The 8-ball goes back on its spot. 🎱',
+  nowTheEight: 'All in order! Now sink the 8-ball. 🎱',
+  /** {ball} = the ball he potted, {next} = the one he needed. */
+  wrongOrder: 'Wrong ball! You potted the {ball} but needed the {next}. RE-RACK! 😈',
+  breakRespot: 'Lucky break! The out-of-order balls go back on the table.',
   scratchMessage: 'Scratch! The white ball’s back on the table.',
   tooSoft: 'Drag back further for more power!',
   winMessage: 'GAME! You win… this time. 😤🎱',

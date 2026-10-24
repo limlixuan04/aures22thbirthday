@@ -4,7 +4,7 @@ Nearly everything you'll want to change lives in **two files**, so you never hav
 
 | What | Where |
 |---|---|
-| Password, welcome message, every level's title/instructions/success message, quiz, sudoku, claw, memory cards, puzzle photo, whack-a-mole, timeline, spot-the-difference, catch game, cake, finale, Wordle, clues | `src/content/content.ts` |
+| Password, welcome message, scoreboard, every level's title/instructions/success message, quiz, sudoku, claw, memory cards, jigsaw photo, Hell's Kitchen, whack-a-bao friends, spot the bao, pool, cake, finale, Wordle, clues | `src/content/content.ts` |
 | The birthday letter | `src/content/letter.ts` |
 | Photos | `public/photos/` |
 | Colours | `tailwind.config.js` (`colors` section) |
@@ -18,8 +18,8 @@ After you edit, run `npm test` (it catches mistakes such as a quiz answer index 
 ### Quiz questions (Level 1)
 In `content.ts` → `quiz`. Use 3–5 questions. Each one has 4 `options`, and `correctIndex` is **0-based**: 0 is the first option, 3 is the last.
 
-### Timeline (Level 7)
-`timeline`: list the events **in the correct order, oldest first**. The game shuffles them. Dates stay hidden until he solves it.
+### Whack-a-Bao friends (Level 7)
+`whackAMole.friends`: one `{ name, photo }` per mini level (photos in `public/photos/`, square crops). `rounds` sets each mini level's time, target (22) and speed.
 
 ### Memory cards (Level 4)
 `memoryCards`: six items, each `{ emoji, label }` or `{ art: 'bao', label }` to use a built-in drawing (`'bao'`, `'duck'` or `'basketball'`). Each one becomes a pair.
@@ -40,11 +40,11 @@ Keep photos under about 1–2 MB each so the site loads quickly. Phone photos ca
 - Claw machine: `duckSpeed` / `rainbowSpeed` (smaller = easier), `catchTolerance` (bigger = easier), `rainbowDuck` (which duck is the rainbow one) and `clawSpeed`.
 - Jigsaw: `jigsaw.cols` × `jigsaw.rows` pieces (6 × 5 = 30; 4 × 3 = 12 is gentle).
 - Hell's Kitchen: `hellsKitchen.dishes` (dishes and their ingredients, in order), `dishesToServe`, `maxSentBack`, `firstTicketSeconds` and the chef's lines.
-- Pool: `poolGame.colouredBalls` (fewer = easier).
+- Pool: `poolGame.colouredBalls` (balls 1…N go in order, then the 8; fewer = easier).
 - Memory card style: `gameChoices.memoryCards` picks poker cards or the classic look.
 
-### Spot the difference with your own pictures
-Set `imageA`/`imageB` to two versions of a picture in `public/photos/`, set `aspectRatio` to width ÷ height, and update `differences`. Each one is `x`/`y` (% across/down) plus `r` (click radius as % of width). To find coordinates, open the image in any editor and divide the pixel position by the image size.
+### Spot the Bao (Level 8)
+`spotTheBao.image` is the photo; `baos` lists where each tiny bao sits (`x` / `y` = % across / down, `rot` = tilt). `baoSize` (smaller = harder) and `hitRadius` (bigger = easier) set the difficulty.
 
 ### Colours
 In `tailwind.config.js` you can edit the `blush` (pinks), `berry` (burgundy), `cream`, `honey`, `sage` and `cocoa` shades.
