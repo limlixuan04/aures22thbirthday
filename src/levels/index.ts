@@ -8,7 +8,8 @@ import Level06Kitchen from './Level06Kitchen';
 import Level07Whack from './Level07Whack';
 import Level08SpotBao from './Level08SpotBao';
 import Level09Pool from './Level09Pool';
-import Level10Cake from './Level10Cake';
+import Level10ModernFamily from './Level10ModernFamily';
+import Level11Cake from './Level11Cake';
 
 export interface LevelProps {
   /** Call once when the level's goal is achieved. */
@@ -25,5 +26,6 @@ export const LEVEL_COMPONENTS: Record<number, ComponentType<LevelProps>> = {
   7: Level07Whack,
   8: Level08SpotBao,
   9: Level09Pool,
-  10: Level10Cake,
+  10: Level10ModernFamily,
+  11: Level11Cake,
 };

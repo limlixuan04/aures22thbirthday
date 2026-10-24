@@ -5,7 +5,7 @@ Nearly everything you'll want to change lives in **two files**, so you never hav
 | What | Where |
 |---|---|
 | Password, welcome message, scoreboard, every level's title/instructions/success message, quiz, sudoku, claw, memory cards, jigsaw photo, Hell's Kitchen, whack-a-bao friends, spot the bao, pool, cake, finale, Wordle, clues | `src/content/content.ts` |
-| The birthday letter | `src/content/letter.ts` |
+| The birthday letter (shown with the trophy after all 11 levels) | `src/content/letter.ts` |
 | Photos | `public/photos/` |
 | Colours | `tailwind.config.js` (`colors` section) |
 
@@ -27,12 +27,12 @@ In `content.ts` → `quiz`. Use 3–5 questions. Each one has 4 `options`, and `
 ### Your photos
 1. Put the image files in `public/photos/`, e.g. `public/photos/us.jpg`. Avoid spaces in file names.
 2. **Jigsaw (Level 5):** set `jigsaw.image: '/photos/us.jpg'`. The photo is cropped to fill a 6 × 5 board, so landscape or square photos work best, with faces near the middle. A photo with lots of detail and colour makes the pieces easier to tell apart.
-3. **Gallery (Level 11):** edit `finale.gallery`. Each entry is `{ src: '/photos/xyz.jpg', caption: '...' }`. Use `[]` to hide the gallery.
+3. **Gallery (trophy screen):** edit `finale.gallery`. Each entry is `{ src: '/photos/xyz.jpg', caption: '...' }`. Use `[]` to hide the gallery.
 4. Delete the placeholder SVGs if you like.
 
 Keep photos under about 1–2 MB each so the site loads quickly. Phone photos can be shrunk at https://squoosh.app.
 
-### The letter (Level 11)
+### The letter (the trophy screen)
 `src/content/letter.ts`: each string in `paragraphs` is one paragraph. Use `\n` inside a string for a line break. Apostrophes are fine inside `'…'` strings if you use the curly kind (’). For a straight one, write `\'`.
 
 ### Difficulty

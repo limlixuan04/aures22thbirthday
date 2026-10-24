@@ -38,8 +38,8 @@ export function Jersey({ className = 'w-32 h-36', number = '22', name = '' }: Sv
         strokeWidth="3"
         strokeLinejoin="round"
       />
-      <path d="M34 4 C40 18 80 18 86 4" stroke="#F6B3C4" strokeWidth="6" fill="none" strokeLinecap="round" />
-      <path d="M16 10 C20 28 16 40 6 46 M104 10 C100 28 104 40 114 46" stroke="#F6B3C4" strokeWidth="5" fill="none" strokeLinecap="round" />
+      <path d="M34 4 C40 18 80 18 86 4" stroke="#F5CD6E" strokeWidth="6" fill="none" strokeLinecap="round" />
+      <path d="M16 10 C20 28 16 40 6 46 M104 10 C100 28 104 40 114 46" stroke="#F5CD6E" strokeWidth="5" fill="none" strokeLinecap="round" />
       {name && (
         <text x="60" y="48" textAnchor="middle" fontFamily="Fredoka, sans-serif" fontWeight="700" fontSize="15" letterSpacing="2" fill="#FDE6EC">
           {name}
@@ -70,7 +70,7 @@ export function FloatingBackground({ count = 14 }: { count?: number }) {
       delay: -r() * 30,
       duration: 22 + r() * 18,
       kind: i % 3,
-      color: ['#F6B3C4', '#EF8FA8', '#F5CD6E', '#FAD0DB'][i % 4],
+      color: ['#C25B7A', '#E0995C', '#F5CD6E', '#A8395A'][i % 4],
     }));
   }, [count]);
   return (
@@ -87,9 +87,45 @@ export function FloatingBackground({ count = 14 }: { count?: number }) {
             animation: `drift ${it.duration}s linear ${it.delay}s infinite`,
           }}
         >
-          {it.kind === 2 ? <Basketball className="h-full w-full opacity-60" /> : <Heart className="h-full w-full" color={it.color} />}
+          {it.kind === 0 ? <Heart className="h-full w-full opacity-70" color={it.color} /> : <Basketball className="h-full w-full opacity-50" />}
         </div>
       ))}
     </div>
+  );
+}
+
+/** Gold championship trophy with a basketball on top. */
+export function Trophy({ className = 'w-40 h-48', label = 'MVP' }: SvgProps & { label?: string }) {
+  return (
+    <svg viewBox="0 0 160 200" className={className} aria-hidden="true">
+      <defs>
+        <linearGradient id="trophy-gold" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#C8901A" />
+          <stop offset="0.35" stopColor="#FBE3A6" />
+          <stop offset="0.6" stopColor="#F5CD6E" />
+          <stop offset="1" stopColor="#B07A12" />
+        </linearGradient>
+      </defs>
+      {/* ball */}
+      <g transform="translate(56 2)">
+        <circle cx="24" cy="24" r="22" fill="#EE8A3C" stroke="#5A2A12" strokeWidth="2.5" />
+        <path d="M24 2 V46 M2 24 H46 M9 8.5 C17 15 17 33 9 39.5 M39 8.5 C31 15 31 33 39 39.5" stroke="#5A2A12" strokeWidth="2.2" fill="none" />
+        <ellipse cx="15" cy="13" rx="5" ry="3" fill="#fff" opacity=".35" transform="rotate(-35 15 13)" />
+      </g>
+      {/* cup */}
+      <path d="M38 52 H122 C122 96 104 118 80 120 C56 118 38 96 38 52Z" fill="url(#trophy-gold)" stroke="#8C5A0A" strokeWidth="3" />
+      <path d="M38 60 C18 60 14 92 46 100 M122 60 C142 60 146 92 114 100" stroke="#C8901A" strokeWidth="7" fill="none" strokeLinecap="round" />
+      <path d="M58 62 C58 88 66 104 74 110" stroke="#FFF6C9" strokeWidth="5" fill="none" strokeLinecap="round" opacity=".7" />
+      {/* stem + base */}
+      <rect x="70" y="118" width="20" height="22" fill="url(#trophy-gold)" stroke="#8C5A0A" strokeWidth="3" />
+      <path d="M52 140 H108 L114 158 H46Z" fill="url(#trophy-gold)" stroke="#8C5A0A" strokeWidth="3" strokeLinejoin="round" />
+      <rect x="38" y="158" width="84" height="30" rx="5" fill="#7A1F3D" stroke="#45101F" strokeWidth="3" />
+      <text x="80" y="181" textAnchor="middle" fontFamily="'Bebas Neue', Impact, sans-serif" fontSize="22" letterSpacing="2" fill="#F5CD6E">
+        {label}
+      </text>
+      <text x="80" y="92" textAnchor="middle" fontFamily="'Bebas Neue', Impact, sans-serif" fontSize="30" fill="#8C5A0A" opacity=".85">
+        22
+      </text>
+    </svg>
   );
 }

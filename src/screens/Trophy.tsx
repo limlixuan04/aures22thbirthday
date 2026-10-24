@@ -5,15 +5,21 @@ import { letter } from '../content/letter';
 import { celebrate, hearts } from '../lib/confetti';
 import { sfx } from '../lib/sound';
 import { navigate } from '../lib/router';
-import { Basketball, Heart, Sparkle } from '../art/Decor';
-import { Bear, Duck } from '../art/Critters';
+import { Basketball, Heart, Sparkle, Trophy as TrophyArt } from '../art/Decor';
+import { useProgress } from '../lib/progress';
+import { DEV_TOOLS } from '../lib/devmode';
+import { TOTAL_LEVELS } from '../lib/progressCore';
 
-export default function Finale({ onComplete }: { onComplete: () => void }) {
+export default function Trophy() {
+  const { isCompleted } = useProgress();
+  const earned = isCompleted(TOTAL_LEVELS) || DEV_TOOLS;
+  useEffect(() => {
+    if (!earned) navigate({ name: 'map' });
+  }, [earned]);
   const [open, setOpen] = useState(false);
   const [zoom, setZoom] = useState<number | null>(null);
 
   useEffect(() => {
-    onComplete();
     const t = window.setTimeout(() => {
       celebrate(3500);
       sfx.fanfare();
@@ -28,21 +34,22 @@ export default function Finale({ onComplete }: { onComplete: () => void }) {
     hearts();
   };
 
+  if (!earned) return null;
+
   return (
     <div className="mx-auto max-w-4xl px-4 pb-20 pt-4 sm:pt-6">
       <nav className="mb-2" aria-label="Level navigation">
-        <button type="button" className="btn-ghost" onClick={() => navigate({ name: 'level', level: 10 })} data-testid="back-level-top">
-          ← Level 10
+        <button type="button" className="btn-ghost" onClick={() => navigate({ name: 'level', level: 11 })} data-testid="back-level-top">
+          ← Level 11
         </button>
       </nav>
       {/* Headline */}
       <div className="relative text-center">
         <Sparkle className="absolute left-2 top-0 h-10 w-10 animate-wiggle sm:left-10" />
         <Sparkle className="absolute right-4 top-12 h-7 w-7 animate-wiggle sm:right-16" color="#E2688A" />
-        <motion.div initial={{ scale: 0, rotate: -20 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: 'spring', delay: 0.2 }} className="mx-auto mb-4 flex w-fit items-end gap-3">
-          <Duck className="h-14 w-14 animate-bob" happy />
-          <Heart className="h-20 w-20 animate-floaty" />
-          <Bear className="h-14 w-14 animate-bob [animation-delay:-1s]" />
+        <motion.div initial={{ scale: 0, rotate: -20, y: 40 }} animate={{ scale: 1, rotate: 0, y: 0 }} transition={{ type: 'spring', delay: 0.2 }} className="mx-auto mb-2 flex w-fit flex-col items-center">
+          <TrophyArt className="h-48 w-40 drop-shadow-[0_10px_12px_rgba(94,22,48,0.35)] sm:h-56 sm:w-48" />
+          <span className="mt-2 rounded-full bg-berry-600 px-4 py-1 font-sport text-xl tracking-[0.2em] text-honey-300">{finale.trophyTitle}</span>
         </motion.div>
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
@@ -169,11 +176,11 @@ export default function Finale({ onComplete }: { onComplete: () => void }) {
 
       <div className="mt-12 text-center">
         <div className="flex flex-wrap justify-center gap-3">
-          <button type="button" className="btn-soft" onClick={() => navigate({ name: 'level', level: 10 })} data-testid="back-level">
+          <button type="button" className="btn-soft" onClick={() => navigate({ name: 'level', level: 11 })} data-testid="back-level">
             ← Back
           </button>
           <button type="button" className="btn-ghost" onClick={() => navigate({ name: 'map' })}>
-            🗺️ Replay any level
+            🏆 Replay any level
           </button>
         </div>
         <p className="mt-2 font-hand text-2xl text-berry-400">Happy birthday, {people.nickname}. I love you. 💞</p>

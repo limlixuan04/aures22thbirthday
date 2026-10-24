@@ -85,8 +85,8 @@ export function TopBar({ currentLevel }: { currentLevel?: number }) {
         <div className="flex shrink-0 items-center gap-2 md:w-60 md:justify-end">
           {unlocked && (
             <button type="button" onClick={() => navigate({ name: 'map' })} className="chip border-2 border-blush-300 bg-cream-50 py-1.5 text-base hover:bg-blush-100">
-              <span aria-hidden="true">🗺️</span>
-              <span className="hidden sm:inline">Map</span>
+              <span aria-hidden="true">🏆</span>
+              <span className="hidden sm:inline">The Road</span>
             </button>
           )}
           <MuteButton />

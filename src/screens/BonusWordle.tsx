@@ -41,7 +41,8 @@ function splitGroups<T>(items: T[]): T[][] {
 export function BonusWordle() {
   const [state, setState] = useState<Saved>(() => {
     const s = load<Saved | null>('wordle', null);
-    return s && Array.isArray(s.guesses) ? s : { guesses: [], cluesShown: 0, solved: false, rounds: 0 };
+    const valid = s && Array.isArray(s.guesses) && s.guesses.every((g) => g.length === LEN);
+    return valid ? s : { guesses: [], cluesShown: 0, solved: false, rounds: 0 };
   });
   const [current, setCurrent] = useState('');
   const [toast, setToast] = useState<string | null>(null);
@@ -63,7 +64,7 @@ export function BonusWordle() {
     if (current.length !== LEN) {
       sfx.error();
       setShakeRow((n) => n + 1);
-      flash(`Your guess needs ${LEN} letters (${wordle.groups.join(' + ')}) ✍️`);
+      flash(`Your guess needs ${LEN} letters${wordle.groups.length > 1 ? ` (${wordle.groups.join(' + ')})` : ''} ✍️`);
       return;
     }
     const guesses = [...state.guesses, current];
@@ -169,7 +170,7 @@ export function BonusWordle() {
                           aria-label={ch ? `${ch} ${st === 'typing' || st === 'empty' ? '' : st}` : 'empty'}
                           data-reveal={revealing}
                           style={revealing ? { animationDelay: `${i * 120}ms`, transitionDelay: `${i * 120 + 250}ms` } : undefined}
-                          className={`wordle-tile grid h-10 w-10 place-items-center rounded-xl border-2 font-display text-xl font-bold transition-colors duration-100 sm:h-14 sm:w-14 sm:text-3xl ${TILE_COLOURS[st]}`}
+                          className={`wordle-tile grid h-14 w-14 place-items-center rounded-xl border-2 font-sport text-3xl transition-colors duration-100 sm:h-16 sm:w-16 sm:text-4xl ${TILE_COLOURS[st]}`}
                         >
                           {ch}
                         </div>

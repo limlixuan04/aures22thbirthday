@@ -29,7 +29,7 @@ export function LevelShell({ level, text, done, alreadyBeaten, onNext, onBack, c
           disabled={!canGoForward}
           title={canGoForward ? undefined : 'Finish this level to unlock the next one'}
         >
-          {canGoForward ? `Level ${level + 1} →` : `🔒 Level ${level + 1}`}
+          {level >= 11 ? (canGoForward ? '🏆 Trophy →' : '🔒 Trophy') : canGoForward ? `Level ${level + 1} →` : `🔒 Level ${level + 1}`}
         </button>
       </nav>
       <div className="mb-6 text-center">
@@ -68,10 +68,10 @@ export function LevelShell({ level, text, done, alreadyBeaten, onNext, onBack, c
             ← Back
           </button>
           <button type="button" className="btn-primary min-w-[220px] text-xl" disabled={!canGoForward} onClick={onNext} data-testid="next-level">
-            {level === 10 ? 'Open Level 11 💌' : 'Next Level →'}
+            {level === 11 ? 'Claim your trophy 🏆' : 'Next Level →'}
           </button>
         </div>
-        {!canGoForward && <p className="text-sm text-cocoa-500">🔒 The next level unlocks when you finish this one.</p>}
+        {!canGoForward && <p className="text-sm text-cocoa-500">🔒 {level === 11 ? 'Your trophy unlocks' : 'The next level unlocks'} when you finish this one.</p>}
       </div>
     </div>
   );

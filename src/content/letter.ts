@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- *  💌  THE BIRTHDAY LETTER  (shown on Level 11)
+ *  💌  THE BIRTHDAY LETTER  (shown with the trophy after all 11 levels)
  * ============================================================================
  *  ✏️ SAMPLE — replace with your real letter.
  *  Each string in `paragraphs` becomes its own paragraph.

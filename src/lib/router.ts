@@ -4,12 +4,14 @@ export type Route =
   | { name: 'home' }
   | { name: 'map' }
   | { name: 'level'; level: number }
-  | { name: 'bonus' };
+  | { name: 'bonus' }
+  | { name: 'trophy' };
 
 export function parseHash(hash: string): Route {
   const path = hash.replace(/^#\/?/, '').replace(/\/$/, '');
   if (path === 'map') return { name: 'map' };
   if (path === 'bonus') return { name: 'bonus' };
+  if (path === 'trophy') return { name: 'trophy' };
   const m = path.match(/^level\/(\d+)$/);
   if (m) return { name: 'level', level: Number(m[1]) };
   return { name: 'home' };
@@ -23,6 +25,8 @@ export function routeToHash(route: Route): string {
       return '#/map';
     case 'bonus':
       return '#/bonus';
+    case 'trophy':
+      return '#/trophy';
     case 'level':
       return `#/level/${route.level}`;
   }

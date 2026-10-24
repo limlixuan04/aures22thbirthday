@@ -6,7 +6,6 @@ import { sfx } from '../lib/sound';
 import { burst } from '../lib/confetti';
 import { LevelShell } from '../components/LevelShell';
 import { LEVEL_COMPONENTS } from '../levels';
-import Finale from '../levels/Level11Finale';
 
 export function LevelScreen({ level }: { level: number }) {
   const { canAccess, isCompleted, completeLevel } = useProgress();
@@ -28,8 +27,6 @@ export function LevelScreen({ level }: { level: number }) {
 
   if (!allowed) return null;
 
-  if (level === 11) return <Finale onComplete={() => completeLevel(11)} />;
-
   const Game = LEVEL_COMPONENTS[level];
   const text = levelTextFor(level, choices);
   return (
@@ -40,7 +37,7 @@ export function LevelScreen({ level }: { level: number }) {
       alreadyBeaten={alreadyBeaten}
       onNext={() => {
         sfx.whoosh();
-        navigate({ name: 'level', level: level + 1 });
+        navigate(level >= 11 ? { name: 'trophy' } : { name: 'level', level: level + 1 });
       }}
       onBack={() => {
         sfx.click();

@@ -4,7 +4,7 @@ import { useProgress } from '../lib/progress';
 import { navigate } from '../lib/router';
 import { TOTAL_LEVELS } from '../lib/progressCore';
 import { sfx } from '../lib/sound';
-import { Basketball, Heart, Jersey, Sparkle } from '../art/Decor';
+import { Basketball, Jersey, Sparkle } from '../art/Decor';
 import { Bear, Duck } from '../art/Critters';
 
 export function Welcome() {
@@ -66,15 +66,15 @@ export function Welcome() {
           data-testid="start-adventure"
           onClick={() => {
             sfx.success();
-            navigate({ name: 'level', level: nextLevel });
+            navigate(allDone ? { name: 'trophy' } : { name: 'level', level: nextLevel });
           }}
         >
-          <Heart className="h-6 w-6" color="#F6B3C4" />
-          {allDone ? 'Read My Letter Again' : started ? `${welcome.continueButton} (Level ${nextLevel})` : welcome.startButton}
+          <Basketball className="h-7 w-7" />
+          {allDone ? 'See Your Trophy 🏆' : started ? `${welcome.continueButton} (Level ${nextLevel})` : welcome.startButton}
         </button>
         {started && (
           <button type="button" className="btn-ghost" onClick={() => navigate({ name: 'map' })}>
-            🗺️ View the level map
+            🏆 Road to the Championship
           </button>
         )}
         {allDone && (

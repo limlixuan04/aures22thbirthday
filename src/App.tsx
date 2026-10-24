@@ -11,6 +11,7 @@ import { Welcome } from './screens/Welcome';
 import { MapScreen } from './screens/MapScreen';
 import { LevelScreen } from './screens/LevelScreen';
 import { BonusWordle } from './screens/BonusWordle';
+import Trophy from './screens/Trophy';
 
 // Only loaded in dev mode; excluded from the deployed site.
 const DevPanel = DEV_TOOLS ? lazy(() => import('./components/DevPanel')) : null;
@@ -35,6 +36,9 @@ export default function App() {
         break;
       case 'bonus':
         screen = <BonusWordle />;
+        break;
+      case 'trophy':
+        screen = <Trophy />;
         break;
       default:
         screen = <Welcome />;

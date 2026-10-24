@@ -11,9 +11,9 @@ export function MapScreen() {
   const choices = useChoices();
   return (
     <div className="mx-auto max-w-5xl px-4 pb-16 pt-8">
-      <h1 className="text-center text-4xl font-bold text-berry-600 sm:text-5xl">The Adventure Map 🗺️</h1>
+      <h1 className="text-center text-4xl font-bold text-berry-600 sm:text-5xl">Road to the Championship 🏆</h1>
       <p className="mt-2 text-center text-berry-500">
-        {completed.length} of {TOTAL_LEVELS} complete. Revisit any level you’ve beaten!
+        {completed.length} of {TOTAL_LEVELS} challenges won · {completed.length * 2} points. Revisit any level you’ve beaten!
       </p>
 
       <ol className="relative mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
@@ -23,7 +23,7 @@ export function MapScreen() {
           const current = l === nextLevel && !done;
           const t = levelTextFor(l, choices);
           return (
-            <motion.li key={l} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }} className={l === 11 ? 'col-span-2 sm:col-span-3 lg:col-span-1' : ''}>
+            <motion.li key={l} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }} className={l === 11 ? 'col-span-2 sm:col-span-1' : ''}>
               <button
                 type="button"
                 disabled={!open}
@@ -53,8 +53,24 @@ export function MapScreen() {
         })}
       </ol>
 
-      {isCompleted(11) && (
-        <div className="mt-10 text-center">
+      <button
+        type="button"
+        disabled={!isCompleted(TOTAL_LEVELS)}
+        onClick={() => navigate({ name: 'trophy' })}
+        className={`mx-auto mt-6 flex w-full max-w-md items-center justify-center gap-4 rounded-3xl border-4 p-4 transition ${
+          isCompleted(TOTAL_LEVELS) ? 'border-honey-400 bg-gradient-to-br from-honey-200 to-cream-50 shadow-card hover:-translate-y-1' : 'cursor-not-allowed border-dashed border-blush-300 bg-cream-50/60 opacity-70'
+        }`}
+        data-testid="trophy-node"
+      >
+        <span className="text-5xl">{isCompleted(TOTAL_LEVELS) ? '🏆' : '🔒'}</span>
+        <span className="text-left">
+          <span className="block font-sport text-2xl tracking-wide text-berry-600">The Championship Trophy</span>
+          <span className="block text-sm text-berry-400">{isCompleted(TOTAL_LEVELS) ? 'You won it! Tap to see your trophy & letter.' : 'Win all 11 challenges to claim it.'}</span>
+        </span>
+      </button>
+
+      {isCompleted(TOTAL_LEVELS) && (
+        <div className="mt-6 text-center">
           <button type="button" className="btn-soft" onClick={() => navigate({ name: 'bonus' })}>
             ✨ {finale.bonusTitle}
           </button>

@@ -146,16 +146,16 @@ export const levels: Record<number, LevelText> = {
     success: '8-ball, corner pocket. Called it. 😎 (I’m still winning the next real one though.)',
   },
   10: {
+    title: 'Modern Family: The Family Portrait',
+    emoji: '📸',
+    instructions: '🚧 This level is still being built.',
+    success: 'Picture perfect!',
+  },
+  11: {
     title: 'Decorate Your Birthday Cake',
     emoji: '🎂',
     instructions: 'No wrong answers here! Pick your frosting, add toppings, then tap the top of the cake to place candles. When it’s perfect, light them up and make a wish.',
     success: 'Wish made. I hope every single bit of it comes true. 🌟',
-  },
-  11: {
-    title: 'Happy 22nd Birthday, Aure!',
-    emoji: '💌',
-    instructions: 'You made it to the end.',
-    success: 'Happy birthday, my love.',
   },
 };
 
@@ -497,8 +497,9 @@ export const cake = {
  * ------------------------------------------------------------------------- */
 export const finale = {
   heading: 'Happy 22nd Birthday, Aure!',
-  subheading: 'You did it — all 10 levels! This last one is just for you.',
-  envelopeLabel: 'For Aure — open me 💌',
+  subheading: 'All 11 challenges complete. Final score: 22–0. Champion of the world, and of my heart.',
+  envelopeLabel: 'Your trophy comes with a letter. Open me 💌',
+  trophyTitle: 'BIRTHDAY CHAMPIONSHIP MVP',
   galleryTitle: 'A few of my favourite moments',
   /** ✏️ SAMPLE photos — put your photos in public/photos/ and update these. Leave the list empty [] to hide the gallery. */
   gallery: [
@@ -517,24 +518,24 @@ export const finale = {
  * ------------------------------------------------------------------------- */
 export const wordle = {
   /** Letters only, no spaces or punctuation. */
-  answer: 'ITSTIME',
+  answer: 'TIME',
   /** How the answer is split into tile groups (must add up to the answer length). */
-  groups: [3, 4],
+  groups: [4],
   /** How the answer is shown once solved. */
-  display: 'IT’S TIME',
+  display: 'TIME',
   maxGuesses: 6,
   title: 'The Bonus Wordle',
-  intro: 'Seven letters. Two words. Six guesses. Any seven letters count as a guess, so go wild.',
+  intro: 'One word. Four letters. Six guesses. Any four letters count as a guess, so go wild.',
   /** Revealed one at a time when he presses “Give me a clue”. */
   clues: [
-    'It’s two words: the first has 3 letters, the second has 4.',
-    'The first word is a contraction — there’s a sneaky apostrophe hiding in it.',
-    'The second word is the thing we never seem to have enough of when we’re together.',
-    'It starts with I… and ends with E.',
-    'Say it out loud: “I _ ’ _   T _ _ E”',
+    'It’s one word, four letters.',
+    'Everyone always wants more of it.',
+    'It’s the thing we never seem to have enough of when we’re together.',
+    'It starts with T… and ends with E.',
+    'T _ _ E',
   ],
-  successMessage: 'Remember these words. You’ll know when to say them.',
-  outOfGuesses: 'Out of guesses! Don’t worry — the board resets and your clues stay. Try again! 💪',
+  successMessage: 'Remember this word. You’ll know when to say it.',
+  outOfGuesses: 'Out of guesses! Don’t worry, the board resets and your clues stay. Try again! 💪',
 };
 
 /* ----------------------------------------------------------------------------

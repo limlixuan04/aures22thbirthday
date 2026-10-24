@@ -31,7 +31,8 @@ export default function DevPanel() {
           <div className="flex flex-wrap gap-1">
             <button className="rounded bg-blush-100 px-2 py-1 hover:bg-blush-200" onClick={() => navigate({ name: 'home' })}>Welcome</button>
             <button className="rounded bg-blush-100 px-2 py-1 hover:bg-blush-200" onClick={() => navigate({ name: 'bonus' })}>Wordle</button>
-            <button className="rounded bg-blush-100 px-2 py-1 hover:bg-blush-200" onClick={() => p.setCompleted(levels.slice(0, 10))}>Complete 1–10</button>
+            <button className="rounded bg-blush-100 px-2 py-1 hover:bg-blush-200" onClick={() => navigate({ name: 'trophy' })}>Trophy</button>
+            <button className="rounded bg-blush-100 px-2 py-1 hover:bg-blush-200" onClick={() => p.setCompleted(levels)}>Complete all 11</button>
             <button className="rounded bg-blush-100 px-2 py-1 hover:bg-blush-200" onClick={() => p.setCompleted([])}>Clear levels</button>
             <button
               className="rounded bg-berry-500 px-2 py-1 text-white"
