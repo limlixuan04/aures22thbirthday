@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useChoices, levelTextFor } from '../lib/choices';
-import Level06Poker from '../levels/Level06Poker';
 import { useProgress } from '../lib/progress';
 import { navigate } from '../lib/router';
 import { sfx } from '../lib/sound';
@@ -31,7 +30,7 @@ export function LevelScreen({ level }: { level: number }) {
 
   if (level === 11) return <Finale onComplete={() => completeLevel(11)} />;
 
-  const Game = level === 6 && choices.level6 === 'poker' ? Level06Poker : LEVEL_COMPONENTS[level];
+  const Game = LEVEL_COMPONENTS[level];
   const text = levelTextFor(level, choices);
   return (
     <LevelShell
@@ -48,7 +47,7 @@ export function LevelScreen({ level }: { level: number }) {
         navigate(level === 1 ? { name: 'home' } : { name: 'level', level: level - 1 });
       }}
     >
-      <Game key={level === 6 ? choices.level6 : choices.memoryCards} onComplete={onComplete} />
+      <Game key={choices.memoryCards} onComplete={onComplete} />
     </LevelShell>
   );
 }

@@ -41,8 +41,7 @@ Keep photos under about 1–2 MB each so the site loads quickly. Phone photos ca
 - Jigsaw: `jigsaw.cols` × `jigsaw.rows` pieces (6 × 5 = 30; 4 × 3 = 12 is gentle).
 - Whack-a-mole: `targetScore`, `durationSeconds`, `visibleMs`.
 - Pool: `poolGame.colouredBalls` (fewer = easier).
-- Poker: `pokerGame.baozersHand` (her hand) and `luckyAfterLosses`.
-- Level 6 / memory card style: `gameChoices` picks poker or the original version.
+- Memory card style: `gameChoices.memoryCards` picks poker cards or the classic look.
 
 ### Spot the difference with your own pictures
 Set `imageA`/`imageB` to two versions of a picture in `public/photos/`, set `aspectRatio` to width ÷ height, and update `differences`. Each one is `x`/`y` (% across/down) plus `r` (click radius as % of width). To find coordinates, open the image in any editor and divide the pixel position by the image size.

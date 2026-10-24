@@ -13,7 +13,12 @@ type Phase = 'idle' | 'dropping' | 'grabbing' | 'rising' | 'returning' | 'releas
 interface SwimmingDuck {
   id: number;
   x: number;
-  v: number; // % per second, sign = direction
+  dir: 1 | -1;
+  base: number; // normal speed, % per second
+  mult: number; // current speed multiplier
+  target: number; // multiplier it's easing towards
+  timer: number; // seconds until it changes its mind
+  hop: number; // seconds left in a bounce hop
   rainbow: boolean;
   dropIn?: boolean;
 }
@@ -21,24 +26,38 @@ interface SwimmingDuck {
 const GLASS_H = 340;
 const CLAW_H = 56;
 const REST = 18;
-const DUCK_SIZE = 64;
+const DUCK_SIZE = 54;
 const DUCK_BOTTOM = 14;
 const DROP = GLASS_H - DUCK_BOTTOM - DUCK_SIZE * 0.55 - CLAW_H;
 const MIN_X = 10;
 const MAX_X = 94;
 const CHUTE_X = 7;
-const SWIM_MIN = 22;
-const SWIM_MAX = 92;
+const SWIM_MIN = 20;
+const SWIM_MAX = 94;
+const HOP_TIME = 0.45;
 
 const wait = (ms: number) => new Promise((r) => window.setTimeout(r, ms));
 
 function freshDucks(): SwimmingDuck[] {
   return clawMachine.duckPositions.map((x, i) => {
-    const rainbow = i === clawMachine.rainbowDuck;
-    const speed = rainbow ? clawMachine.rainbowSpeed : clawMachine.duckSpeed * (0.75 + ((i * 37) % 10) / 20);
-    return { id: i, x, v: (i % 2 ? -1 : 1) * speed, rainbow };
+    const rainbow = clawMachine.rainbowDucks.includes(i);
+    const base = rainbow ? clawMachine.rainbowSpeed : clawMachine.duckSpeed * (0.8 + ((i * 37) % 10) / 25);
+    return { id: i, x, dir: i % 2 ? -1 : 1, base, mult: 1, target: 1, timer: 0.5 + Math.random() * 2, hop: 0, rainbow };
   });
 }
+
+/** Ducks change their minds: sometimes dawdle, sometimes zoom, occasionally turn around. */
+function newMood(d: SwimmingDuck) {
+  const roll = Math.random();
+  const { slowest, fastest } = clawMachine;
+  d.target = roll < 0.3 ? slowest + Math.random() * 0.25 : roll < 0.75 ? 0.8 + Math.random() * 0.4 : fastest * (0.75 + Math.random() * 0.25);
+  d.timer = 0.8 + Math.random() * 1.8;
+  if (Math.random() < 0.15) d.dir = d.dir === 1 ? -1 : 1;
+}
+
+const velocity = (d: SwimmingDuck) => d.dir * d.base * d.mult;
+/** Little hop when a duck bounces off the wall. */
+const hopPx = (d: SwimmingDuck) => (d.hop > 0 ? Math.sin(Math.PI * (1 - d.hop / HOP_TIME)) * 22 : 0);
 
 function Claw({ closed }: { closed: boolean }) {
   const a = closed ? 6 : 28;
@@ -65,6 +84,8 @@ export default function Level03Claw({ onComplete }: LevelProps) {
   const [held, setHeld] = useState<SwimmingDuck | null>(null);
   const [dropping, setDropping] = useState(false);
   const [won, setWon] = useState(false);
+  const [rainbowsCaught, setRainbowsCaught] = useState(0);
+  const rainbowsRef = useRef(0);
   const [tries, setTries] = useState(0);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -90,13 +111,15 @@ export default function Level03Claw({ onComplete }: LevelProps) {
         setX((v) => Math.max(MIN_X, Math.min(MAX_X, v + dir.current * clawMachine.clawSpeed * dt)));
       }
       for (const d of ducks.current) {
-        d.x += d.v * dt;
-        if (d.x < SWIM_MIN) {
-          d.x = SWIM_MIN;
-          d.v = Math.abs(d.v);
-        } else if (d.x > SWIM_MAX) {
-          d.x = SWIM_MAX;
-          d.v = -Math.abs(d.v);
+        d.timer -= dt;
+        if (d.timer <= 0) newMood(d);
+        d.mult += (d.target - d.mult) * Math.min(1, dt * 3);
+        d.x += velocity(d) * dt;
+        d.hop = Math.max(0, d.hop - dt);
+        if (d.x < SWIM_MIN || d.x > SWIM_MAX) {
+          d.x = Math.max(SWIM_MIN, Math.min(SWIM_MAX, d.x));
+          d.dir = d.x <= SWIM_MIN ? 1 : -1;
+          d.hop = HOP_TIME;
         }
       }
       setFrame((f) => f + 1);
@@ -169,6 +192,15 @@ export default function Level03Claw({ onComplete }: LevelProps) {
     await wait(600);
     if (!alive.current) return;
     setDropping(false);
+    rainbowsRef.current += 1;
+    setRainbowsCaught(rainbowsRef.current);
+    if (rainbowsRef.current < Math.min(clawMachine.rainbowToCatch, clawMachine.rainbowDucks.length)) {
+      setMessage(clawMachine.oneMoreMessage);
+      sfx.success();
+      setX(50);
+      setPhase('idle');
+      return;
+    }
     setWon(true);
     setMessage(clawMachine.winMessage);
     sfx.fanfare();
@@ -202,6 +234,8 @@ export default function Level03Claw({ onComplete }: LevelProps) {
 
   const playAgain = () => {
     ducks.current = freshDucks();
+    rainbowsRef.current = 0;
+    setRainbowsCaught(0);
     setWon(false);
     setMessage(null);
     setX(50);
@@ -231,7 +265,7 @@ export default function Level03Claw({ onComplete }: LevelProps) {
           {[0, 1, 2].map((i) => (
             <span key={i} className="h-2.5 w-2.5 animate-pulse rounded-full bg-honey-300" style={{ animationDelay: `${i * 0.3}s` }} />
           ))}
-          <span className="px-2 font-display text-xl font-bold tracking-widest text-honey-200 sm:text-2xl">DUCK CATCHER 3000</span>
+          <span className="px-2 font-display text-xl font-bold tracking-widest text-honey-200 sm:text-2xl">DUCK CATCHER 2004</span>
           {[0, 1, 2].map((i) => (
             <span key={i} className="h-2.5 w-2.5 animate-pulse rounded-full bg-honey-300" style={{ animationDelay: `${0.9 - i * 0.3}s` }} />
           ))}
@@ -261,13 +295,13 @@ export default function Level03Claw({ onComplete }: LevelProps) {
               <Wrapper
                 key={`${d.id}-${d.dropIn ? 'back' : 'swim'}`}
                 className="absolute"
-                style={d.dropIn ? { left: `${d.x}%`, bottom: DUCK_BOTTOM, x: '-50%' } : { left: `${d.x}%`, bottom: DUCK_BOTTOM, transform: 'translateX(-50%)' }}
+                style={d.dropIn ? { left: `${d.x}%`, bottom: DUCK_BOTTOM + hopPx(d), x: '-50%', zIndex: d.rainbow ? 2 : 1 } : { left: `${d.x}%`, bottom: DUCK_BOTTOM + hopPx(d), transform: 'translateX(-50%)', zIndex: d.rainbow ? 2 : 1 }}
                 data-testid={d.rainbow ? 'rainbow-duck' : 'duck'}
                 data-x={d.x.toFixed(1)}
-                data-v={d.v.toFixed(2)}
+                data-v={velocity(d).toFixed(2)}
                 {...anim}
               >
-                <div style={{ transform: `scaleX(${d.v < 0 ? 1 : -1})` }}>
+                <div style={{ transform: `scaleX(${d.dir < 0 ? 1 : -1})` }}>
                   <Duck rainbow={d.rainbow} style={{ width: DUCK_SIZE, height: DUCK_SIZE }} />
                 </div>
                 {d.rainbow && <Sparkle className="absolute -right-1 -top-1 h-4 w-4 animate-wiggle" />}
@@ -311,7 +345,7 @@ export default function Level03Claw({ onComplete }: LevelProps) {
 
           {won && phase === 'idle' && (
             <div className="absolute right-3 top-6 z-30 flex items-center gap-1 rounded-full bg-cream-50/90 px-3 py-1 font-display text-sm font-semibold text-berry-600 shadow">
-              <Duck happy rainbow className="h-7 w-7" /> Caught!
+              <Duck happy rainbow className="h-7 w-7" /> Both caught!
             </div>
           )}
         </div>
@@ -332,7 +366,9 @@ export default function Level03Claw({ onComplete }: LevelProps) {
 
       <div className="flex flex-wrap items-center justify-center gap-3">
         <span className="chip">🎯 Tries: {tries}</span>
-        <span className="chip">🌈 Rainbow duck: {won ? 'caught!' : 'still swimming'}</span>
+        <span className="chip">
+          🌈 Rainbow ducks: {rainbowsCaught} / {Math.min(clawMachine.rainbowToCatch, clawMachine.rainbowDucks.length)}
+        </span>
         {won && phase === 'idle' && (
           <button type="button" className="btn-ghost" onClick={playAgain}>
             Put it back & play again 🦆
@@ -340,7 +376,7 @@ export default function Level03Claw({ onComplete }: LevelProps) {
         )}
       </div>
       <p className="min-h-[2rem] text-center font-hand text-2xl text-berry-500 sm:text-3xl" aria-live="polite">
-        {message ?? (busy ? 'Ooooh…' : 'Catch the RAINBOW duck! 🌈')}
+        {message ?? (busy ? 'Ooooh…' : 'Catch the RAINBOW ducks! 🌈')}
       </p>
     </div>
   );

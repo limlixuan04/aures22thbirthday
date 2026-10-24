@@ -46,16 +46,6 @@ export default function DevPanel() {
           <div className="mt-2 space-y-1 border-t border-blush-200 pt-2">
             <p className="font-bold text-berry-600">Compare versions</p>
             <div className="flex items-center justify-between gap-1">
-              <span>Level 6</span>
-              <span className="flex gap-1">
-                {(['poker', 'whack'] as const).map((v) => (
-                  <button key={v} onClick={() => setChoice('level6', v)} className={`rounded px-2 py-0.5 ${choices.level6 === v ? 'bg-berry-500 text-white' : 'bg-blush-100'}`}>
-                    {v === 'poker' ? 'Poker' : 'Whack-a-Bao'}
-                  </button>
-                ))}
-              </span>
-            </div>
-            <div className="flex items-center justify-between gap-1">
               <span>Memory cards</span>
               <span className="flex gap-1">
                 {(['poker', 'classic'] as const).map((v) => (

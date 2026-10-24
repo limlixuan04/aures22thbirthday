@@ -3,7 +3,7 @@
  * In dev mode (npm run dev / the preview) the 🛠 Dev panel can override it for comparing.
  */
 import { useSyncExternalStore } from 'react';
-import { gameChoices, levels, pokerLevelText, type LevelText } from '../content/content';
+import { gameChoices, levels, type LevelText } from '../content/content';
 import { DEV_TOOLS } from './devmode';
 import { load, save } from './storage';
 
@@ -28,7 +28,6 @@ export function useChoices(): Choices {
   );
 }
 
-export function levelTextFor(level: number, choices: Choices): LevelText {
-  if (level === 6 && choices.level6 === 'poker') return pokerLevelText;
+export function levelTextFor(level: number, _choices: Choices): LevelText {
   return levels[level];
 }

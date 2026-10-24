@@ -95,7 +95,7 @@ export const levels: Record<number, LevelText> = {
   3: {
     title: 'The Duck Claw Machine',
     emoji: '🦆',
-    instructions: 'The legendary duck-catching champion returns! The ducks won’t sit still, and only the RAINBOW duck counts. Move with ◀ ▶ (or ← → keys) and hit DROP (or Space).',
+    instructions: 'The legendary duck-catching champion returns! The ducks won’t sit still, and only the RAINBOW ducks count. Catch both! Move with ◀ ▶ (or ← → keys) and hit DROP (or Space).',
     success: 'The Duck Whisperer strikes again! China would be proud. 🏆',
   },
   4: {
@@ -275,14 +275,19 @@ export const sudoku9 = {
  *  Level 3 — Duck claw machine
  * ------------------------------------------------------------------------- */
 export const clawMachine = {
-  /** Starting positions of the ducks, in % of the machine width (keep between 22 and 92). */
-  duckPositions: [26, 42, 58, 74, 89],
-  /** Which duck (0 = first) is the rainbow one he has to catch. */
-  rainbowDuck: 2,
-  /** How fast the ducks swim back and forth (% of width per second). Bigger = harder. */
-  duckSpeed: 9,
-  /** The rainbow duck's speed. */
-  rainbowSpeed: 13,
+  /** Starting positions of the ducks, in % of the machine width (keep between 20 and 94). */
+  duckPositions: [22, 31, 40, 49, 58, 67, 76, 86],
+  /** Which ducks (0 = first) are rainbow ducks. */
+  rainbowDucks: [2, 6],
+  /** How many rainbow ducks he must catch to win. */
+  rainbowToCatch: 2,
+  /** Normal swimming speed (% of width per second). Bigger = harder. */
+  duckSpeed: 15,
+  /** Rainbow ducks' normal speed. */
+  rainbowSpeed: 19,
+  /** Ducks randomly speed up and slow down between these multiples of their normal speed. */
+  slowest: 0.25,
+  fastest: 2,
   /** How close (in % of width) the claw must be to a duck's centre to grab it. Bigger = easier. */
   catchTolerance: 5,
   /** Claw speed, in % of machine width per second. */
@@ -298,7 +303,8 @@ export const clawMachine = {
     'Cute, but not shiny enough. Rainbow duck only! 🌈',
     'That’s a regular duck. We want the rainbow one! 😤',
   ],
-  winMessage: 'GOT THE RAINBOW DUCK! 🌈🦆',
+  oneMoreMessage: 'One rainbow duck down! Now get the other one! 🌈',
+  winMessage: 'GOT BOTH RAINBOW DUCKS! 🌈🦆🌈',
 };
 
 /* ----------------------------------------------------------------------------
@@ -324,7 +330,7 @@ export const memoryFlipBackDelay = 900;
  *  The photo is cropped to fill the board (cols : rows shape), so keep faces near the middle.
  * ------------------------------------------------------------------------- */
 export const jigsaw = {
-  image: '/photos/placeholder-couple.svg',
+  image: '/photos/us-puzzle.jpg',
   /** 6 × 5 = 30 pieces. Fewer = easier. */
   cols: 6,
   rows: 5,
@@ -347,34 +353,10 @@ export const whackAMole = {
  *  (In `npm run dev` / the preview you can also flip these in the 🛠 Dev panel.)
  * ------------------------------------------------------------------------- */
 export const gameChoices: {
-  /** Level 6: 'poker' = Beat Baozers' Hand, 'whack' = Whack-a-Bao */
-  level6: 'poker' | 'whack';
   /** Level 4 card look: 'poker' = playing cards, 'classic' = pink basketball cards */
   memoryCards: 'poker' | 'classic';
 } = {
-  level6: 'poker',
   memoryCards: 'poker',
-};
-
-/* ----------------------------------------------------------------------------
- *  Level 6 (poker version) — Beat Baozers' Hand
- * ------------------------------------------------------------------------- */
-export const pokerLevelText: LevelText = {
-  title: 'Beat Baozers’ Hand',
-  emoji: '♠️',
-  instructions: 'Five-card draw! Baozers is showing her hand. Tap the cards you want to keep (HOLD), then draw new ones for the rest. Beat her hand to win the level!',
-  success: 'Read ’em and weep, Baozers. 😎♠️',
-};
-
-export const pokerGame = {
-  /** Baozers' hand — card codes: rank (2–9, T, J, Q, K, A) + suit (S, H, D, C). Pair of 7s is a friendly target. */
-  baozersHand: ['7H', '7S', 'KD', '9C', '2S'],
-  /** After this many lost rounds, the next deal is secretly lucky (starts with a high pair). */
-  luckyAfterLosses: 2,
-  winLines: ['Read ’em and weep! 😎', 'Okay poker face, I see you. 👀', 'Beginner’s luck… or is it? 🤨'],
-  loseLines: ['Baozers takes this round. 😏', 'Ooh, unlucky! Deal again?', 'The house always wins… not for long though.'],
-  tieLine: 'Split pot! Exactly the same hand. Deal again!',
-  luckyHint: 'Psst… the deck feels lucky this time. 🍀',
 };
 
 /* ----------------------------------------------------------------------------
