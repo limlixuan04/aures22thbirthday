@@ -130,8 +130,8 @@ export const levels: Record<number, LevelText> = {
   },
   9: {
     title: 'Catch My Love',
-    emoji: '🧺',
-    instructions: 'Catch the falling hearts in your basket! Dodge the broccoli, alarm clocks and homework — they’ll cost you points. Use ← → (or A / D), the buttons, or drag.',
+    emoji: '🏀',
+    instructions: 'Catch the falling hearts in your hoop! Dodge the broccoli, alarm clocks and homework — they’ll cost you points. Use ← → (or A / D), the buttons, or drag.',
     success: 'You caught every bit of my love. (There’s plenty more where that came from.) 💘',
   },
   10: {

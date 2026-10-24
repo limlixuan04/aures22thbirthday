@@ -23,14 +23,16 @@ const PLAYER_Y = 0.83;
 const ITEM = 0.075; // item size as fraction of width
 const PLAYER_SPEED = 1.15; // widths per second
 
-function Basket() {
+function Hoop() {
   return (
-    <svg viewBox="0 0 100 60" className="h-full w-full" aria-hidden="true">
-      <path d="M10 18 C10 -6 90 -6 90 18" stroke="#7A4A2E" strokeWidth="5" fill="none" />
-      <path d="M4 18 L96 18 L84 58 L16 58Z" fill="#D9A47C" stroke="#7A4A2E" strokeWidth="3" strokeLinejoin="round" />
-      <path d="M10 30 L90 30 M13 42 L87 42 M30 18 L34 58 M50 18 L50 58 M70 18 L66 58" stroke="#7A4A2E" strokeWidth="2" opacity=".6" />
-      <path d="M50 22 C44 12 34 14 36 22 C38 28 46 26 50 22Z M50 22 C56 12 66 14 64 22 C62 28 54 26 50 22Z" fill="#E2688A" stroke="#7A1F3D" strokeWidth="1.5" />
-      <circle cx="50" cy="22" r="3.5" fill="#E2688A" stroke="#7A1F3D" strokeWidth="1.5" />
+    <svg viewBox="0 0 100 60" className="h-full w-full overflow-visible" aria-hidden="true">
+      {/* net */}
+      <path d="M10 12 L22 58 L78 58 L90 12" fill="#FFFCF7" fillOpacity=".55" stroke="#fff" strokeWidth="2.5" strokeLinejoin="round" />
+      <path d="M26 12 L32 58 M42 12 L44 58 M58 12 L56 58 M74 12 L68 58 M13 24 L87 24 M17 38 L83 38 M20 50 L80 50" stroke="#fff" strokeWidth="2" opacity=".95" />
+      <path d="M10 12 L22 58 L78 58 L90 12" fill="none" stroke="#C8B6B0" strokeWidth="1" opacity=".8" />
+      {/* rim */}
+      <ellipse cx="50" cy="12" rx="44" ry="8" fill="none" stroke="#E2572B" strokeWidth="6" />
+      <ellipse cx="50" cy="11" rx="44" ry="8" fill="none" stroke="#FF8A5B" strokeWidth="1.5" opacity=".8" />
     </svg>
   );
 }
@@ -212,7 +214,7 @@ export default function Level09Catch({ onComplete }: LevelProps) {
       >
         {/* decorative stars */}
         <div className="pointer-events-none absolute inset-0 opacity-50" style={{ backgroundImage: 'radial-gradient(#F6B3C4 1.5px, transparent 1.5px)', backgroundSize: '28px 28px' }} />
-        <div className="absolute inset-x-0 bottom-0 h-[10%] bg-sage-300" />
+        <div className="absolute inset-x-0 bottom-0 h-[10%] border-t-4 border-cream-50/80 bg-[repeating-linear-gradient(90deg,#E9B97A_0,#E9B97A_38px,#DFAD6C_38px,#DFAD6C_40px)]" />
 
         {items.current.map((it) => (
           <div
@@ -241,7 +243,7 @@ export default function Level09Catch({ onComplete }: LevelProps) {
           className="absolute"
           style={{ left: `${playerX.current * 100}%`, top: `${PLAYER_Y * 100}%`, width: `${PLAYER_W * 100}%`, aspectRatio: '100 / 60', translateX: '-50%' }}
         >
-          <Basket />
+          <Hoop />
         </motion.div>
 
         <AnimatePresence>
@@ -273,7 +275,7 @@ export default function Level09Catch({ onComplete }: LevelProps) {
                 </>
               )}
               <button type="button" className="btn-primary mt-4" onClick={start} data-testid="catch-start">
-                {status === 'won' ? 'Play again 🔁' : 'Start catching! 🧺'}
+                {status === 'won' ? 'Play again 🔁' : 'Start catching! 🏀'}
               </button>
             </div>
           </div>

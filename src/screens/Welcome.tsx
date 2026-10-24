@@ -4,7 +4,7 @@ import { useProgress } from '../lib/progress';
 import { navigate } from '../lib/router';
 import { TOTAL_LEVELS } from '../lib/progressCore';
 import { sfx } from '../lib/sound';
-import { Bow, Heart, Sparkle } from '../art/Decor';
+import { Basketball, Heart, Jersey, Sparkle } from '../art/Decor';
 import { Bear, Duck } from '../art/Critters';
 
 export function Welcome() {
@@ -18,9 +18,9 @@ export function Welcome() {
         <div className="relative mx-auto mb-2 flex w-fit items-end gap-2">
           <Duck className="h-14 w-14 animate-bob" />
           <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', delay: 0.2 }}>
-            <div className="relative grid h-28 w-28 place-items-center rounded-full border-4 border-berry-600 bg-blush-200 shadow-pop sm:h-32 sm:w-32">
-              <span className="font-display text-6xl font-bold text-berry-600 sm:text-7xl">{people.age}</span>
-              <Bow className="absolute -top-6 left-1/2 h-10 w-16 -translate-x-1/2" />
+            <div className="relative" role="img" aria-label={`A basketball jersey with the number ${people.age}`}>
+              <Jersey className="h-36 w-32 drop-shadow-[0_6px_0_rgba(94,22,48,0.25)] sm:h-40 sm:w-36" number={String(people.age)} name={people.nickname.toUpperCase()} />
+              <Basketball className="absolute -right-5 -top-3 h-11 w-11 animate-bob [animation-delay:-0.6s]" />
             </div>
           </motion.div>
           <Bear className="h-14 w-14 animate-bob [animation-delay:-1.2s]" />

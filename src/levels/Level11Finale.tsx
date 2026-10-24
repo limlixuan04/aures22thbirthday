@@ -5,7 +5,7 @@ import { letter } from '../content/letter';
 import { celebrate, hearts } from '../lib/confetti';
 import { sfx } from '../lib/sound';
 import { navigate } from '../lib/router';
-import { Bow, Heart, Sparkle } from '../art/Decor';
+import { Basketball, Heart, Sparkle } from '../art/Decor';
 import { Bear, Duck } from '../art/Critters';
 
 export default function Finale({ onComplete }: { onComplete: () => void }) {
@@ -88,7 +88,7 @@ export default function Finale({ onComplete }: { onComplete: () => void }) {
               className="letter-paper relative mx-auto max-w-2xl rounded-[24px] border-2 border-blush-200 px-6 py-10 shadow-card sm:px-14 sm:py-14"
               data-testid="letter"
             >
-              <Bow className="absolute -top-6 left-1/2 h-12 w-20 -translate-x-1/2" />
+              <Basketball className="absolute -top-6 left-1/2 h-12 w-12 -translate-x-1/2" />
               <div className="absolute bottom-0 left-8 top-0 w-px bg-blush-300/60 sm:left-10" aria-hidden="true" />
               <p className="font-hand text-4xl font-bold text-berry-600">{letter.greeting}</p>
               <div className="mt-4 space-y-5 font-hand text-[1.7rem] leading-[36px] text-berry-700">

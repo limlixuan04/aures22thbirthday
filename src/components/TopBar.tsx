@@ -2,7 +2,7 @@ import { siteTitle } from '../content/content';
 import { useProgress } from '../lib/progress';
 import { TOTAL_LEVELS } from '../lib/progressCore';
 import { navigate } from '../lib/router';
-import { Bow } from '../art/Decor';
+import { Basketball } from '../art/Decor';
 import { MuteButton } from './MuteButton';
 
 export function TopBar({ currentLevel }: { currentLevel?: number }) {
@@ -16,7 +16,7 @@ export function TopBar({ currentLevel }: { currentLevel?: number }) {
           className="flex shrink-0 items-center gap-1.5 rounded-xl font-display text-lg font-semibold text-berry-600"
           disabled={!unlocked}
         >
-          <Bow className="h-6 w-9" />
+          <Basketball className="h-7 w-7" />
           <span className="hidden md:inline">{siteTitle}</span>
         </button>
 

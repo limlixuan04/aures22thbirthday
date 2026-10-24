@@ -73,7 +73,7 @@ export function Bear({ className = 'w-16 h-16', style }: Props) {
       <path d="M28 46 q4 3 8 0" stroke="#45101F" strokeWidth="2" fill="none" strokeLinecap="round" />
       <ellipse cx="15" cy="42" rx="4" ry="2.5" fill="#F6A0B4" />
       <ellipse cx="49" cy="42" rx="4" ry="2.5" fill="#F6A0B4" />
-      <path d="M40 10 C36 2 28 4 32 10 C36 4 44 2 40 10Z" fill="#E2688A" stroke="#7A1F3D" strokeWidth="1.5" transform="translate(6 2)" />
+      <path d="M48 9 s-5 -3 -6.5 -6 c-1.3 -3 2.5 -5.5 6.5 -2 c4 -3.5 7.8 -1 6.5 2 c-1.5 3 -6.5 6 -6.5 6z" fill="#E2688A" stroke="#7A1F3D" strokeWidth="1.2" />
     </svg>
   );
 }

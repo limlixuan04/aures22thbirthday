@@ -38,12 +38,12 @@ export function MapScreen() {
                 }`}
                 aria-label={`Level ${l}: ${t.title}${done ? ' (complete)' : open ? '' : ' (locked)'}`}
               >
-                <span className={`grid h-14 w-14 place-items-center rounded-full text-3xl ${done ? 'bg-berry-500' : 'bg-blush-200'} ${current ? 'animate-bob' : ''}`}>
+                <span className={`grid h-14 w-14 place-items-center rounded-full text-3xl ${done ? 'bg-ball-300' : 'bg-blush-200'} ${current ? 'animate-bob' : ''}`}>
                   {open ? t.emoji : '🔒'}
                 </span>
                 <span className="font-display text-sm font-semibold text-berry-400">Level {l}</span>
                 <span className="font-display text-base font-semibold leading-tight text-berry-600">{open ? t.title : '???'}</span>
-                {done && <span className="chip bg-berry-500 text-cream-50">♥ Done</span>}
+                {done && <span className="chip bg-ball-400 text-white">🏀 Swish!</span>}
                 {current && <span className="chip">▶ Play now</span>}
               </button>
             </motion.li>

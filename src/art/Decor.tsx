@@ -15,14 +15,39 @@ export function Heart({ className = 'w-6 h-6', color = '#E2688A', style }: SvgPr
   );
 }
 
-export function Bow({ className = 'w-10 h-10', color = '#E2688A', style }: SvgProps) {
+/** A cartoon basketball. */
+export function Basketball({ className = 'w-10 h-10', style }: SvgProps) {
   return (
-    <svg viewBox="0 0 64 40" className={className} style={style} aria-hidden="true">
-      <path d="M32 20 C20 2 4 4 6 18 C8 32 22 30 32 20Z" fill={color} stroke="#7A1F3D" strokeWidth="2" />
-      <path d="M32 20 C44 2 60 4 58 18 C56 32 42 30 32 20Z" fill={color} stroke="#7A1F3D" strokeWidth="2" />
-      <path d="M30 22 L22 38 L28 36 L31 39Z M34 22 L42 38 L36 36 L33 39Z" fill={color} stroke="#7A1F3D" strokeWidth="1.5" />
-      <ellipse cx="32" cy="20" rx="6" ry="6.5" fill={color} stroke="#7A1F3D" strokeWidth="2" />
-      <path d="M12 14 C14 10 20 10 24 14" stroke="#fff" strokeWidth="2" fill="none" opacity=".5" strokeLinecap="round" />
+    <svg viewBox="0 0 48 48" className={className} style={style} aria-hidden="true">
+      <circle cx="24" cy="24" r="21" fill="#EE8A3C" stroke="#5A2A12" strokeWidth="2.5" />
+      <path d="M24 3 V45 M3 24 H45" stroke="#5A2A12" strokeWidth="2.2" fill="none" />
+      <path d="M9.5 8.5 C17 15 17 33 9.5 39.5 M38.5 8.5 C31 15 31 33 38.5 39.5" stroke="#5A2A12" strokeWidth="2.2" fill="none" />
+      <ellipse cx="15" cy="13" rx="5" ry="3" fill="#fff" opacity=".35" transform="rotate(-35 15 13)" />
+    </svg>
+  );
+}
+
+/** A little basketball jersey with a number on it. */
+export function Jersey({ className = 'w-32 h-36', number = '22', name = '' }: SvgProps & { number?: string; name?: string }) {
+  return (
+    <svg viewBox="0 0 120 136" className={className} aria-hidden="true">
+      <path
+        d="M34 4 C40 18 80 18 86 4 L104 10 C100 28 104 40 114 46 L114 130 Q114 134 110 134 L10 134 Q6 134 6 130 L6 46 C16 40 20 28 16 10Z"
+        fill="#7A1F3D"
+        stroke="#45101F"
+        strokeWidth="3"
+        strokeLinejoin="round"
+      />
+      <path d="M34 4 C40 18 80 18 86 4" stroke="#F6B3C4" strokeWidth="6" fill="none" strokeLinecap="round" />
+      <path d="M16 10 C20 28 16 40 6 46 M104 10 C100 28 104 40 114 46" stroke="#F6B3C4" strokeWidth="5" fill="none" strokeLinecap="round" />
+      {name && (
+        <text x="60" y="48" textAnchor="middle" fontFamily="Fredoka, sans-serif" fontWeight="700" fontSize="15" letterSpacing="2" fill="#FDE6EC">
+          {name}
+        </text>
+      )}
+      <text x="60" y="106" textAnchor="middle" fontFamily="Fredoka, sans-serif" fontWeight="700" fontSize="58" fill="#FDE6EC" stroke="#EE8A3C" strokeWidth="2.5" paintOrder="stroke">
+        {number}
+      </text>
     </svg>
   );
 }
@@ -62,7 +87,7 @@ export function FloatingBackground({ count = 14 }: { count?: number }) {
             animation: `drift ${it.duration}s linear ${it.delay}s infinite`,
           }}
         >
-          {it.kind === 2 ? <Sparkle className="h-full w-full" color={it.color} /> : <Heart className="h-full w-full" color={it.color} />}
+          {it.kind === 2 ? <Basketball className="h-full w-full opacity-60" /> : <Heart className="h-full w-full" color={it.color} />}
         </div>
       ))}
     </div>

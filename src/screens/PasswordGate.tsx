@@ -4,7 +4,7 @@ import { passwordGate } from '../content/content';
 import { useProgress } from '../lib/progress';
 import { sfx } from '../lib/sound';
 import { burst } from '../lib/confetti';
-import { Bow, Heart, Sparkle } from '../art/Decor';
+import { Basketball, Heart, Sparkle } from '../art/Decor';
 
 export function checkPassword(input: string): boolean {
   const clean = (s: string) => s.toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -54,7 +54,7 @@ export function PasswordGate() {
             animate={opening ? { scaleY: -1, y: -12 } : {}}
           />
           <div className="absolute left-1/2 top-2 -translate-x-1/2">
-            <Bow className="h-10 w-16" />
+            <Basketball className="h-11 w-11 animate-bob" />
           </div>
 
           <AnimatePresence mode="wait">

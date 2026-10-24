@@ -1,6 +1,6 @@
 import confetti from 'canvas-confetti';
 
-const COLORS = ['#F6B3C4', '#E2688A', '#7A1F3D', '#F5CD6E', '#FFF6EA', '#A9D2A6'];
+const COLORS = ['#F6B3C4', '#E2688A', '#7A1F3D', '#EE8A3C', '#F5CD6E', '#FFF6EA'];
 
 export function burst(origin = { x: 0.5, y: 0.6 }) {
   void confetti({

@@ -26,7 +26,7 @@ const TOPPINGS = [
   { id: 'hearts', label: 'Hearts', emoji: '💗' },
   { id: 'pearls', label: 'Pearls', emoji: '🤍' },
   { id: 'stars', label: 'Stars', emoji: '⭐' },
-  { id: 'bow', label: 'Big bow', emoji: '🎀' },
+  { id: 'ball', label: 'Basketball', emoji: '🏀' },
 ] as const;
 type ToppingId = (typeof TOPPINGS)[number]['id'];
 const CANDLE_COLOURS = ['#7EC8E3', '#F6B3C4', '#F5CD6E', '#A9D2A6', '#CDB4E6', '#FFFDF8'];
@@ -267,11 +267,11 @@ export default function Level10Cake({ onComplete }: LevelProps) {
                   <circle cx="0" cy="0" r=".9" fill="#FFE9A8" />
                 </g>
               ))}
-            {has('bow') && (
-              <g transform="translate(168 168) scale(1)">
-                <path d="M32 20 C20 2 4 4 6 18 C8 32 22 30 32 20Z M32 20 C44 2 60 4 58 18 C56 32 42 30 32 20Z" fill="#E2688A" stroke="#7A1F3D" strokeWidth="2" />
-                <path d="M30 22 L22 38 L28 36 L31 39Z M34 22 L42 38 L36 36 L33 39Z" fill="#E2688A" stroke="#7A1F3D" strokeWidth="1.5" />
-                <circle cx="32" cy="20" r="6" fill="#E2688A" stroke="#7A1F3D" strokeWidth="2" />
+            {has('ball') && (
+              <g transform="translate(176 160)">
+                <circle cx="24" cy="24" r="21" fill="#EE8A3C" stroke="#5A2A12" strokeWidth="2.5" />
+                <path d="M24 3 V45 M3 24 H45 M9.5 8.5 C17 15 17 33 9.5 39.5 M38.5 8.5 C31 15 31 33 38.5 39.5" stroke="#5A2A12" strokeWidth="2.2" fill="none" />
+                <ellipse cx="15" cy="13" rx="5" ry="3" fill="#fff" opacity=".35" transform="rotate(-35 15 13)" />
               </g>
             )}
 

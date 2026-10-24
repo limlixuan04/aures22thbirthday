@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { memoryCards, memoryFlipBackDelay } from '../content/content';
 import { shuffle } from '../lib/random';
 import { sfx } from '../lib/sound';
-import { Bow } from '../art/Decor';
+import { Basketball } from '../art/Decor';
 import type { LevelProps } from '.';
 
 interface Card {
@@ -84,7 +84,7 @@ export default function Level04Memory({ onComplete }: LevelProps) {
                 <div className="flip-face absolute inset-0 grid place-items-center overflow-hidden rounded-2xl border-4 border-berry-600 bg-blush-300 shadow-pop">
                   <div className="absolute inset-2 rounded-xl border-2 border-dashed border-cream-50/70" />
                   <div className="absolute inset-0 opacity-30" style={{ backgroundImage: 'radial-gradient(#fff 2px, transparent 2px)', backgroundSize: '14px 14px' }} />
-                  <Bow className="relative h-10 w-16 sm:h-12 sm:w-20" color="#FDE6EC" />
+                  <Basketball className="relative h-12 w-12 sm:h-16 sm:w-16" />
                 </div>
                 <div className={`flip-face flip-back absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-2xl border-4 p-2 shadow-card ${isMatched ? 'border-sage-500 bg-sage-200' : 'border-blush-400 bg-cream-50'}`}>
                   <span className="text-4xl sm:text-6xl">{content.emoji}</span>
