@@ -166,8 +166,8 @@ export const quiz: QuizQuestion[] = [
   {
     question: 'What does Baozers think Aure’s most adorable habit is?',
     options: [
-      '“okay lor guess im just fat and ugly *pouts*”',
-      '“that adorable little laugh when im TOO funny”',
+      '“okay lor guess im just fat and ugly” *pouts*',
+      'that adorable little laugh when im TOO funny',
       'pretending that he has friends',
       'eyebrow raise with “what that mean?”',
     ],
