@@ -70,12 +70,13 @@ describe('content sanity', () => {
   });
   it('has 6 memory pairs, 11 hidden baos and a friend for every whack round', () => {
     expect(memoryCards.length).toBeGreaterThanOrEqual(3);
-    expect(spotTheBao.baos).toHaveLength(11);
-    spotTheBao.baos.forEach((b) => {
-      expect(b.x).toBeGreaterThanOrEqual(0);
-      expect(b.x).toBeLessThanOrEqual(100);
-      expect(b.y).toBeGreaterThanOrEqual(0);
-      expect(b.y).toBeLessThanOrEqual(100);
+    expect(spotTheBao.count).toBe(11);
+    expect(spotTheBao.spots.length).toBeGreaterThanOrEqual(spotTheBao.count + spotTheBao.decoys + 8);
+    spotTheBao.spots.forEach(([x, y]) => {
+      expect(x).toBeGreaterThanOrEqual(0);
+      expect(x).toBeLessThanOrEqual(100);
+      expect(y).toBeGreaterThanOrEqual(0);
+      expect(y).toBeLessThanOrEqual(100);
     });
     expect(whackAMole.friends.length).toBeGreaterThanOrEqual(1);
     expect(whackAMole.rounds.length).toBeGreaterThanOrEqual(1);

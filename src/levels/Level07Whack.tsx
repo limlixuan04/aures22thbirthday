@@ -173,7 +173,7 @@ export default function Level07Whack({ onComplete }: LevelProps) {
                       <motion.button
                         key={pop.id}
                         type="button"
-                        aria-label={`Whack ${friend.name}!`}
+                        aria-label="Whack!"
                         onPointerDown={(e) => {
                           e.preventDefault();
                           whack(pop);
@@ -235,7 +235,6 @@ export default function Level07Whack({ onComplete }: LevelProps) {
                 <>
                   <img src={friend.photo} alt={friend.name} className="h-20 w-20 rounded-full border-4 border-berry-500 object-cover shadow-card" />
                   <p className="mt-2 font-display text-sm font-semibold uppercase tracking-widest text-berry-400">Mini level {round + 1} of {WM.rounds.length}</p>
-                  <p className="font-display text-2xl font-semibold text-berry-600">Whack {friend.name}!</p>
                   {status === 'over' ? (
                     <p className="mt-1 font-hand text-2xl text-blush-500">Time’s up! {score} points. One more go? 💪</p>
                   ) : (

@@ -199,21 +199,31 @@ export function BonusWordle() {
             >
               <Sparkle className="absolute left-4 top-4 h-8 w-8 animate-wiggle" />
               <Sparkle className="absolute bottom-5 right-6 h-6 w-6 animate-wiggle" color="#E2688A" />
-              <p className="font-display text-lg font-semibold text-berry-400">You solved it!</p>
-              <p className="my-3 font-display text-5xl font-bold tracking-wider text-berry-600 sm:text-7xl" aria-label={wordle.display}>
-                {wordle.display.split('').map((ch, i) => (
+              <p className="font-display text-lg font-semibold text-berry-400">
+                You solved it! The word is <span className="font-bold text-berry-600">{wordle.display}</span>.
+              </p>
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: (revealRow !== null ? LEN * 0.12 + 0.6 : 0.2) + 0.4 }}
+                className="mt-3 font-display text-sm font-bold uppercase tracking-[0.3em] text-ball-500"
+              >
+                Now remember these words
+              </motion.p>
+              <p className="my-2 font-sport text-7xl leading-none tracking-wide text-berry-600 sm:text-8xl" aria-label={wordle.phrase} data-testid="wordle-phrase">
+                {wordle.phrase.split('').map((ch, i) => (
                   <motion.span
                     key={i}
                     className="inline-block"
-                    initial={{ y: 30, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: (revealRow !== null ? LEN * 0.12 + 0.6 : 0.2) + i * 0.07 }}
+                    initial={{ y: 40, opacity: 0, scale: 1.6 }}
+                    animate={{ y: 0, opacity: 1, scale: 1 }}
+                    transition={{ delay: (revealRow !== null ? LEN * 0.12 + 0.6 : 0.2) + 0.9 + i * 0.12, type: 'spring', stiffness: 380, damping: 18 }}
                   >
-                    {ch === ' ' ? ' ' : ch}
+                    {ch === ' ' ? '\u00A0' : ch}
                   </motion.span>
                 ))}
               </p>
-              <p className="font-hand text-3xl leading-snug text-berry-500">{wordle.successMessage}</p>
+              <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: (revealRow !== null ? LEN * 0.12 + 0.6 : 0.2) + 2.2 }} className="font-hand text-3xl leading-snug text-berry-500">{wordle.successMessage}</motion.p>
             </motion.div>
           )}
         </AnimatePresence>

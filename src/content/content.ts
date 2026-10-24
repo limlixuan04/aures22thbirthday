@@ -148,8 +148,8 @@ export const levels: Record<number, LevelText> = {
   10: {
     title: 'Modern Family: The Family Portrait',
     emoji: '📸',
-    instructions: '🚧 This level is still being built.',
-    success: 'Picture perfect!',
+    instructions: 'Everyone in white, everyone smiling… what could go wrong? Clean up the mud fight, shoo the pigeon, then snap 3 perfect photos before the chaos photobombs again.',
+    success: 'Framed and hung. The most Modern Family portrait ever taken. 📸💛',
   },
   11: {
     title: 'Decorate Your Birthday Cake',
@@ -443,23 +443,31 @@ export const spotTheBao = {
   image: '/photos/spot-bao.jpg',
   /** width ÷ height of the photo */
   aspectRatio: 1104 / 1232,
+  /** How many baos to find. */
+  count: 11,
+  /** Decoy dumplings that look a lot like baos. Clicking one costs time. */
+  decoys: 5,
   /** Bao size, in % of the picture width. Smaller = harder. */
-  baoSize: 2.8,
+  baoSize: 2.1,
+  /** How see-through the baos are (0–1). Lower = harder. */
+  baoOpacity: 0.95,
   /** How close (in % of the picture width) a tap must be to count. */
-  hitRadius: 3.2,
-  baos: [
-    { x: 27, y: 6, rot: -20 },
-    { x: 8, y: 13, rot: 15 },
-    { x: 49, y: 10.5, rot: 0 },
-    { x: 80, y: 4.5, rot: 25 },
-    { x: 61, y: 25.5, rot: -10 },
-    { x: 91, y: 29, rot: 12 },
-    { x: 17, y: 33, rot: -25 },
-    { x: 4, y: 41, rot: 8 },
-    { x: 47, y: 58, rot: 18 },
-    { x: 4, y: 88, rot: -12 },
-    { x: 57, y: 95, rot: 30 },
-  ],
+  hitRadius: 2.4,
+  /** Seconds per attempt. When time runs out, the baos hide somewhere new. */
+  seconds: 90,
+  missPenalty: 2,
+  decoyPenalty: 5,
+  hintPenalty: 10,
+  /**
+   * Possible hiding spots (x / y = % across / down). Each attempt picks random ones,
+   * so he can't memorise them. Keep them off faces.
+   */
+  spots: [
+    [5, 18], [12, 24], [20, 13], [8, 30], [24, 22], [30, 4], [42, 6], [66, 8], [87, 3], [72, 3], [95, 6],
+    [33, 17], [45, 12], [56, 15], [38, 26], [50, 27], [75, 14], [85, 20], [93, 26], [80, 25], [90, 12],
+    [33, 37], [58, 36], [86, 40], [95, 45], [5, 41], [14, 37], [2, 64], [8, 96], [95, 90], [97, 52],
+    [54, 90], [46, 47], [84, 50], [78, 70], [73, 64], [4, 55], [93, 76],
+  ] as [number, number][],
 };
 
 /* ----------------------------------------------------------------------------
@@ -481,7 +489,7 @@ export const poolGame = {
 };
 
 /* ----------------------------------------------------------------------------
- *  Level 10 — Cake
+ *  Level 11 — Cake
  * ------------------------------------------------------------------------- */
 export const cake = {
   /** Written on the plaque on the cake. Keep it short (≈ 18 characters). */
@@ -492,7 +500,40 @@ export const cake = {
 };
 
 /* ----------------------------------------------------------------------------
- *  Level 11 — Finale
+ *  Level 10 — Modern Family: The Family Portrait
+ *  Put the family photo in public/photos/ and change `image`.
+ * ------------------------------------------------------------------------- */
+export const modernFamily = {
+  image: '/photos/placeholder-couple.svg',
+  /** width ÷ height of the photo */
+  aspectRatio: 1,
+  /** Stage 1: how much of the mud must be wiped off (0–1). */
+  cleanTarget: 0.85,
+  /** Stage 2: taps needed to shoo the pigeon out. */
+  pigeonTaps: 6,
+  /** Stage 3: clean photos needed, and how many ruined ones before starting stage 3 again. */
+  photosNeeded: 3,
+  maxRuined: 3,
+  /** Photobombers that jump into the shot. */
+  photobombers: [
+    { emoji: '🐦', line: 'The PIGEON is back!' },
+    { emoji: '🤡', line: 'Fizbo?! Not now!' },
+    { emoji: '🟤', line: 'Who threw more mud?!' },
+    { emoji: '🙈', line: 'Someone blinked. Again.' },
+    { emoji: '🧹', line: 'Is that a broom?!' },
+  ],
+  stageLines: [
+    'MUD FIGHT! Wipe the photo clean before anyone sees. 🧽',
+    'A pigeon got in! Tap it until it flies out. 🐦',
+    'Places, everyone! Snap when nobody is photobombing. 📸',
+  ],
+  cleanShotLines: ['Perfect! Hold that pose!', 'Gorgeous. Frame it.', 'Everyone looks amazing!'],
+  ruinedLines: ['Ruined! Do it again.', 'NOPE. Photobombed.', 'That one’s going in the blooper reel.'],
+  winLine: 'The perfect family portrait. Finally! 📸',
+};
+
+/* ----------------------------------------------------------------------------
+ *  Trophy screen (after all 11 levels)
  *  The letter itself lives in src/content/letter.ts
  * ------------------------------------------------------------------------- */
 export const finale = {
@@ -523,6 +564,8 @@ export const wordle = {
   groups: [4],
   /** How the answer is shown once solved. */
   display: 'TIME',
+  /** The phrase revealed after solving — the words he should remember. */
+  phrase: 'IT’S TIME',
   maxGuesses: 6,
   title: 'The Bonus Wordle',
   intro: 'One word. Four letters. Six guesses. Any four letters count as a guess, so go wild.',
@@ -534,7 +577,7 @@ export const wordle = {
     'It starts with T… and ends with E.',
     'T _ _ E',
   ],
-  successMessage: 'Remember this word. You’ll know when to say it.',
+  successMessage: 'Remember these words. You’ll know when to say them.',
   outOfGuesses: 'Out of guesses! Don’t worry, the board resets and your clues stay. Try again! 💪',
 };
 

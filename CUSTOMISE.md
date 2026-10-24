@@ -44,7 +44,10 @@ Keep photos under about 1–2 MB each so the site loads quickly. Phone photos ca
 - Memory card style: `gameChoices.memoryCards` picks poker cards or the classic look.
 
 ### Spot the Bao (Level 8)
-`spotTheBao.image` is the photo; `baos` lists where each tiny bao sits (`x` / `y` = % across / down, `rot` = tilt). `baoSize` (smaller = harder) and `hitRadius` (bigger = easier) set the difficulty.
+`spotTheBao.spots` lists possible hiding places (`[x, y]` = % across / down). Every attempt hides `count` baos and `decoys` dumplings in random spots, so keep spots off faces. `baoSize`, `baoOpacity`, `seconds` and the penalties set the difficulty.
+
+### Modern Family portrait (Level 10)
+Put the family photo in `public/photos/` and set `modernFamily.image` (and `aspectRatio` = width ÷ height). `cleanTarget`, `pigeonTaps`, `photosNeeded` and the photobombers / lines are all editable.
 
 ### Colours
 In `tailwind.config.js` you can edit the `blush` (pinks), `berry` (burgundy), `cream`, `honey`, `sage` and `cocoa` shades.

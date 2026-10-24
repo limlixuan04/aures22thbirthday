@@ -124,3 +124,25 @@ export function Chef({ className = 'w-24 h-24', mood = 'neutral' }: Props & { mo
     </svg>
   );
 }
+
+/** A slightly smug pigeon. */
+export function Pigeon({ className = 'w-16 h-16', flap = false }: Props & { flap?: boolean }) {
+  return (
+    <svg viewBox="0 0 64 64" className={className} aria-hidden="true">
+      <path d="M8 40 C8 28 20 22 34 24 C46 26 54 34 52 44 C44 50 18 52 8 40Z" fill="#9AA0AE" stroke="#4A4F5C" strokeWidth="2" />
+      <path
+        d={flap ? 'M22 30 C20 12 34 6 40 10 C38 20 34 28 28 34Z' : 'M20 34 C26 26 40 26 46 34 C38 40 28 40 20 34Z'}
+        fill="#7D8392"
+        stroke="#4A4F5C"
+        strokeWidth="2"
+      />
+      <circle cx="48" cy="22" r="10" fill="#9AA0AE" stroke="#4A4F5C" strokeWidth="2" />
+      <path d="M40 28 C44 32 52 32 56 28" stroke="#6FBF9A" strokeWidth="3" fill="none" />
+      <path d="M57 21 L63 23 L57 25Z" fill="#E9B44C" stroke="#8C5A0A" strokeWidth="1" />
+      <circle cx="50" cy="19" r="2.6" fill="#E2572B" />
+      <circle cx="50" cy="19" r="1.2" fill="#1E1A1C" />
+      <path d="M8 40 L1 36 L4 44Z" fill="#7D8392" stroke="#4A4F5C" strokeWidth="1.5" />
+      <path d="M28 49 L26 58 M36 49 L36 58" stroke="#E2688A" strokeWidth="2.5" strokeLinecap="round" />
+    </svg>
+  );
+}
