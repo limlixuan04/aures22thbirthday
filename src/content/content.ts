@@ -172,9 +172,8 @@ export const quiz: QuizQuestion[] = [
       'eyebrow raise with “what that mean?”',
     ],
     correctIndex: 1,
-    // ✏️ DRAFT feedback — replace with your own words if you like
-    correctFeedback: 'YES. That little laugh gets me every single time. 🥹',
-    wrongFeedback: 'Hmm… also very cute, but not the one! Try again. 😏',
+    correctFeedback: 'Correct! Can’t wait for it to evolve into the rich people laugh',
+    wrongFeedback: 'NUH UH boooooooo',
   },
   {
     question: '✏️ SAMPLE: If Aure were an animal, which would Baozers say he is?',
