@@ -129,10 +129,10 @@ export const levels: Record<number, LevelText> = {
     success: 'Eagle eyes! Nothing gets past you. 🦅',
   },
   9: {
-    title: 'Catch My Love',
-    emoji: '🏀',
-    instructions: 'Catch the falling hearts in your hoop! Dodge the broccoli, alarm clocks and homework — they’ll cost you points. Use ← → (or A / D), the buttons, or drag.',
-    success: 'You caught every bit of my love. (There’s plenty more where that came from.) 💘',
+    title: 'Our 8-Ball Showdown',
+    emoji: '🎱',
+    instructions: 'Rack ’em up! Sink all the coloured balls, then finish with the 8-ball. Drag back from the white ball like a slingshot to aim and set your power, then let go.',
+    success: '8-ball, corner pocket. Called it. 😎 (I’m still winning the next real one though.)',
   },
   10: {
     title: 'Decorate Your Birthday Cake',
@@ -345,22 +345,19 @@ export const spotTheDifference: {
 };
 
 /* ----------------------------------------------------------------------------
- *  Level 9 — Catch My Love
+ *  Level 9 — 8-ball pool
  * ------------------------------------------------------------------------- */
-export const catchGame = {
-  targetScore: 20,
-  /** Points lost when an obstacle is caught. */
-  obstaclePenalty: 2,
-  /** Base fall speed (fraction of play-area height per second). */
-  baseSpeed: 0.32,
-  /** Chance (0–1) that a falling item is an obstacle. */
-  obstacleChance: 0.22,
-  obstacles: [
-    { emoji: '🥦', quip: 'Ew, broccoli!' },
-    { emoji: '⏰', quip: 'Not the 8am alarm!' },
-    { emoji: '📚', quip: 'Homework?! On your birthday?!' },
-    { emoji: '🌧️', quip: 'British weather!' },
-  ],
+export const poolGame = {
+  /** How many coloured balls to sink before the 8-ball (1–7). Fewer = easier. */
+  colouredBalls: 5,
+  startMessage: 'Break shot! Give it some power. 💪',
+  potMessages: ['Nice shot! 🎯', 'In the pocket! 😎', 'Ooh, smooth. 💗', 'Show-off. 🙄💕', 'Pool shark alert! 🦈'],
+  missMessages: ['So close!', 'Unlucky! Try again.', 'Hmm, the pockets are over there. 😜', 'Line up the dotted line with a pocket!'],
+  nowTheEight: 'All coloured balls down! Now sink the 8-ball. 🎱',
+  eightTooEarly: 'Whoa, not yet! The 8-ball goes back on its spot. 🎱',
+  scratchMessage: 'Scratch! The white ball’s back on the table.',
+  tooSoft: 'Drag back further for more power!',
+  winMessage: 'GAME! You win… this time. 😤🎱',
 };
 
 /* ----------------------------------------------------------------------------

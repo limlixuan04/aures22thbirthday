@@ -7,7 +7,7 @@ import Level05Slide from './Level05Slide';
 import Level06Whack from './Level06Whack';
 import Level07Timeline from './Level07Timeline';
 import Level08SpotDiff from './Level08SpotDiff';
-import Level09Catch from './Level09Catch';
+import Level09Pool from './Level09Pool';
 import Level10Cake from './Level10Cake';
 
 export interface LevelProps {
@@ -24,6 +24,6 @@ export const LEVEL_COMPONENTS: Record<number, ComponentType<LevelProps>> = {
   6: Level06Whack,
   7: Level07Timeline,
   8: Level08SpotDiff,
-  9: Level09Catch,
+  9: Level09Pool,
   10: Level10Cake,
 };
