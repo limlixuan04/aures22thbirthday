@@ -9,12 +9,29 @@ interface Props {
   done: boolean;
   alreadyBeaten: boolean;
   onNext: () => void;
+  onBack: () => void;
   children: ReactNode;
 }
 
-export function LevelShell({ level, text, done, alreadyBeaten, onNext, children }: Props) {
+export function LevelShell({ level, text, done, alreadyBeaten, onNext, onBack, children }: Props) {
+  const canGoForward = done || alreadyBeaten;
+  const backLabel = level === 1 ? 'Welcome' : `Level ${level - 1}`;
   return (
-    <div className="mx-auto max-w-5xl px-4 pb-16 pt-6 sm:pt-10">
+    <div className="mx-auto max-w-5xl px-4 pb-16 pt-4 sm:pt-6">
+      <nav className="mb-2 flex items-center justify-between" aria-label="Level navigation">
+        <button type="button" className="btn-ghost" onClick={onBack} data-testid="back-level-top">
+          ← {backLabel}
+        </button>
+        <button
+          type="button"
+          className="btn-ghost"
+          onClick={onNext}
+          disabled={!canGoForward}
+          title={canGoForward ? undefined : 'Finish this level to unlock the next one'}
+        >
+          {canGoForward ? `Level ${level + 1} →` : `🔒 Level ${level + 1}`}
+        </button>
+      </nav>
       <div className="mb-6 text-center">
         <span className="chip mb-3">
           <span aria-hidden="true">{text.emoji}</span> Level {level}
@@ -46,10 +63,15 @@ export function LevelShell({ level, text, done, alreadyBeaten, onNext, children 
             </motion.div>
           )}
         </AnimatePresence>
-        <button type="button" className="btn-primary min-w-[220px] text-xl" disabled={!(done || alreadyBeaten)} onClick={onNext} data-testid="next-level">
-          {level === 10 ? 'Open Level 11 💌' : 'Next Level →'}
-        </button>
-        {!(done || alreadyBeaten) && <p className="text-sm text-cocoa-500">🔒 The next level unlocks when you finish this one.</p>}
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          <button type="button" className="btn-soft" onClick={onBack} data-testid="back-level">
+            ← Back
+          </button>
+          <button type="button" className="btn-primary min-w-[220px] text-xl" disabled={!canGoForward} onClick={onNext} data-testid="next-level">
+            {level === 10 ? 'Open Level 11 💌' : 'Next Level →'}
+          </button>
+        </div>
+        {!canGoForward && <p className="text-sm text-cocoa-500">🔒 The next level unlocks when you finish this one.</p>}
       </div>
     </div>
   );

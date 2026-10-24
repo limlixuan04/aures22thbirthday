@@ -41,6 +41,10 @@ export function LevelScreen({ level }: { level: number }) {
         sfx.whoosh();
         navigate({ name: 'level', level: level + 1 });
       }}
+      onBack={() => {
+        sfx.click();
+        navigate(level === 1 ? { name: 'home' } : { name: 'level', level: level - 1 });
+      }}
     >
       <Game onComplete={onComplete} />
     </LevelShell>

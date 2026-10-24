@@ -29,7 +29,12 @@ export default function Finale({ onComplete }: { onComplete: () => void }) {
   };
 
   return (
-    <div className="mx-auto max-w-4xl px-4 pb-20 pt-8 sm:pt-12">
+    <div className="mx-auto max-w-4xl px-4 pb-20 pt-4 sm:pt-6">
+      <nav className="mb-2" aria-label="Level navigation">
+        <button type="button" className="btn-ghost" onClick={() => navigate({ name: 'level', level: 10 })} data-testid="back-level-top">
+          ← Level 10
+        </button>
+      </nav>
       {/* Headline */}
       <div className="relative text-center">
         <Sparkle className="absolute left-2 top-0 h-10 w-10 animate-wiggle sm:left-10" />
@@ -163,9 +168,14 @@ export default function Finale({ onComplete }: { onComplete: () => void }) {
       )}
 
       <div className="mt-12 text-center">
-        <button type="button" className="btn-ghost" onClick={() => navigate({ name: 'map' })}>
-          🗺️ Replay any level
-        </button>
+        <div className="flex flex-wrap justify-center gap-3">
+          <button type="button" className="btn-soft" onClick={() => navigate({ name: 'level', level: 10 })} data-testid="back-level">
+            ← Back
+          </button>
+          <button type="button" className="btn-ghost" onClick={() => navigate({ name: 'map' })}>
+            🗺️ Replay any level
+          </button>
+        </div>
         <p className="mt-2 font-hand text-2xl text-berry-400">Happy birthday, {people.nickname}. I love you. 💞</p>
       </div>
     </div>
