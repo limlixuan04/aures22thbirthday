@@ -22,7 +22,7 @@ In `content.ts` → `quiz`. Use 3–5 questions. Each one has 4 `options`, and `
 `timeline`: list the events **in the correct order, oldest first**. The game shuffles them. Dates stay hidden until he solves it.
 
 ### Memory cards (Level 4)
-`memoryCards`: six `{ emoji, label }` items. Each one becomes a pair.
+`memoryCards`: six items, each `{ emoji, label }` or `{ art: 'bao', label }` to use a built-in drawing (`'bao'`, `'duck'` or `'basketball'`). Each one becomes a pair.
 
 ### Your photos
 1. Put the image files in `public/photos/`, e.g. `public/photos/us.jpg`. Avoid spaces in file names.
@@ -36,11 +36,13 @@ Keep photos under about 1–2 MB each so the site loads quickly. Phone photos ca
 `src/content/letter.ts`: each string in `paragraphs` is one paragraph. Use `\n` inside a string for a line break. Apostrophes are fine inside `'…'` strings if you use the curly kind (’). For a straight one, write `\'`.
 
 ### Difficulty
-- Sudoku: swap in the provided 9×9 (instructions are next to `sudoku`). The tests verify any puzzle you paste in.
-- Claw machine: `catchTolerance` (bigger = easier) and `clawSpeed`.
+- Sudoku: the 9×9 is medium-hard; `sudoku4` is an easy 4×4 backup, and `maxMistakes` sets how many wrong numbers reset the board. The tests verify any puzzle you paste in.
+- Claw machine: `duckSpeed` / `rainbowSpeed` (smaller = easier), `catchTolerance` (bigger = easier), `rainbowDuck` (which duck is the rainbow one) and `clawSpeed`.
 - Sliding puzzle: `shuffleMoves` (30 = gentle, 80 = tricky).
 - Whack-a-mole: `targetScore`, `durationSeconds`, `visibleMs`.
-- Catch game: `targetScore`, `obstaclePenalty`, `baseSpeed`, `obstacleChance`.
+- Pool: `poolGame.colouredBalls` (fewer = easier).
+- Poker: `pokerGame.baozersHand` (her hand) and `luckyAfterLosses`.
+- Level 6 / memory card style: `gameChoices` picks poker or the original version.
 
 ### Spot the difference with your own pictures
 Set `imageA`/`imageB` to two versions of a picture in `public/photos/`, set `aspectRatio` to width ÷ height, and update `differences`. Each one is `x`/`y` (% across/down) plus `r` (click radius as % of width). To find coordinates, open the image in any editor and divide the pixel position by the image size.

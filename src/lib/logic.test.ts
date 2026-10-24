@@ -3,7 +3,7 @@ import { scoreGuess, keyboardStates, normaliseGuess, isValidGuess } from './word
 import { countSolutions, findConflicts, isSolved } from './sudoku';
 import { isSolvable, isSolvedTiles, moveTile, shuffleTiles, solvedTiles } from './slidePuzzle';
 import { canAccess, nextLevel, withCompleted } from './progressCore';
-import { sudoku, sudoku9, wordle, quiz, timeline, memoryCards, spotTheDifference } from '../content/content';
+import { sudoku, sudoku4, sudoku9, wordle, quiz, timeline, memoryCards, spotTheDifference } from '../content/content';
 import { seeded } from './random';
 
 describe('wordle', () => {
@@ -34,7 +34,7 @@ describe('wordle', () => {
 });
 
 describe('sudoku content', () => {
-  for (const [name, s] of [['main', sudoku], ['9x9', sudoku9]] as const) {
+  for (const [name, s] of [['main', sudoku], ['4x4', sudoku4], ['9x9 alt', sudoku9]] as const) {
     it(`${name}: solution is valid and matches the givens`, () => {
       expect(isSolved(s.solution)).toBe(true);
       s.puzzle.forEach((row, r) => row.forEach((v, c) => v && expect(s.solution[r][c]).toBe(v)));

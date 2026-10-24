@@ -89,13 +89,13 @@ export const levels: Record<number, LevelText> = {
   2: {
     title: 'Our Sudoku Era',
     emoji: '🔢',
-    instructions: 'Remember when we were obsessed with Sudoku? Fill every row, column and box with each number exactly once. Click a cell, then pick a number (or use your keyboard).',
-    success: 'Big brain energy! Our Sudoku era lives on. 🧠✨',
+    instructions: 'Remember when we were obsessed with Sudoku? ⚠️ Warning: 3 mistakes and it resets!',
+    success: 'Big brain! Almost as good as I am 🥱',
   },
   3: {
     title: 'The Duck Claw Machine',
     emoji: '🦆',
-    instructions: 'The legendary duck-catching champion returns! Move the claw with the arrows (or ← → keys), then hit DROP (or Space) when you’re lined up with a duck.',
+    instructions: 'The legendary duck-catching champion returns! The ducks won’t sit still, and only the RAINBOW duck counts. Move with ◀ ▶ (or ← → keys) and hit DROP (or Space).',
     success: 'The Duck Whisperer strikes again! China would be proud. 🏆',
   },
   4: {
@@ -179,14 +179,14 @@ export const quiz: QuizQuestion[] = [
     question: 'If Aure were an animal, which would Baozers say he is?',
     options: ['a sleepy cat', 'zesty unicorn', 'goofy retriever', 'pouty duck'],
     correctIndex: 2,
-    correctFeedback: 'As zesty as you are, i still think youre my fluffy dog',
+    correctFeedback: 'Correct! As zesty as you are, i still think youre my fluffy dog',
     wrongFeedback: 'NUH UH boooooooo',
   },
   {
     question: 'What is Aure’s superpower?',
     options: ['making her laugh at the worst moments', 'taking care of everything', 'incredibly big muscles', 'being impossibly comforting'],
     correctIndex: 3,
-    correctFeedback: 'i know you wish c was the answer but sorry man youre just my favourite safe place',
+    correctFeedback: 'Correct! i know you wish c was the answer but sorry man youre just my favourite safe place',
     wrongFeedback: 'NUH UH boooooooo',
   },
 ];
@@ -198,7 +198,38 @@ export const quiz: QuizQuestion[] = [
  *  that it matches `solution`. Run `npm test` after changing it.
  * ------------------------------------------------------------------------- */
 export const sudoku = {
+  size: 9,
+  /** How many wrong numbers before the board resets. */
+  maxMistakes: 3,
+  // Medium-hard 9×9: 30 clues, one unique solution, solvable by logic alone (no guessing).
+  puzzle: [
+    [2, 0, 0, 3, 0, 0, 1, 9, 8],
+    [3, 0, 0, 0, 9, 0, 0, 2, 0],
+    [0, 0, 1, 2, 0, 5, 3, 0, 7],
+    [0, 0, 0, 0, 0, 0, 0, 3, 0],
+    [0, 0, 8, 0, 0, 6, 0, 0, 0],
+    [0, 0, 0, 0, 0, 1, 8, 0, 0],
+    [0, 6, 5, 0, 1, 0, 0, 8, 0],
+    [0, 0, 7, 0, 0, 3, 0, 0, 6],
+    [0, 3, 9, 6, 0, 0, 7, 0, 5],
+  ],
+  solution: [
+    [2, 5, 4, 3, 6, 7, 1, 9, 8],
+    [3, 7, 6, 1, 9, 8, 5, 2, 4],
+    [9, 8, 1, 2, 4, 5, 3, 6, 7],
+    [5, 9, 2, 8, 7, 4, 6, 3, 1],
+    [7, 1, 8, 9, 3, 6, 4, 5, 2],
+    [6, 4, 3, 5, 2, 1, 8, 7, 9],
+    [4, 6, 5, 7, 1, 9, 2, 8, 3],
+    [8, 2, 7, 4, 5, 3, 9, 1, 6],
+    [1, 3, 9, 6, 8, 2, 7, 4, 5],
+  ],
+};
+
+/** An easier 4×4 alternative — swap it in above if the 9×9 is too much. */
+export const sudoku4 = {
   size: 4,
+  maxMistakes: 3,
   puzzle: [
     [1, 0, 0, 0],
     [0, 4, 1, 0],
@@ -211,12 +242,11 @@ export const sudoku = {
     [2, 1, 4, 3],
     [4, 3, 2, 1],
   ],
-  // Want a bigger challenge? Swap in this 9×9 (also verified by the tests):
-  //   size: 9, puzzle: sudoku9.puzzle, solution: sudoku9.solution
 };
 
 export const sudoku9 = {
   size: 9,
+  maxMistakes: 3,
   puzzle: [
     [5, 3, 0, 0, 7, 0, 0, 0, 0],
     [6, 0, 0, 1, 9, 5, 0, 0, 0],
@@ -245,31 +275,45 @@ export const sudoku9 = {
  *  Level 3 — Duck claw machine
  * ------------------------------------------------------------------------- */
 export const clawMachine = {
-  /** Horizontal positions of the ducks, in % of the machine width (keep between 22 and 92). */
+  /** Starting positions of the ducks, in % of the machine width (keep between 22 and 92). */
   duckPositions: [26, 42, 58, 74, 89],
+  /** Which duck (0 = first) is the rainbow one he has to catch. */
+  rainbowDuck: 2,
+  /** How fast the ducks swim back and forth (% of width per second). Bigger = harder. */
+  duckSpeed: 9,
+  /** The rainbow duck's speed. */
+  rainbowSpeed: 13,
   /** How close (in % of width) the claw must be to a duck's centre to grab it. Bigger = easier. */
-  catchTolerance: 6,
+  catchTolerance: 5,
   /** Claw speed, in % of machine width per second. */
   clawSpeed: 38,
   missMessages: [
     'So close! That duck is extra slippery today. 🫧',
-    'The duck dodged! Line the claw up right above it. 🎯',
-    'Almost! Use the dotted line to aim. 🦆',
+    'The duck dodged! Time it as it swims under you. 🎯',
+    'Almost! Watch where the rainbow duck is going. 🌈',
     'Champion ducks need champion focus. You got this! 💪',
   ],
-  winMessage: 'GOT ONE! 🦆💛',
+  wrongDuckMessages: [
+    'Wrong duck! Only the RAINBOW one counts. 🌈',
+    'Cute, but not shiny enough. Rainbow duck only! 🌈',
+    'That’s a regular duck. We want the rainbow one! 😤',
+  ],
+  winMessage: 'GOT THE RAINBOW DUCK! 🌈🦆',
 };
 
 /* ----------------------------------------------------------------------------
  *  Level 4 — Memory cards  ✏️ SAMPLE (exactly 6 pairs works best)
  * ------------------------------------------------------------------------- */
-export const memoryCards: { emoji: string; label: string }[] = [
+/**
+ * Each card shows an emoji, or one of the built-in drawings via `art` ('bao', 'duck' or 'basketball').
+ */
+export const memoryCards: { emoji?: string; art?: 'bao' | 'duck' | 'basketball'; label: string }[] = [
   { emoji: '🦆', label: 'Duck champion' },
-  { emoji: '🔢', label: 'Sudoku nights' },
-  { emoji: '🥟', label: 'Baozers' },
-  { emoji: '🌈', label: 'Rainbow unicorn' },
-  { emoji: '✈️', label: 'Our China trip' },
-  { emoji: '🧋', label: 'Bubble tea dates' },
+  { emoji: '👶', label: 'babysitting nights' },
+  { art: 'bao', label: 'Baozers' },
+  { emoji: '🎵', label: 'WHERE HAVE YOU BEENNNNNN' },
+  { emoji: '🎨', label: 'play-dough-off (which i won)' },
+  { emoji: '🧋', label: 'fat dates' },
 ];
 /** Milliseconds a mismatched pair stays face-up before flipping back. */
 export const memoryFlipBackDelay = 900;

@@ -3,6 +3,7 @@ import { memoryCards, memoryFlipBackDelay } from '../content/content';
 import { shuffle } from '../lib/random';
 import { sfx } from '../lib/sound';
 import { Basketball } from '../art/Decor';
+import { Bao, Duck } from '../art/Critters';
 import { CardBack, CardFace } from '../art/PlayingCard';
 import { useChoices } from '../lib/choices';
 import type { LevelProps } from '.';
@@ -15,6 +16,13 @@ interface Card {
 // Poker look: each pair gets its own playing-card rank and suit.
 const POKER_RANKS = ['A', 'K', 'Q', 'J', '10', '9', '8', '7'];
 const POKER_SUITS = ['♥', '♠', '♦', '♣'];
+
+function CardPicture({ item, className }: { item: (typeof memoryCards)[number]; className: string }) {
+  if (item.art === 'bao') return <Bao className={className} />;
+  if (item.art === 'duck') return <Duck className={className} />;
+  if (item.art === 'basketball') return <Basketball className={className} />;
+  return null;
+}
 
 const deal = (): Card[] => shuffle(memoryCards.flatMap((_, pair) => [{ uid: pair * 2, pair }, { uid: pair * 2 + 1, pair }]));
 
@@ -100,8 +108,8 @@ export default function Level04Memory({ onComplete }: LevelProps) {
                         red={card.pair % 2 === 0}
                         className={isMatched ? 'border-[3px] border-sage-400' : ''}
                       >
-                        <span className="text-[2em] leading-none sm:text-[2.2em]">{content.emoji}</span>
-                        <span className="mt-1 text-center font-display text-[0.6em] font-semibold leading-tight text-berry-600 sm:text-[0.7em]">{content.label}</span>
+                        {content.art ? <CardPicture item={content} className="h-[3.2em] w-[3.2em] drop-shadow-[0_2px_2px_rgba(122,31,61,0.35)]" /> : <span className="text-[2em] leading-none sm:text-[2.2em]">{content.emoji}</span>}
+                        <span className="mt-1 text-center break-words font-display text-[0.55em] font-semibold leading-tight text-berry-600 [overflow-wrap:anywhere] sm:text-[0.65em]">{content.label}</span>
                       </CardFace>
                     </div>
                   </>
@@ -113,7 +121,7 @@ export default function Level04Memory({ onComplete }: LevelProps) {
                       <Basketball className="relative h-12 w-12 sm:h-16 sm:w-16" />
                     </div>
                     <div className={`flip-face flip-back absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-2xl border-4 p-2 shadow-card ${isMatched ? 'border-sage-500 bg-sage-200' : 'border-blush-400 bg-cream-50'}`}>
-                      <span className="text-4xl sm:text-6xl">{content.emoji}</span>
+                      {content.art ? <CardPicture item={content} className="h-14 w-14 drop-shadow-[0_2px_2px_rgba(122,31,61,0.35)] sm:h-20 sm:w-20" /> : <span className="text-4xl sm:text-6xl">{content.emoji}</span>}
                       <span className="text-center font-display text-xs font-semibold leading-tight text-berry-600 sm:text-base">{content.label}</span>
                     </div>
                   </>

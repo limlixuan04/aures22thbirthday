@@ -3,11 +3,20 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { clawMachine } from '../content/content';
 import { sfx } from '../lib/sound';
 import { burst } from '../lib/confetti';
+import { pick } from '../lib/random';
 import { Duck } from '../art/Critters';
 import { Sparkle } from '../art/Decor';
 import type { LevelProps } from '.';
 
 type Phase = 'idle' | 'dropping' | 'grabbing' | 'rising' | 'returning' | 'releasing';
+
+interface SwimmingDuck {
+  id: number;
+  x: number;
+  v: number; // % per second, sign = direction
+  rainbow: boolean;
+  dropIn?: boolean;
+}
 
 const GLASS_H = 340;
 const CLAW_H = 56;
@@ -18,8 +27,18 @@ const DROP = GLASS_H - DUCK_BOTTOM - DUCK_SIZE * 0.55 - CLAW_H;
 const MIN_X = 10;
 const MAX_X = 94;
 const CHUTE_X = 7;
+const SWIM_MIN = 22;
+const SWIM_MAX = 92;
 
 const wait = (ms: number) => new Promise((r) => window.setTimeout(r, ms));
+
+function freshDucks(): SwimmingDuck[] {
+  return clawMachine.duckPositions.map((x, i) => {
+    const rainbow = i === clawMachine.rainbowDuck;
+    const speed = rainbow ? clawMachine.rainbowSpeed : clawMachine.duckSpeed * (0.75 + ((i * 37) % 10) / 20);
+    return { id: i, x, v: (i % 2 ? -1 : 1) * speed, rainbow };
+  });
+}
 
 function Claw({ closed }: { closed: boolean }) {
   const a = closed ? 6 : 28;
@@ -42,24 +61,25 @@ export default function Level03Claw({ onComplete }: LevelProps) {
   const [phase, setPhase] = useState<Phase>('idle');
   const [cable, setCable] = useState(REST);
   const [closed, setClosed] = useState(false);
-  const [ducks, setDucks] = useState(() => clawMachine.duckPositions.map((p, id) => ({ id, x: p })));
-  const [held, setHeld] = useState<number | null>(null); // duck id in the claw
-  const [dropping, setDropping] = useState<number | null>(null); // duck falling into the chute
-  const [prizes, setPrizes] = useState(0);
+  const [, setFrame] = useState(0);
+  const [held, setHeld] = useState<SwimmingDuck | null>(null);
+  const [dropping, setDropping] = useState(false);
+  const [won, setWon] = useState(false);
   const [tries, setTries] = useState(0);
   const [message, setMessage] = useState<string | null>(null);
 
+  const ducks = useRef<SwimmingDuck[]>(freshDucks());
   const dir = useRef(0);
   const xRef = useRef(50);
   const phaseRef = useRef<Phase>('idle');
-  const won = useRef(false);
+  const completed = useRef(false);
   const alive = useRef(true);
   useEffect(() => () => void (alive.current = false), []);
 
   phaseRef.current = phase;
   xRef.current = x;
 
-  // Smooth movement while a direction is held.
+  // One loop: the claw moves while a direction is held, and the ducks swim back and forth.
   useEffect(() => {
     let raf = 0;
     let last = performance.now();
@@ -69,6 +89,17 @@ export default function Level03Claw({ onComplete }: LevelProps) {
       if (dir.current && phaseRef.current === 'idle') {
         setX((v) => Math.max(MIN_X, Math.min(MAX_X, v + dir.current * clawMachine.clawSpeed * dt)));
       }
+      for (const d of ducks.current) {
+        d.x += d.v * dt;
+        if (d.x < SWIM_MIN) {
+          d.x = SWIM_MIN;
+          d.v = Math.abs(d.v);
+        } else if (d.x > SWIM_MAX) {
+          d.x = SWIM_MAX;
+          d.v = -Math.abs(d.v);
+        }
+      }
+      setFrame((f) => f + 1);
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
@@ -76,15 +107,10 @@ export default function Level03Claw({ onComplete }: LevelProps) {
   }, []);
 
   const drop = useCallback(async () => {
-    if (phaseRef.current !== 'idle') return;
+    if (phaseRef.current !== 'idle' || won) return;
     dir.current = 0;
     setTries((t) => t + 1);
     setMessage(null);
-    const cx = xRef.current;
-    const target = ducks
-      .map((d) => ({ d, dist: Math.abs(d.x - cx) }))
-      .filter((o) => o.dist <= clawMachine.catchTolerance)
-      .sort((a, b) => a.dist - b.dist)[0]?.d;
 
     sfx.whoosh();
     setPhase('dropping');
@@ -94,11 +120,17 @@ export default function Level03Claw({ onComplete }: LevelProps) {
     setPhase('grabbing');
     setClosed(true);
     sfx.click();
+    // Whatever is under the claw at the moment it closes gets grabbed.
+    const cx = xRef.current;
+    const target = ducks.current
+      .map((d) => ({ d, dist: Math.abs(d.x - cx) }))
+      .filter((o) => o.dist <= clawMachine.catchTolerance)
+      .sort((a, b) => a.dist - b.dist)[0]?.d;
     await wait(350);
     if (!alive.current) return;
     if (target) {
-      setHeld(target.id);
-      setDucks((ds) => ds.filter((d) => d.id !== target.id));
+      ducks.current = ducks.current.filter((d) => d !== target);
+      setHeld(target);
       sfx.good();
     }
     setPhase('rising');
@@ -110,7 +142,18 @@ export default function Level03Claw({ onComplete }: LevelProps) {
       setClosed(false);
       setPhase('idle');
       sfx.bonk();
-      setMessage(clawMachine.missMessages[tries % clawMachine.missMessages.length]);
+      setMessage(pick(clawMachine.missMessages));
+      return;
+    }
+
+    if (!target.rainbow) {
+      // Wrong duck: open the claw and let it splash back in.
+      setClosed(false);
+      setHeld(null);
+      ducks.current = [...ducks.current, { ...target, x: Math.max(SWIM_MIN, Math.min(SWIM_MAX, xRef.current)), dropIn: true }];
+      sfx.bonk();
+      setMessage(pick(clawMachine.wrongDuckMessages));
+      setPhase('idle');
       return;
     }
 
@@ -121,21 +164,21 @@ export default function Level03Claw({ onComplete }: LevelProps) {
     setPhase('releasing');
     setClosed(false);
     setHeld(null);
-    setDropping(target.id);
+    setDropping(true);
     sfx.pop();
     await wait(600);
     if (!alive.current) return;
-    setDropping(null);
-    setPrizes((p) => p + 1);
+    setDropping(false);
+    setWon(true);
     setMessage(clawMachine.winMessage);
     sfx.fanfare();
     burst({ x: 0.3, y: 0.6 });
-    if (!won.current) {
-      won.current = true;
+    if (!completed.current) {
+      completed.current = true;
       onComplete();
     }
     setPhase('idle');
-  }, [ducks, onComplete, tries]);
+  }, [onComplete, won]);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -157,9 +200,11 @@ export default function Level03Claw({ onComplete }: LevelProps) {
     };
   }, [drop]);
 
-  const refill = () => {
-    setDucks(clawMachine.duckPositions.map((p, id) => ({ id: id + 100 * (prizes + 1), x: p })));
+  const playAgain = () => {
+    ducks.current = freshDucks();
+    setWon(false);
     setMessage(null);
+    setX(50);
   };
 
   const holdProps = (d: number) => ({
@@ -193,33 +238,46 @@ export default function Level03Claw({ onComplete }: LevelProps) {
         </div>
 
         <div className="relative overflow-hidden rounded-2xl border-4 border-berry-600 bg-gradient-to-b from-[#E8F6FF] to-[#CFEAF7]" style={{ height: GLASS_H }} data-testid="claw-glass">
-          {/* glass shine */}
           <div className="pointer-events-none absolute -left-10 top-0 h-full w-24 -skew-x-12 bg-white/40" />
-          {/* rail */}
           <div className="absolute inset-x-0 top-0 h-3 bg-cocoa-400" />
           {/* chute */}
           <div className="absolute bottom-0 left-0 z-10 flex h-24 w-[14%] min-w-[56px] flex-col items-center justify-end rounded-tr-xl border-r-4 border-t-4 border-berry-600 bg-berry-500/90 pb-2">
             <span className="font-display text-[10px] font-bold tracking-wider text-honey-200 sm:text-xs">PRIZE</span>
             <span className="text-lg">⬇</span>
           </div>
-          {/* floor */}
-          <div className="absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-[#9BD3EE] to-transparent" />
+          {/* water */}
+          <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-[#9BD3EE] to-transparent" />
 
           {/* aim guide */}
-          {phase === 'idle' && (
+          {phase === 'idle' && !won && (
             <div className="absolute bottom-3 border-l-2 border-dashed border-berry-300/70" style={{ left: `${x}%`, top: REST + CLAW_H }} />
           )}
 
-          {/* ducks */}
-          {ducks.map((d, i) => (
-            <div key={d.id} className="absolute" style={{ left: `${d.x}%`, bottom: DUCK_BOTTOM, transform: 'translateX(-50%)' }}>
-              <Duck className="animate-bob" style={{ width: DUCK_SIZE, height: DUCK_SIZE, animationDelay: `${-i * 0.5}s` }} />
-            </div>
-          ))}
+          {/* swimming ducks */}
+          {ducks.current.map((d) => {
+            const Wrapper = d.dropIn ? motion.div : 'div';
+            const anim = d.dropIn ? { initial: { y: -(DROP - 20) }, animate: { y: 0 }, transition: { type: 'spring' as const, stiffness: 220, damping: 14 } } : {};
+            return (
+              <Wrapper
+                key={`${d.id}-${d.dropIn ? 'back' : 'swim'}`}
+                className="absolute"
+                style={d.dropIn ? { left: `${d.x}%`, bottom: DUCK_BOTTOM, x: '-50%' } : { left: `${d.x}%`, bottom: DUCK_BOTTOM, transform: 'translateX(-50%)' }}
+                data-testid={d.rainbow ? 'rainbow-duck' : 'duck'}
+                data-x={d.x.toFixed(1)}
+                data-v={d.v.toFixed(2)}
+                {...anim}
+              >
+                <div style={{ transform: `scaleX(${d.v < 0 ? 1 : -1})` }}>
+                  <Duck rainbow={d.rainbow} style={{ width: DUCK_SIZE, height: DUCK_SIZE }} />
+                </div>
+                {d.rainbow && <Sparkle className="absolute -right-1 -top-1 h-4 w-4 animate-wiggle" />}
+              </Wrapper>
+            );
+          })}
 
-          {/* duck falling into chute */}
+          {/* rainbow duck falling into the chute */}
           <AnimatePresence>
-            {dropping !== null && (
+            {dropping && (
               <motion.div
                 key="drop"
                 className="absolute z-20"
@@ -228,7 +286,7 @@ export default function Level03Claw({ onComplete }: LevelProps) {
                 animate={{ top: GLASS_H - 50, opacity: 0.2, scale: 0.7 }}
                 transition={{ duration: 0.55, ease: 'easeIn' }}
               >
-                <Duck happy style={{ width: DUCK_SIZE, height: DUCK_SIZE }} />
+                <Duck happy rainbow style={{ width: DUCK_SIZE, height: DUCK_SIZE }} />
               </motion.div>
             )}
           </AnimatePresence>
@@ -243,24 +301,30 @@ export default function Level03Claw({ onComplete }: LevelProps) {
             <div className="w-1.5 bg-cocoa-500" style={{ height: cable, transition: 'height 0.9s ease-in-out' }} />
             <div className="relative">
               <Claw closed={closed} />
-              {held !== null && (
+              {held && (
                 <div className="absolute left-1/2 -translate-x-1/2" style={{ top: CLAW_H - 30 }}>
-                  <Duck happy style={{ width: DUCK_SIZE, height: DUCK_SIZE }} />
+                  <Duck happy rainbow={held.rainbow} style={{ width: DUCK_SIZE, height: DUCK_SIZE }} />
                 </div>
               )}
             </div>
           </div>
+
+          {won && phase === 'idle' && (
+            <div className="absolute right-3 top-6 z-30 flex items-center gap-1 rounded-full bg-cream-50/90 px-3 py-1 font-display text-sm font-semibold text-berry-600 shadow">
+              <Duck happy rainbow className="h-7 w-7" /> Caught!
+            </div>
+          )}
         </div>
 
         {/* Controls */}
         <div className="mt-4 flex items-center justify-center gap-3 sm:gap-5">
-          <button type="button" className="btn-soft h-16 w-16 touch-none p-0 text-3xl" aria-label="Move claw left (hold)" disabled={busy} {...holdProps(-1)}>
+          <button type="button" className="btn-soft h-16 w-16 touch-none p-0 text-3xl" aria-label="Move claw left (hold)" disabled={busy || won} {...holdProps(-1)}>
             ◀
           </button>
-          <button type="button" className="btn-primary h-16 px-8 text-2xl tracking-wider" onClick={() => void drop()} disabled={busy} data-testid="claw-drop">
+          <button type="button" className="btn-primary h-16 px-8 text-2xl tracking-wider" onClick={() => void drop()} disabled={busy || won} data-testid="claw-drop">
             DROP ⬇
           </button>
-          <button type="button" className="btn-soft h-16 w-16 touch-none p-0 text-3xl" aria-label="Move claw right (hold)" disabled={busy} {...holdProps(1)}>
+          <button type="button" className="btn-soft h-16 w-16 touch-none p-0 text-3xl" aria-label="Move claw right (hold)" disabled={busy || won} {...holdProps(1)}>
             ▶
           </button>
         </div>
@@ -268,18 +332,15 @@ export default function Level03Claw({ onComplete }: LevelProps) {
 
       <div className="flex flex-wrap items-center justify-center gap-3">
         <span className="chip">🎯 Tries: {tries}</span>
-        <span className="chip">
-          🦆 Ducks won: {prizes}
-          {prizes > 0 && <Sparkle className="h-4 w-4" />}
-        </span>
-        {ducks.length === 0 && phase === 'idle' && (
-          <button type="button" className="btn-ghost" onClick={refill}>
-            Refill the machine 🦆
+        <span className="chip">🌈 Rainbow duck: {won ? 'caught!' : 'still swimming'}</span>
+        {won && phase === 'idle' && (
+          <button type="button" className="btn-ghost" onClick={playAgain}>
+            Put it back & play again 🦆
           </button>
         )}
       </div>
       <p className="min-h-[2rem] text-center font-hand text-2xl text-berry-500 sm:text-3xl" aria-live="polite">
-        {message ?? (busy ? 'Ooooh…' : 'Hold ◀ ▶ (or arrow keys), then DROP!')}
+        {message ?? (busy ? 'Ooooh…' : 'Catch the RAINBOW duck! 🌈')}
       </p>
     </div>
   );

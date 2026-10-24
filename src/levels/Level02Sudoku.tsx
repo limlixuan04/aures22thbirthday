@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { sudoku } from '../content/content';
-import { boxDims, findConflicts, isSolved, type Grid } from '../lib/sudoku';
+import { boxDims, type Grid } from '../lib/sudoku';
 import { sfx } from '../lib/sound';
 import type { LevelProps } from '.';
 
@@ -17,7 +17,14 @@ export default function Level02Sudoku({ onComplete }: LevelProps) {
   const [message, setMessage] = useState<string | null>(null);
 
   const given = useCallback((r: number, c: number) => sudoku.puzzle[r][c] !== 0, []);
-  const conflicts = useMemo(() => findConflicts(grid), [grid]);
+  const wrong = useMemo(() => {
+    const out = new Set<string>();
+    grid.forEach((row, r) => row.forEach((v, c) => v && v !== sudoku.solution[r][c] && out.add(`${r},${c}`)));
+    return out;
+  }, [grid]);
+  const selectedValue = sel ? grid[sel[0]][sel[1]] : 0;
+  const resetTimer = useRef<number>();
+  useEffect(() => () => window.clearTimeout(resetTimer.current), []);
 
   const setCell = useCallback(
     (v: number) => {
@@ -36,22 +43,32 @@ export default function Level02Sudoku({ onComplete }: LevelProps) {
         setMessage(null);
         return;
       }
-      const clash = findConflicts(next).has(`${r},${c}`);
-      if (clash) {
+      if (v !== sudoku.solution[r][c]) {
         sfx.error();
-        setMistakes((m) => m + 1);
-        setMessage(`Oops! There’s already a ${v} in that row, column or box. 🙈`);
-      } else {
-        sfx.pop();
-        setMessage(null);
+        const m = mistakes + 1;
+        setMistakes(m);
+        if (m >= sudoku.maxMistakes) {
+          setMessage(`${m} mistakes! The board resets… 😈`);
+          resetTimer.current = window.setTimeout(() => {
+            setGrid(clone(sudoku.puzzle));
+            setSel(null);
+            setMistakes(0);
+            setMessage('Fresh board. You got this! 💪');
+          }, 1400);
+        } else {
+          setMessage(`Oops! ${v} doesn’t go there. ${sudoku.maxMistakes - m} mistake${sudoku.maxMistakes - m === 1 ? '' : 's'} left! 🙈`);
+        }
+        return;
       }
-      if (isSolved(next)) {
+      sfx.pop();
+      setMessage(null);
+      if (next.every((row, rr) => row.every((x, cc) => x === sudoku.solution[rr][cc]))) {
         setSolved(true);
         setSel(null);
         onComplete();
       }
     },
-    [sel, solved, grid, given, onComplete],
+    [sel, solved, grid, given, mistakes, onComplete],
   );
 
   useEffect(() => {
@@ -105,13 +122,14 @@ export default function Level02Sudoku({ onComplete }: LevelProps) {
               const isGiven = given(r, c);
               const isSel = sel?.[0] === r && sel?.[1] === c;
               const related = sel && (sel[0] === r || sel[1] === c || (Math.floor(sel[0] / br) === Math.floor(r / br) && Math.floor(sel[1] / bc) === Math.floor(c / bc)));
-              const bad = conflicts.has(`${r},${c}`);
+              const bad = wrong.has(`${r},${c}`);
+              const same = !!selectedValue && v === selectedValue && !isSel;
               return (
                 <button
                   key={c}
                   type="button"
                   role="gridcell"
-                  aria-label={`Row ${r + 1}, column ${c + 1}: ${v || 'empty'}${isGiven ? ' (given)' : ''}${bad ? ' (conflict)' : ''}`}
+                  aria-label={`Row ${r + 1}, column ${c + 1}: ${v || 'empty'}${isGiven ? ' (given)' : ''}${bad ? ' (wrong)' : ''}`}
                   aria-selected={isSel}
                   onClick={() => {
                     sfx.click();
@@ -121,7 +139,7 @@ export default function Level02Sudoku({ onComplete }: LevelProps) {
                   className={`${cellPx} grid place-items-center font-display font-bold transition ${c % bc === bc - 1 && c !== size - 1 ? 'mr-1' : 'mr-px'} last:mr-0 ${
                     r === 0 && c === 0 ? 'rounded-tl-2xl' : ''
                   } ${r === 0 && c === size - 1 ? 'rounded-tr-2xl' : ''} ${r === size - 1 && c === 0 ? 'rounded-bl-2xl' : ''} ${r === size - 1 && c === size - 1 ? 'rounded-br-2xl' : ''} ${
-                    solved ? 'bg-sage-200 text-berry-600' : isSel ? 'bg-blush-300 text-berry-700' : bad ? 'bg-blush-100 text-blush-500' : related ? 'bg-blush-50' : 'bg-cream-50'
+                    solved ? 'bg-sage-200 text-berry-600' : isSel ? 'bg-blush-300 text-berry-700' : bad ? 'bg-[#FCD9DF] text-[#C2264B]' : same ? 'bg-blush-200' : related ? 'bg-blush-50' : 'bg-cream-50'
                   } ${isGiven ? 'text-berry-700' : bad ? '' : 'text-blush-500'}`}
                 >
                   {v ? <span className={bad && !isSel ? 'animate-shake' : ''}>{v}</span> : ''}
@@ -146,13 +164,13 @@ export default function Level02Sudoku({ onComplete }: LevelProps) {
         </div>
         <p className="text-center text-sm text-cocoa-500">{sel ? `Selected: row ${sel[0] + 1}, column ${sel[1] + 1}` : 'Tap an empty cell to begin.'}</p>
         <div className="flex items-center gap-3">
-          <span className="chip">❌ Mistakes: {mistakes}</span>
+          <span className="chip">❌ Mistakes: {mistakes} / {sudoku.maxMistakes}</span>
           <button type="button" className="btn-ghost" onClick={reset}>↺ Reset</button>
         </div>
         <p className="min-h-[3rem] text-center font-display text-blush-500" aria-live="polite">
           {solved ? 'Solved! 🎉 You and me, the ultimate puzzle duo.' : message}
         </p>
-        <p className="text-center text-xs text-cocoa-500">Dark numbers are pre-filled. Keyboard: arrows to move, 1–{size} to fill, Backspace to erase.</p>
+        <p className="text-center text-xs text-cocoa-500">Tip: you can type numbers and use the arrow keys too.</p>
       </div>
     </div>
   );

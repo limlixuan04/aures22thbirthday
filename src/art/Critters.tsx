@@ -1,12 +1,26 @@
 /** Original cartoon critters used across the games. */
 type Props = { className?: string; style?: React.CSSProperties };
 
-export function Duck({ className = 'w-14 h-14', style, happy = false }: Props & { happy?: boolean }) {
+export function Duck({ className = 'w-14 h-14', style, happy = false, rainbow = false }: Props & { happy?: boolean; rainbow?: boolean }) {
+  const body = rainbow ? 'url(#duck-rainbow)' : '#FFD84D';
+  const line = rainbow ? '#8A5BB5' : '#C8901A';
   return (
     <svg viewBox="0 0 64 64" className={className} style={style} aria-hidden="true">
+      {rainbow && (
+        <defs>
+          <linearGradient id="duck-rainbow" x1="0" y1="10" x2="0" y2="56" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stopColor="#FF6B8B" />
+            <stop offset=".25" stopColor="#FFB347" />
+            <stop offset=".45" stopColor="#FFE066" />
+            <stop offset=".65" stopColor="#7ED957" />
+            <stop offset=".82" stopColor="#6EC6FF" />
+            <stop offset="1" stopColor="#B28DFF" />
+          </linearGradient>
+        </defs>
+      )}
       <ellipse cx="32" cy="58" rx="20" ry="3" fill="#7A1F3D" opacity=".12" />
-      <path d="M10 38 C10 26 22 24 30 30 C34 22 54 22 54 38 C54 52 42 56 32 56 C18 56 10 50 10 38Z" fill="#FFD84D" stroke="#C8901A" strokeWidth="2" />
-      <circle cx="22" cy="24" r="13" fill="#FFD84D" stroke="#C8901A" strokeWidth="2" />
+      <path d="M10 38 C10 26 22 24 30 30 C34 22 54 22 54 38 C54 52 42 56 32 56 C18 56 10 50 10 38Z" fill={body} stroke={line} strokeWidth="2" />
+      <circle cx="22" cy="24" r="13" fill={body} stroke={line} strokeWidth="2" />
       <path d="M8 26 C2 26 2 30 8 31 L14 30 Z" fill="#FF9A3C" stroke="#C86A1A" strokeWidth="1.5" />
       {happy ? (
         <path d="M17 21 q3 -3 6 0" stroke="#45101F" strokeWidth="2" fill="none" strokeLinecap="round" />
@@ -15,7 +29,7 @@ export function Duck({ className = 'w-14 h-14', style, happy = false }: Props & 
       )}
       <circle cx="19.8" cy="20.2" r=".8" fill="#fff" />
       <ellipse cx="26" cy="28" rx="3" ry="2" fill="#F6A0B4" opacity=".8" />
-      <path d="M34 38 C40 34 48 36 48 42 C44 44 38 44 34 38Z" fill="#FFC928" stroke="#C8901A" strokeWidth="1.5" />
+      <path d="M34 38 C40 34 48 36 48 42 C44 44 38 44 34 38Z" fill={rainbow ? '#FFFFFF' : '#FFC928'} fillOpacity={rainbow ? 0.5 : 1} stroke={line} strokeWidth="1.5" />
     </svg>
   );
 }
