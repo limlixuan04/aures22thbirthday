@@ -164,11 +164,17 @@ export interface QuizQuestion {
 
 export const quiz: QuizQuestion[] = [
   {
-    question: '✏️ SAMPLE: What does Baozers think Aure’s most adorable habit is?',
-    options: ['Humming while he thinks', 'Getting excited about food', 'Explaining things very seriously', 'All of the above, obviously'],
-    correctIndex: 3,
-    correctFeedback: 'Correct! It was a trick question — everything you do is adorable. 🥹',
-    wrongFeedback: 'True… but not the WHOLE truth. Try again! 😏',
+    question: 'What does Baozers think Aure’s most adorable habit is?',
+    options: [
+      '“okay lor guess im just fat and ugly *pouts*”',
+      '“that adorable little laugh when im TOO funny”',
+      'pretending that he has friends',
+      'eyebrow raise with “what that mean?”',
+    ],
+    correctIndex: 1,
+    // ✏️ DRAFT feedback — replace with your own words if you like
+    correctFeedback: 'YES. That little laugh gets me every single time. 🥹',
+    wrongFeedback: 'Hmm… also very cute, but not the one! Try again. 😏',
   },
   {
     question: '✏️ SAMPLE: If Aure were an animal, which would Baozers say he is?',
