@@ -107,7 +107,7 @@ export const levels: Record<number, LevelText> = {
   5: {
     title: 'Put Us Back Together',
     emoji: '🧩',
-    instructions: 'Oh no, we’ve been scrambled! Click a tile next to the empty space to slide it. Restore the picture to put us back together.',
+    instructions: 'Oh no, we’ve been scrambled into 30 pieces! Click a piece, then click where it goes on the board. Pieces only fit in their real spot.',
     success: 'Back together, just how we should be. 🥰',
   },
   6: {
@@ -319,14 +319,15 @@ export const memoryCards: { emoji?: string; art?: 'bao' | 'duck' | 'basketball';
 export const memoryFlipBackDelay = 900;
 
 /* ----------------------------------------------------------------------------
- *  Level 5 — Sliding photo puzzle
- *  Put your photo in public/photos/ (a SQUARE photo works best) and change
- *  `image` below, e.g. image: '/photos/us.jpg'
+ *  Level 5 — Jigsaw puzzle
+ *  Put your photo in public/photos/ and change `image`, e.g. image: '/photos/us.jpg'
+ *  The photo is cropped to fill the board (cols : rows shape), so keep faces near the middle.
  * ------------------------------------------------------------------------- */
-export const slidingPuzzle = {
+export const jigsaw = {
   image: '/photos/placeholder-couple.svg',
-  /** Number of random moves used to shuffle. Lower = easier (30 is gentle, 80 is tricky). */
-  shuffleMoves: 40,
+  /** 6 × 5 = 30 pieces. Fewer = easier. */
+  cols: 6,
+  rows: 5,
 };
 
 /* ----------------------------------------------------------------------------

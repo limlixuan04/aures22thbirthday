@@ -1,10 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { scoreGuess, keyboardStates, normaliseGuess, isValidGuess } from './wordle';
 import { countSolutions, findConflicts, isSolved } from './sudoku';
-import { isSolvable, isSolvedTiles, moveTile, shuffleTiles, solvedTiles } from './slidePuzzle';
 import { canAccess, nextLevel, withCompleted } from './progressCore';
 import { sudoku, sudoku4, sudoku9, wordle, quiz, timeline, memoryCards, spotTheDifference } from '../content/content';
-import { seeded } from './random';
 
 describe('wordle', () => {
   it('scores an exact match', () => {
@@ -45,24 +43,6 @@ describe('sudoku content', () => {
       expect(countSolutions(s.puzzle)).toBe(1);
     });
   }
-});
-
-describe('sliding puzzle', () => {
-  it('shuffles into solvable, unsolved states', () => {
-    const rng = seeded(42);
-    for (let i = 0; i < 200; i++) {
-      const t = shuffleTiles(3, 40, rng);
-      expect(isSolvable(t, 3)).toBe(true);
-      expect(isSolvedTiles(t)).toBe(false);
-      expect([...t].sort()).toEqual([...solvedTiles(3)].sort());
-    }
-  });
-  it('rejects illegal moves', () => {
-    const solved = solvedTiles(3); // empty at index 8
-    expect(moveTile(solved, 0, 3)).toBeNull();
-    expect(moveTile(solved, 7, 3)).not.toBeNull();
-    expect(moveTile(solved, 5, 3)).not.toBeNull();
-  });
 });
 
 describe('progress gating', () => {

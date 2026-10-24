@@ -26,7 +26,7 @@ In `content.ts` → `quiz`. Use 3–5 questions. Each one has 4 `options`, and `
 
 ### Your photos
 1. Put the image files in `public/photos/`, e.g. `public/photos/us.jpg`. Avoid spaces in file names.
-2. **Sliding puzzle (Level 5):** set `slidingPuzzle.image: '/photos/us.jpg'`. Use a **square** photo, or it will look stretched. Pick one with lots of detail so the tiles are distinguishable.
+2. **Jigsaw (Level 5):** set `jigsaw.image: '/photos/us.jpg'`. The photo is cropped to fill a 6 × 5 board, so landscape or square photos work best, with faces near the middle. A photo with lots of detail and colour makes the pieces easier to tell apart.
 3. **Gallery (Level 11):** edit `finale.gallery`. Each entry is `{ src: '/photos/xyz.jpg', caption: '...' }`. Use `[]` to hide the gallery.
 4. Delete the placeholder SVGs if you like.
 
@@ -38,7 +38,7 @@ Keep photos under about 1–2 MB each so the site loads quickly. Phone photos ca
 ### Difficulty
 - Sudoku: the 9×9 is medium-hard; `sudoku4` is an easy 4×4 backup, and `maxMistakes` sets how many wrong numbers reset the board. The tests verify any puzzle you paste in.
 - Claw machine: `duckSpeed` / `rainbowSpeed` (smaller = easier), `catchTolerance` (bigger = easier), `rainbowDuck` (which duck is the rainbow one) and `clawSpeed`.
-- Sliding puzzle: `shuffleMoves` (30 = gentle, 80 = tricky).
+- Jigsaw: `jigsaw.cols` × `jigsaw.rows` pieces (6 × 5 = 30; 4 × 3 = 12 is gentle).
 - Whack-a-mole: `targetScore`, `durationSeconds`, `visibleMs`.
 - Pool: `poolGame.colouredBalls` (fewer = easier).
 - Poker: `pokerGame.baozersHand` (her hand) and `luckyAfterLosses`.
