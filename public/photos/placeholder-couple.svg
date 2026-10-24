@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F6B3C4"/><stop offset=".55" stop-color="#FDE6EC"/><stop offset="1" stop-color="#FFF6EA"/></linearGradient>
+    <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="12" cy="12" r="2" fill="#fff" opacity=".5"/></pattern>
+  </defs>
+  <rect width="600" height="600" fill="url(#sky)"/>
+  <rect width="600" height="600" fill="url(#dots)"/>
+  <!-- top-left: moon & stars -->
+  <circle cx="90" cy="90" r="46" fill="#FFF6C9"/><circle cx="110" cy="76" r="40" fill="#F6B3C4"/>
+  <path d="M190 60 l6 14 14 6 -14 6 -6 14 -6 -14 -14 -6 14 -6z" fill="#F5CD6E"/>
+  <!-- top-middle: banner -->
+  <path d="M210 120 Q300 90 390 120 L380 160 Q300 132 220 160Z" fill="#7A1F3D"/>
+  <text x="300" y="147" text-anchor="middle" font-family="Arial Rounded MT Bold, Trebuchet MS, Helvetica, sans-serif" font-size="22" font-weight="700" fill="#FFF6EA">AURE &amp; BAOZERS</text>
+  <!-- top-right: balloons -->
+  <path d="M480 190 C470 230 500 250 490 300" stroke="#7A1F3D" stroke-width="2" fill="none"/>
+  <path d="M530 170 C520 230 510 260 490 300" stroke="#7A1F3D" stroke-width="2" fill="none"/>
+  <ellipse cx="480" cy="140" rx="36" ry="44" fill="#E2688A" stroke="#7A1F3D" stroke-width="3"/>
+  <ellipse cx="535" cy="120" rx="32" ry="40" fill="#F5CD6E" stroke="#C8901A" stroke-width="3"/>
+  <ellipse cx="468" cy="124" rx="8" ry="14" fill="#fff" opacity=".5"/>
+  <!-- hills -->
+  <path d="M0 430 C120 380 220 400 300 420 C400 445 500 390 600 410 L600 600 L0 600Z" fill="#A9D2A6"/>
+  <path d="M0 500 C150 470 300 490 420 480 C500 474 560 470 600 480 L600 600 L0 600Z" fill="#7FB685"/>
+  <!-- Aure (left) -->
+  <path d="M150 470 C150 380 190 350 230 350 C270 350 310 380 310 470Z" fill="#7A1F3D"/>
+  <circle cx="230" cy="290" r="66" fill="#F6D2B8" stroke="#C8956E" stroke-width="4"/>
+  <path d="M164 284 C160 214 300 210 296 284 C280 250 230 242 190 262Z" fill="#2E1A16"/>
+  <circle cx="208" cy="298" r="7" fill="#2E1A16"/><circle cx="252" cy="298" r="7" fill="#2E1A16"/>
+  <circle cx="210" cy="295" r="2.5" fill="#fff"/><circle cx="254" cy="295" r="2.5" fill="#fff"/>
+  <path d="M214 324 q16 14 32 0" stroke="#2E1A16" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <ellipse cx="186" cy="320" rx="12" ry="7" fill="#EF8FA8"/><ellipse cx="274" cy="320" rx="12" ry="7" fill="#EF8FA8"/>
+  <!-- Baozers (right) -->
+  <path d="M310 300 C304 230 330 196 380 196 C430 196 456 230 450 330 L440 440 L320 440Z" fill="#4A2C22"/>
+  <path d="M300 470 C300 380 340 350 380 350 C420 350 460 380 460 470Z" fill="#F6B3C4"/>
+  <circle cx="380" cy="290" r="66" fill="#F6D2B8" stroke="#C8956E" stroke-width="4"/>
+  <path d="M314 286 C310 214 450 214 446 286 C430 246 380 240 330 270Z" fill="#4A2C22"/>
+  <circle cx="358" cy="298" r="7" fill="#2E1A16"/><circle cx="402" cy="298" r="7" fill="#2E1A16"/>
+  <circle cx="360" cy="295" r="2.5" fill="#fff"/><circle cx="404" cy="295" r="2.5" fill="#fff"/>
+  <path d="M364 324 q16 14 32 0" stroke="#2E1A16" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <ellipse cx="336" cy="320" rx="12" ry="7" fill="#EF8FA8"/><ellipse cx="424" cy="320" rx="12" ry="7" fill="#EF8FA8"/>
+  <g transform="translate(400 210) scale(1.2)"><path d="M32 20 C20 2 4 4 6 18 C8 32 22 30 32 20Z M32 20 C44 2 60 4 58 18 C56 32 42 30 32 20Z" fill="#E2688A" stroke="#7A1F3D" stroke-width="3"/><circle cx="32" cy="20" r="6" fill="#E2688A" stroke="#7A1F3D" stroke-width="3"/></g>
+  <!-- heart between -->
+  <path d="M305 230 s-22-14-28-28 c-6-14 12-26 28-10 c16-16 34-4 28 10 c-6 14-28 28-28 28z" fill="#E2688A" stroke="#7A1F3D" stroke-width="3"/>
+  <!-- bottom-left: duck -->
+  <g transform="translate(40 470) scale(1.6)"><path d="M10 38 C10 26 22 24 30 30 C34 22 54 22 54 38 C54 52 42 56 32 56 C18 56 10 50 10 38Z" fill="#FFD84D" stroke="#C8901A" stroke-width="2"/><circle cx="22" cy="24" r="13" fill="#FFD84D" stroke="#C8901A" stroke-width="2"/><path d="M8 26 C2 26 2 30 8 31 L14 30 Z" fill="#FF9A3C"/><circle cx="19" cy="21" r="2.4" fill="#45101F"/></g>
+  <!-- bottom-middle: caption -->
+  <rect x="190" y="520" width="220" height="50" rx="25" fill="#FFFCF7" stroke="#E2688A" stroke-width="3"/>
+  <text x="300" y="553" text-anchor="middle" font-family="Trebuchet MS, Helvetica, sans-serif" font-style="italic" font-size="22" font-weight="700" fill="#7A1F3D">our photo goes here</text>
+  <!-- bottom-right: flowers -->
+  <g transform="translate(500 520)"><line x1="0" y1="0" x2="0" y2="50" stroke="#5E9A66" stroke-width="5"/><circle cx="0" cy="-12" r="11" fill="#F6B3C4"/><circle cx="-12" cy="0" r="11" fill="#F6B3C4"/><circle cx="12" cy="0" r="11" fill="#F6B3C4"/><circle cx="0" cy="10" r="11" fill="#F6B3C4"/><circle r="8" fill="#F5CD6E"/></g>
+  <g transform="translate(556 500)"><line x1="0" y1="0" x2="0" y2="70" stroke="#5E9A66" stroke-width="5"/><circle cx="0" cy="-10" r="9" fill="#FFF6EA"/><circle cx="-10" cy="0" r="9" fill="#FFF6EA"/><circle cx="10" cy="0" r="9" fill="#FFF6EA"/><circle cx="0" cy="9" r="9" fill="#FFF6EA"/><circle r="7" fill="#F5CD6E"/></g>
+</svg>

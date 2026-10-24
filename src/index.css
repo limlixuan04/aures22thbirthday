@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-cream-100 font-body text-berry-700 antialiased;
+    background-image:
+      radial-gradient(circle at 12% 18%, rgba(246, 179, 196, 0.35) 0, transparent 38%),
+      radial-gradient(circle at 88% 8%, rgba(245, 205, 110, 0.22) 0, transparent 30%),
+      radial-gradient(circle at 80% 92%, rgba(246, 179, 196, 0.3) 0, transparent 40%),
+      radial-gradient(rgba(122, 31, 61, 0.06) 1px, transparent 1px);
+    background-size: auto, auto, auto, 22px 22px;
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+  h1, h2, h3 {
+    @apply font-display;
+  }
+  :focus-visible {
+    outline: 3px solid #E2688A;
+    outline-offset: 3px;
+    border-radius: 12px;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-[28px] border-2 border-blush-200 bg-cream-50/95 shadow-card;
+  }
+  .btn {
+    @apply inline-flex select-none items-center justify-center gap-2 rounded-full px-6 py-3 font-display text-lg font-semibold transition
+      active:translate-y-[3px] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:translate-y-0;
+  }
+  .btn-primary {
+    @apply btn bg-berry-600 text-cream-50 shadow-pop hover:bg-berry-500 active:shadow-none disabled:hover:bg-berry-600;
+  }
+  .btn-soft {
+    @apply btn border-2 border-blush-300 bg-blush-100 text-berry-600 shadow-pop-soft hover:bg-blush-200 active:shadow-none;
+  }
+  .btn-ghost {
+    @apply btn px-4 py-2 text-base text-berry-500 hover:bg-blush-100;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full bg-blush-100 px-3 py-1 font-display text-sm font-medium text-berry-600;
+  }
+}
+
+.flip-card { perspective: 900px; }
+.flip-inner { transition: transform 0.45s cubic-bezier(.2,.8,.3,1.2); transform-style: preserve-3d; }
+.flip-card[data-flipped='true'] .flip-inner { transform: rotateY(180deg); }
+.flip-face { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.flip-back { transform: rotateY(180deg); }
+
+.wordle-tile[data-reveal='true'] { animation: tileflip 0.5s ease both; }
+@keyframes tileflip {
+  0% { transform: rotateX(0); }
+  50% { transform: rotateX(90deg); }
+  100% { transform: rotateX(0); }
+}
+
+.letter-paper {
+  background-color: #fffdf8;
+  background-image: repeating-linear-gradient(to bottom, transparent 0, transparent 35px, rgba(226, 104, 138, 0.18) 35px, rgba(226, 104, 138, 0.18) 36px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
