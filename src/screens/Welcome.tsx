@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { welcome, people, finale } from '../content/content';
+import { welcome, people, finale, scoreboard } from '../content/content';
 import { useProgress } from '../lib/progress';
 import { navigate } from '../lib/router';
 import { TOTAL_LEVELS } from '../lib/progressCore';
@@ -56,7 +56,7 @@ export function Welcome() {
             </span>
           ))}
         </div>
-        <p className="mt-2 text-center text-sm text-cocoa-500">{TOTAL_LEVELS} levels to complete · progress saves automatically</p>
+        <p className="mt-2 text-center text-sm text-cocoa-500">{scoreboard.tagline} Every win = {scoreboard.pointsPerLevel} points on the road to {TOTAL_LEVELS * scoreboard.pointsPerLevel} 🏀</p>
       </motion.div>
 
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="mt-8 flex flex-col items-center gap-3">

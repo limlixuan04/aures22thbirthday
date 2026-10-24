@@ -91,3 +91,36 @@ export function Bear({ className = 'w-16 h-16', style }: Props) {
     </svg>
   );
 }
+
+/** A shouty cartoon chef for Hell's Kitchen. */
+export function Chef({ className = 'w-24 h-24', mood = 'neutral' }: Props & { mood?: 'neutral' | 'angry' | 'happy' }) {
+  return (
+    <svg viewBox="0 0 100 110" className={className} aria-hidden="true">
+      {/* toque */}
+      <path d="M26 42 C14 40 12 22 26 20 C28 8 44 4 52 12 C60 4 78 8 76 22 C90 22 88 42 74 42 Z" fill="#FFFDF8" stroke="#C8B6B0" strokeWidth="2.5" />
+      <rect x="27" y="38" width="46" height="12" rx="3" fill="#FFFDF8" stroke="#C8B6B0" strokeWidth="2.5" />
+      {/* face */}
+      <ellipse cx="50" cy="70" rx="28" ry="30" fill={mood === 'angry' ? '#F4B39C' : '#F6D2B8'} stroke="#C8956E" strokeWidth="2.5" />
+      {/* brows */}
+      {mood === 'angry' ? (
+        <path d="M30 56 L44 62 M70 56 L56 62" stroke="#6B4A2E" strokeWidth="4" strokeLinecap="round" />
+      ) : (
+        <path d="M32 58 Q38 54 44 58 M56 58 Q62 54 68 58" stroke="#6B4A2E" strokeWidth="3.5" fill="none" strokeLinecap="round" />
+      )}
+      {/* eyes */}
+      <circle cx="39" cy="66" r="3.2" fill="#2E1A16" />
+      <circle cx="61" cy="66" r="3.2" fill="#2E1A16" />
+      {/* mouth */}
+      {mood === 'angry' ? (
+        <ellipse cx="50" cy="86" rx="9" ry="7" fill="#7A1F3D" stroke="#45101F" strokeWidth="2" />
+      ) : mood === 'happy' ? (
+        <path d="M38 82 Q50 94 62 82" stroke="#45101F" strokeWidth="3" fill="#fff" strokeLinecap="round" />
+      ) : (
+        <path d="M42 86 L58 86" stroke="#45101F" strokeWidth="3" strokeLinecap="round" />
+      )}
+      <ellipse cx="30" cy="78" rx="5" ry="3" fill="#EF8FA8" opacity=".7" />
+      <ellipse cx="70" cy="78" rx="5" ry="3" fill="#EF8FA8" opacity=".7" />
+      {mood === 'angry' && <path d="M80 44 l6 -6 M84 52 l8 -2 M78 36 l2 -8" stroke="#E2572B" strokeWidth="3" strokeLinecap="round" />}
+    </svg>
+  );
+}

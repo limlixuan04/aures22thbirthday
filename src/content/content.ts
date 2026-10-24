@@ -30,6 +30,17 @@ export const people = {
 /** Little name shown in the top bar. */
 export const siteTitle = "Aure's Birthday Quest";
 
+/** The championship scoreboard that's always at the top. Each finished level scores points. */
+export const scoreboard = {
+  eyebrow: 'BIRTHDAY CHAMPIONSHIP',
+  title: 'AURE’S ROAD TO 22 🏀',
+  tagline: '11 challenges. One birthday MVP.',
+  homeTeam: 'AURE',
+  awayTeam: 'THE WORLD',
+  /** 11 levels × 2 points = 22 */
+  pointsPerLevel: 2,
+};
+
 /* ----------------------------------------------------------------------------
  *  Password gate
  * ------------------------------------------------------------------------- */
@@ -111,10 +122,10 @@ export const levels: Record<number, LevelText> = {
     success: 'Back together, just how we should be. 🥰',
   },
   6: {
-    title: 'Whack-a-Bao',
-    emoji: '🔨',
-    instructions: 'Little critters keep popping out of their holes! Tap as many as you can before time runs out. Golden stars are worth 3 points!',
-    success: 'Lightning reflexes! Nobody escapes the birthday boy. ⚡',
+    title: 'Hell’s Kitchen: Service!',
+    emoji: '👨‍🍳',
+    instructions: 'Orders are coming in, Chef! Tap the ingredients in the right order before each ticket runs out. Serve 6 dishes. Get 3 sent back and you’re out of the kitchen!',
+    success: 'Congratulations, Chef Aure. You’ve earned your first Michelin star in making Bao happy.',
   },
   7: {
     title: 'Our Relationship Timeline',
@@ -337,15 +348,58 @@ export const jigsaw = {
 };
 
 /* ----------------------------------------------------------------------------
- *  Level 6 — Whack-a-Bao
+ *  Level 6 — Hell's Kitchen
+ *  Each dish lists its ingredients in the order they must be added.
+ *  Every ingredient needs an `id` (no spaces), an emoji and a label.
  * ------------------------------------------------------------------------- */
-export const whackAMole = {
-  durationSeconds: 30,
-  targetScore: 15,
-  /** How long a critter stays up (ms). Bigger = easier. */
-  visibleMs: 1250,
-  /** Time between new critters (ms). Smaller = more critters. */
-  spawnEveryMs: 650,
+export const hellsKitchen = {
+  dishesToServe: 6,
+  /** Orders sent back before he's kicked out of the kitchen. */
+  maxSentBack: 3,
+  /** Seconds for the first ticket; each served dish makes the next one 1 second faster. */
+  firstTicketSeconds: 15,
+  fastestTicketSeconds: 9,
+  /** Seconds lost for picking a wrong ingredient. */
+  wrongPenaltySeconds: 2,
+  dishes: [
+    {
+      name: 'Beef Wellington',
+      emoji: '🥩',
+      steps: [
+        { id: 'beef', emoji: '🥩', label: 'Beef fillet' },
+        { id: 'mushroom', emoji: '🍄', label: 'Mushroom duxelles' },
+        { id: 'ham', emoji: '🥓', label: 'Prosciutto' },
+        { id: 'pastry', emoji: '🥐', label: 'Puff pastry' },
+      ],
+    },
+    {
+      name: 'Pan-Seared Scallops',
+      emoji: '🐚',
+      steps: [
+        { id: 'scallop', emoji: '🐚', label: 'Scallops' },
+        { id: 'butter', emoji: '🧈', label: 'Butter' },
+        { id: 'garlic', emoji: '🧄', label: 'Garlic' },
+        { id: 'lemon', emoji: '🍋', label: 'Lemon' },
+      ],
+    },
+    {
+      name: 'Bao',
+      emoji: '🥟',
+      art: 'bao' as const,
+      steps: [
+        { id: 'bun', emoji: '🫓', label: 'Fluffy bun' },
+        { id: 'pork', emoji: '🐷', label: 'Pork belly' },
+        { id: 'cucumber', emoji: '🥒', label: 'Cucumber' },
+        { id: 'peanut', emoji: '🥜', label: 'Peanuts' },
+      ],
+    },
+  ],
+  startLine: 'Right, listen up! Orders are coming in. Let’s go, let’s go!',
+  wrongLines: ['WRONG! What is that?!', 'That’s not in the recipe, you donkey!', 'Are you trying to poison them?!', 'Look at the ticket!'],
+  timeoutLines: ['IT’S RAAAW!', 'WHERE’S THE LAMB SAUCE?!', 'Too slow! It’s gone cold!', 'My gran could do better, and she’s dead!'],
+  servedLines: ['Finally, some good food.', 'Beautiful. Stunning.', 'Yes, Chef! Service!', 'Now THAT is a dish.', 'Oh, hello! Lovely.'],
+  loseLine: 'GET OUT OF MY KITCHEN! …okay fine, try again.',
+  winLine: 'Congratulations, Chef Aure. You’ve earned your first Michelin star in making Bao happy.',
 };
 
 /* ----------------------------------------------------------------------------
