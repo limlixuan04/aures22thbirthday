@@ -5,7 +5,7 @@ import { sfx } from '../lib/sound';
 import { hearts } from '../lib/confetti';
 import type { LevelProps } from '.';
 
-const LETTERS = ['A', 'B', 'C', 'D'];
+const LETTERS = ['a', 'b', 'c', 'd'];
 
 export default function Level01Quiz({ onComplete }: LevelProps) {
   const [index, setIndex] = useState(0);

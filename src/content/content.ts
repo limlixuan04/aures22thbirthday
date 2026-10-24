@@ -149,7 +149,7 @@ export const levels: Record<number, LevelText> = {
 };
 
 /* ----------------------------------------------------------------------------
- *  Level 1 — Quiz   ✏️ SAMPLE QUESTIONS (3–5 questions, 4 options each)
+ *  Level 1 — Quiz   (3–5 questions, 4 options each)
  * ------------------------------------------------------------------------- */
 export interface QuizQuestion {
   question: string;
@@ -176,25 +176,18 @@ export const quiz: QuizQuestion[] = [
     wrongFeedback: 'NUH UH boooooooo',
   },
   {
-    question: '✏️ SAMPLE: If Aure were an animal, which would Baozers say he is?',
-    options: ['A sleepy cat', 'A golden retriever', 'A very determined duck', 'A dramatic penguin'],
+    question: 'If Aure were an animal, which would Baozers say he is?',
+    options: ['a sleepy cat', 'zesty unicorn', 'goofy retriever', 'pouty duck'],
     correctIndex: 2,
-    correctFeedback: 'Quack! A very determined duck, just like the ones you love catching. 🦆',
-    wrongFeedback: 'Cute guess, but no! Think… claw machines. 👀',
+    correctFeedback: 'As zesty as you are, i still think youre my fluffy dog',
+    wrongFeedback: 'NUH UH boooooooo',
   },
   {
-    question: '✏️ SAMPLE: What is Aure’s superpower, according to Baozers?',
-    options: ['Making her laugh at the worst moments', 'Finding the best food spots', 'Winning every claw machine', 'Being impossibly comforting'],
+    question: 'What is Aure’s superpower?',
+    options: ['making her laugh at the worst moments', 'taking care of everything', 'incredibly big muscles', 'being impossibly comforting'],
     correctIndex: 3,
-    correctFeedback: 'Yes. You’re my favourite safe place. 💗',
-    wrongFeedback: 'That’s definitely a talent… but not THE superpower. Try again!',
-  },
-  {
-    question: '✏️ SAMPLE: What will Aure definitely say when he reads this question?',
-    options: ['“Huh?”', '“Baozers you’re so silly”', '“I knew it.”', '“…can I see the answers?”'],
-    correctIndex: 1,
-    correctFeedback: 'I can hear you saying it right now. 😆',
-    wrongFeedback: 'Ha! Nope. I know you too well. Try again.',
+    correctFeedback: 'i know you wish c was the answer but sorry man youre just my favourite safe place',
+    wrongFeedback: 'NUH UH boooooooo',
   },
 ];
 
