@@ -124,7 +124,7 @@ export const levels: Record<number, LevelText> = {
   6: {
     title: 'Hell’s Kitchen: Service!',
     emoji: '👨‍🍳',
-    instructions: 'Orders are coming in, Chef! Tap the ingredients in the right order before each ticket runs out. Serve 6 dishes. Get 3 sent back and you’re out of the kitchen!',
+    instructions: 'Orders are coming in, Chef! Tap the ingredients in the right order before each ticket runs out. Three services: single orders, combo orders, then allergies.',
     success: 'Congratulations, Chef Aure. You’ve earned your first Michelin star in making Bao happy.',
   },
   7: {
@@ -353,54 +353,47 @@ export const jigsaw = {
  *  Every ingredient needs an `id` (no spaces), an emoji and a label.
  * ------------------------------------------------------------------------- */
 export const hellsKitchen = {
-  dishesToServe: 6,
-  /** Orders sent back before he's kicked out of the kitchen. */
-  maxSentBack: 3,
-  /** Seconds for the first ticket; each served dish makes the next one 1 second faster. */
-  firstTicketSeconds: 15,
-  fastestTicketSeconds: 9,
-  /** Seconds lost for picking a wrong ingredient. */
-  wrongPenaltySeconds: 2,
-  dishes: [
-    {
-      name: 'Beef Wellington',
-      emoji: '🥩',
-      steps: [
-        { id: 'beef', emoji: '🥩', label: 'Beef fillet' },
-        { id: 'mushroom', emoji: '🍄', label: 'Mushroom duxelles' },
-        { id: 'ham', emoji: '🥓', label: 'Prosciutto' },
-        { id: 'pastry', emoji: '🥐', label: 'Puff pastry' },
-      ],
-    },
-    {
-      name: 'Pan-Seared Scallops',
-      emoji: '🐚',
-      steps: [
-        { id: 'scallop', emoji: '🐚', label: 'Scallops' },
-        { id: 'butter', emoji: '🧈', label: 'Butter' },
-        { id: 'garlic', emoji: '🧄', label: 'Garlic' },
-        { id: 'lemon', emoji: '🍋', label: 'Lemon' },
-      ],
-    },
-    {
-      name: 'Bao',
-      emoji: '🥟',
-      art: 'bao' as const,
-      steps: [
-        { id: 'bun', emoji: '🫓', label: 'Fluffy bun' },
-        { id: 'pork', emoji: '🐷', label: 'Pork belly' },
-        { id: 'cucumber', emoji: '🥒', label: 'Cucumber' },
-        { id: 'peanut', emoji: '🥜', label: 'Peanuts' },
-      ],
-    },
+  /** Everything on the pass. Decoys aren't in any recipe (they're a trap!). */
+  ingredients: [
+    { id: 'beef', emoji: '🥩', label: 'Beef' },
+    { id: 'mushroom', emoji: '🍄', label: 'Mushroom' },
+    { id: 'ham', emoji: '🥓', label: 'Prosciutto' },
+    { id: 'pastry', emoji: '🥐', label: 'Puff pastry' },
+    { id: 'scallop', emoji: '🐚', label: 'Scallops' },
+    { id: 'butter', emoji: '🧈', label: 'Butter' },
+    { id: 'garlic', emoji: '🧄', label: 'Garlic' },
+    { id: 'lemon', emoji: '🍋', label: 'Lemon' },
+    { id: 'bun', emoji: '🫓', label: 'Fluffy bun' },
+    { id: 'pork', emoji: '🐷', label: 'Pork belly' },
+    { id: 'chives', emoji: '🌿', label: 'Chives' },
+    { id: 'peanut', emoji: '🥜', label: 'Peanuts' },
   ],
+  /** Each dish lists ingredient ids in the order they must be added. */
+  dishes: [
+    { name: 'Beef Wellington', emoji: '🥩', steps: ['beef', 'mushroom', 'ham', 'pastry'] },
+    { name: 'Pan-Seared Scallops', emoji: '🐚', steps: ['scallop', 'butter', 'garlic', 'lemon'] },
+    { name: 'Bao', emoji: '🥟', art: 'bao' as const, steps: ['bun', 'pork', 'mushroom', 'chives'] },
+  ],
+  /** The 3 mini levels. */
+  rounds: [
+    { name: 'Single orders', kind: 'single' as const, orders: 3, seconds: 15, intro: 'Mini level 1: one dish per ticket. Let’s go, let’s go!' },
+    { name: 'Combo orders', kind: 'combo' as const, orders: 2, seconds: 26, intro: 'Mini level 2: COMBO tickets! Two dishes each, in the order on the ticket.' },
+    { name: 'Allergy alert', kind: 'allergy' as const, orders: 3, seconds: 14, intro: 'Mini level 3: allergies! Leave out the banned ingredient or you’re done.' },
+  ],
+  /** Orders sent back in one mini level before he's kicked out (that mini level restarts). */
+  maxSentBack: 3,
+  wrongPenaltySeconds: 2,
+  allergyPenaltySeconds: 5,
   startLine: 'Right, listen up! Orders are coming in. Let’s go, let’s go!',
   wrongLines: ['WRONG! What is that?!', 'That’s not in the recipe, you donkey!', 'Are you trying to poison them?!', 'Look at the ticket!'],
-  timeoutLines: ['IT’S RAAAW!', 'WHERE’S THE LAMB SAUCE?!', 'Too slow! It’s gone cold!', 'My gran could do better, and she’s dead!'],
+  allergyLines: ['THEY’RE ALLERGIC! Are you trying to kill them?!', 'Read the ticket! ALLERGY!', 'That’s going straight to A&E!'],
+  timeoutLines: ['IT’S RAAAW!', 'WHERE’S THE LAMB SAUCE?!', 'Too slow! It’s gone cold!', 'Wake up! The customers are starving!'],
   servedLines: ['Finally, some good food.', 'Beautiful. Stunning.', 'Yes, Chef! Service!', 'Now THAT is a dish.', 'Oh, hello! Lovely.'],
-  loseLine: 'GET OUT OF MY KITCHEN! …okay fine, try again.',
+  roundWonLine: 'Not bad. Not bad at all. Next service!',
+  loseLine: 'GET OUT OF MY KITCHEN! …okay fine, try that service again.',
   winLine: 'Congratulations, Chef Aure. You’ve earned your first Michelin star in making Bao happy.',
 };
+
 
 /* ----------------------------------------------------------------------------
  *  Game choices — pick between versions of a level

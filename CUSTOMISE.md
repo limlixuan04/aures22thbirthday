@@ -39,7 +39,7 @@ Keep photos under about 1–2 MB each so the site loads quickly. Phone photos ca
 - Sudoku: the 9×9 is medium-hard; `sudoku4` is an easy 4×4 backup, and `maxMistakes` sets how many wrong numbers reset the board. The tests verify any puzzle you paste in.
 - Claw machine: `duckSpeed` / `rainbowSpeed` (smaller = easier), `catchTolerance` (bigger = easier), `rainbowDuck` (which duck is the rainbow one) and `clawSpeed`.
 - Jigsaw: `jigsaw.cols` × `jigsaw.rows` pieces (6 × 5 = 30; 4 × 3 = 12 is gentle).
-- Hell's Kitchen: `hellsKitchen.dishes` (dishes and their ingredients, in order), `dishesToServe`, `maxSentBack`, `firstTicketSeconds` and the chef's lines.
+- Hell's Kitchen: `hellsKitchen.ingredients` (the pass), `dishes` (recipes as ingredient ids, in order), `rounds` (the 3 mini levels: orders and seconds per ticket), `maxSentBack` and the chef's lines.
 - Pool: `poolGame.colouredBalls` (balls 1…N go in order, then the 8; fewer = easier).
 - Memory card style: `gameChoices.memoryCards` picks poker cards or the classic look.
 
