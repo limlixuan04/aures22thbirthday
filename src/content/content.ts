@@ -74,7 +74,6 @@ export const welcome = {
     'Hello, my favourite birthday boy!!! 🥳💗',
     'I know I can’t be there to celebrate with you in person this year, so I thought I’d bring a little piece of me to you instead.',
     'Welcome to Aure’s Road to 22! I’ve prepared 11 challenges inspired by our memories, favourite things, and all the nonsense we’ve gotten up to together. Some will test your brain, some will test your patience, and some might make you question why you’re dating me.',
-    'Every challenge you complete earns you 2 points. Win all 11 and you’ll reach 22 points! 🏀🏆',
     'No skipping, no cheating, and absolutely NO asking Baozers for answers!!! (because I will melt...)',
     'There’s something waiting for you at the finish line, so let’s see if you’ve got what it takes to become the birthday MVP.',
     'Ready, champion? Let’s get you to 22! 🏀💋',

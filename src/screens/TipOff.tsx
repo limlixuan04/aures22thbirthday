@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { levels, scoreboard, tipOff } from '../content/content';
+import { scoreboard, tipOff } from '../content/content';
 import { navigate } from '../lib/router';
 import { sfx } from '../lib/sound';
 import { TOTAL_LEVELS } from '../lib/progressCore';
@@ -39,18 +39,6 @@ export function TipOff() {
           ))}
         </ul>
 
-        <h2 className="mt-8 text-3xl text-berry-600">The schedule</h2>
-        <ol className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
-          {Array.from({ length: TOTAL_LEVELS }, (_, i) => i + 1).map((l) => (
-            <li key={l} className="flex items-center gap-2 rounded-xl border-2 border-blush-200 bg-cream-50 px-2 py-1.5">
-              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-blush-200 text-lg">{levels[l].emoji}</span>
-              <span className="min-w-0 leading-tight">
-                <span className="block font-display text-[11px] font-semibold text-berry-400">Level {l}</span>
-                <span className="block truncate font-display text-sm font-semibold text-berry-600">{levels[l].title}</span>
-              </span>
-            </li>
-          ))}
-        </ol>
       </section>
 
       <div className="mt-8 flex justify-center">
