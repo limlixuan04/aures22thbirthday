@@ -66,7 +66,7 @@ export function Welcome() {
           data-testid="start-adventure"
           onClick={() => {
             sfx.success();
-            navigate(allDone ? { name: 'trophy' } : { name: 'level', level: nextLevel });
+            navigate(allDone ? { name: 'trophy' } : started ? { name: 'level', level: nextLevel } : { name: 'tipoff' });
           }}
         >
           <Basketball className="h-7 w-7" />

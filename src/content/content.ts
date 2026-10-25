@@ -81,6 +81,23 @@ export const welcome = {
 };
 
 /* ----------------------------------------------------------------------------
+ *  Tip-Off (the intro page before Level 1, and the first box on the Road)
+ * ------------------------------------------------------------------------- */
+export const tipOff = {
+  title: 'Tip-Off',
+  emoji: '🏀',
+  heading: 'Tip-Off',
+  intro: 'Welcome to the Birthday Championship. Here’s the game plan, Captain.',
+  rules: [
+    { emoji: '🎯', text: '11 challenges stand between you and the trophy.' },
+    { emoji: '🏀', text: 'Every challenge you win puts 2 points on the scoreboard.' },
+    { emoji: '🔒', text: 'Win a challenge to unlock the next one. No skipping!' },
+    { emoji: '🏆', text: 'Win all 11 for 22 points, the championship trophy and a letter from me.' },
+  ],
+  button: 'Jump ball! Start Level 1',
+};
+
+/* ----------------------------------------------------------------------------
  *  Level titles, instructions & success messages
  * ------------------------------------------------------------------------- */
 export interface LevelText {

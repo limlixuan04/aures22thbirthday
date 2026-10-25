@@ -16,7 +16,7 @@ interface Props {
 
 export function LevelShell({ level, text, done, alreadyBeaten, onNext, onBack, children }: Props) {
   const canGoForward = done || alreadyBeaten;
-  const backLabel = level === 1 ? 'Welcome' : `Level ${level - 1}`;
+  const backLabel = level === 1 ? 'Tip-Off' : `Level ${level - 1}`;
   return (
     <div className="mx-auto max-w-5xl px-4 pb-16 pt-4 sm:pt-6">
       <nav className="mb-2 flex items-center justify-between" aria-label="Level navigation">

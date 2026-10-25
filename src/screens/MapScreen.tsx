@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { finale } from '../content/content';
+import { finale, tipOff } from '../content/content';
 import { levelTextFor, useChoices } from '../lib/choices';
 import { useProgress } from '../lib/progress';
 import { navigate } from '../lib/router';
@@ -17,13 +17,32 @@ export function MapScreen() {
       </p>
 
       <ol className="relative mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        <motion.li initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
+          <button
+            type="button"
+            onClick={() => {
+              sfx.click();
+              navigate({ name: 'tipoff' });
+            }}
+            className={`group relative flex h-full w-full flex-col items-center gap-2 rounded-3xl border-2 p-4 text-center transition hover:-translate-y-1 ${
+              completed.length ? 'border-berry-400 bg-blush-100' : 'border-berry-500 bg-cream-50 shadow-card ring-4 ring-blush-200'
+            }`}
+            aria-label={`${tipOff.title}: the game plan`}
+            data-testid="tipoff-node"
+          >
+            <span className={`grid h-14 w-14 place-items-center rounded-full text-3xl ${completed.length ? 'bg-ball-300' : 'bg-blush-200 animate-bob'}`}>{tipOff.emoji}</span>
+            <span className="font-display text-sm font-semibold text-berry-400">Intro</span>
+            <span className="font-display text-base font-semibold leading-tight text-berry-600">{tipOff.title}</span>
+            {completed.length ? <span className="chip bg-ball-400 text-white">🏀 Swish!</span> : <span className="chip">▶ Start here</span>}
+          </button>
+        </motion.li>
         {Array.from({ length: TOTAL_LEVELS }, (_, i) => i + 1).map((l, i) => {
           const done = isCompleted(l);
           const open = canAccess(l);
           const current = l === nextLevel && !done;
           const t = levelTextFor(l, choices);
           return (
-            <motion.li key={l} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }} className={l === 11 ? 'col-span-2 sm:col-span-1' : ''}>
+            <motion.li key={l} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: (i + 1) * 0.04 }} >
               <button
                 type="button"
                 disabled={!open}

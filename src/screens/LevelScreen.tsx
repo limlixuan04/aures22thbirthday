@@ -41,7 +41,7 @@ export function LevelScreen({ level }: { level: number }) {
       }}
       onBack={() => {
         sfx.click();
-        navigate(level === 1 ? { name: 'home' } : { name: 'level', level: level - 1 });
+        navigate(level === 1 ? { name: 'tipoff' } : { name: 'level', level: level - 1 });
       }}
     >
       <Game key={choices.memoryCards} onComplete={onComplete} />
