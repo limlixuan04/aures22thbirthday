@@ -357,11 +357,11 @@ export const memoryFlipBackDelay = 900;
 
 /* ----------------------------------------------------------------------------
  *  Level 5 — Jigsaw puzzle
- *  Put your photo in public/photos/ and change `image`, e.g. image: '/photos/us.jpg'
+ *  Put your photo in public/photos/ and change `image`, e.g. image: 'photos/us.jpg'
  *  The photo is cropped to fill the board (cols : rows shape), so keep faces near the middle.
  * ------------------------------------------------------------------------- */
 export const jigsaw = {
-  image: '/photos/us-puzzle.jpg',
+  image: 'photos/us-puzzle.jpg',
   /** 6 × 5 = 30 pieces. Fewer = easier. */
   cols: 6,
   rows: 5,
@@ -435,9 +435,9 @@ export const whackAMole = {
   /** 4 × 4 = 16 holes */
   gridSize: 4,
   friends: [
-    { name: 'Enemy 1', photo: '/photos/friend-1.jpg' },
-    { name: 'Enemy 2', photo: '/photos/friend-2.jpg' },
-    { name: 'Enemy 3', photo: '/photos/friend-3.jpg' },
+    { name: 'Enemy 1', photo: 'photos/friend-1.jpg' },
+    { name: 'Enemy 2', photo: 'photos/friend-2.jpg' },
+    { name: 'Enemy 3', photo: 'photos/friend-3.jpg' },
   ],
   /** One entry per mini level. visibleMs = how long a face stays up; spawnEveryMs = how often a new one pops up. */
   rounds: [
@@ -454,7 +454,7 @@ export const whackAMole = {
  *  picture; rot tilts the bao. Move them around to make it easier or harder.
  * ------------------------------------------------------------------------- */
 export const spotTheBao = {
-  image: '/photos/spot-bao.jpg',
+  image: 'photos/spot-bao.jpg',
   /** width ÷ height of the photo */
   aspectRatio: 1104 / 1232,
   /** How many baos to find. */
@@ -516,7 +516,7 @@ export const cake = {
  *  Put the family photo in public/photos/ and change `image`.
  * ------------------------------------------------------------------------- */
 export const modernFamily = {
-  image: '/photos/family-portrait.jpg',
+  image: 'photos/family-portrait.jpg',
   /** width ÷ height of the photo */
   aspectRatio: 1070 / 763,
   /** Stage 1: how much of the mud must be wiped off (0–1). */

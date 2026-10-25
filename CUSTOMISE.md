@@ -29,7 +29,7 @@ In `content.ts` → `quiz`. Use 3–5 questions. Each one has 4 `options`, and `
 
 ### Your photos
 1. Put the image files in `public/photos/`, e.g. `public/photos/us.jpg`. Avoid spaces in file names.
-2. **Jigsaw (Level 5):** set `jigsaw.image: '/photos/us.jpg'`. The photo is cropped to fill a 6 × 5 board, so landscape or square photos work best, with faces near the middle. A photo with lots of detail and colour makes the pieces easier to tell apart.
+2. **Jigsaw (Level 5):** set `jigsaw.image: 'photos/us.jpg'`. The photo is cropped to fill a 6 × 5 board, so landscape or square photos work best, with faces near the middle. A photo with lots of detail and colour makes the pieces easier to tell apart.
 4. Delete the placeholder SVGs if you like.
 
 Keep photos under about 1–2 MB each so the site loads quickly. Phone photos can be shrunk at https://squoosh.app.
