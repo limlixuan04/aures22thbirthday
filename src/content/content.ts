@@ -68,12 +68,16 @@ export const passwordGate = {
  *  Welcome screen
  * ------------------------------------------------------------------------- */
 export const welcome = {
-  heading: 'Happy 22nd Birthday, Aure!',
-  // ✏️ SAMPLE — replace with your own welcome message (one string per paragraph).
+  heading: 'HAPPY 22ND BIRTHDAY, BAO BAO!!!',
+  /** One string per paragraph. */
   message: [
-    'Hello my favourite person! I made you a little something. Okay… a not-so-little something. 🥹',
-    'Ahead of you lie 11 levels — quizzes, puzzles, ducks, cake, and a few of our very own inside jokes. Beat each level to unlock the next one.',
-    'There’s something waiting for you at the very end. No skipping, no cheating, and absolutely no asking me for answers. 😤💕',
+    'Hello, my favourite birthday boy!!! 🥳💗',
+    'I know I can’t be there to celebrate with you in person this year, so I thought I’d bring a little piece of me to you instead.',
+    'Welcome to Aure’s Road to 22! I’ve prepared 11 challenges inspired by our memories, favourite things, and all the nonsense we’ve gotten up to together. Some will test your brain, some will test your patience, and some might make you question why you’re dating me.',
+    'Every challenge you complete earns you 2 points. Win all 11 and you’ll reach 22 points! 🏀🏆',
+    'No skipping, no cheating, and absolutely NO asking Baozers for answers!!! (because I will melt...)',
+    'There’s something waiting for you at the finish line, so let’s see if you’ve got what it takes to become the birthday MVP.',
+    'Ready, champion? Let’s get you to 22! 🏀💋',
   ],
   signoff: '— your Baozers 🐻',
   startButton: 'Start Your Adventure',
