@@ -154,7 +154,7 @@ export const levels: Record<number, LevelText> = {
   11: {
     title: 'Decorate Your Birthday Cake',
     emoji: '🎂',
-    instructions: 'No wrong answers here! Pick your frosting, add toppings, then tap the top of the cake to place candles. When it’s perfect, light them up and make a wish.',
+    instructions: 'No wrong answers here! Build your dream cake, drag toppings onto it and tap the top to add candles. When it’s perfect, light them up and make a wish.',
     success: 'Wish made. I hope every single bit of it comes true. 🌟',
   },
 };

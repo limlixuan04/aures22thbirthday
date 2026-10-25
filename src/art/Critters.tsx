@@ -1,11 +1,11 @@
 /** Original cartoon critters used across the games. */
-type Props = { className?: string; style?: React.CSSProperties };
+type Props = { className?: string; style?: React.CSSProperties; width?: number; height?: number };
 
-export function Duck({ className = 'w-14 h-14', style, happy = false, rainbow = false }: Props & { happy?: boolean; rainbow?: boolean }) {
+export function Duck({ className = 'w-14 h-14', style, width, height, happy = false, rainbow = false }: Props & { happy?: boolean; rainbow?: boolean }) {
   const body = rainbow ? 'url(#duck-rainbow)' : '#FFD84D';
   const line = rainbow ? '#8A5BB5' : '#C8901A';
   return (
-    <svg viewBox="0 0 64 64" className={className} style={style} aria-hidden="true">
+    <svg viewBox="0 0 64 64" className={className} style={style} width={width} height={height} aria-hidden="true">
       {rainbow && (
         <defs>
           <linearGradient id="duck-rainbow" x1="0" y1="10" x2="0" y2="56" gradientUnits="userSpaceOnUse">
@@ -34,9 +34,9 @@ export function Duck({ className = 'w-14 h-14', style, happy = false, rainbow = 
   );
 }
 
-export function Bao({ className = 'w-14 h-14', style, bonk = false }: Props & { bonk?: boolean }) {
+export function Bao({ className = 'w-14 h-14', style, width, height, bonk = false }: Props & { bonk?: boolean }) {
   return (
-    <svg viewBox="0 0 64 64" className={className} style={style} aria-hidden="true">
+    <svg viewBox="0 0 64 64" className={className} style={style} width={width} height={height} aria-hidden="true">
       <path d="M6 44 C6 22 18 12 32 12 C46 12 58 22 58 44 C58 52 50 56 32 56 C14 56 6 52 6 44Z" fill="#FFF8EE" stroke="#D9C3B0" strokeWidth="2" />
       <path d="M26 14 q6 6 12 0 M30 13 q2 5 4 0" stroke="#D9C3B0" strokeWidth="2" fill="none" strokeLinecap="round" />
       {bonk ? (
