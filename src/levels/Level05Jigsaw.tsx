@@ -5,6 +5,7 @@ import { makeEdges, piecePath } from '../lib/jigsaw';
 import { shuffle } from '../lib/random';
 import { sfx } from '../lib/sound';
 import type { LevelProps } from '.';
+import { Sentences } from '../components/Sentences';
 
 const { cols: COLS, rows: ROWS, image: IMG } = jigsaw;
 const CELL = 100;
@@ -159,7 +160,7 @@ export default function Level05Jigsaw({ onComplete }: LevelProps) {
           </div>
         </div>
         <p className="mt-3 min-h-[2rem] text-center font-hand text-2xl text-berry-500" aria-live="polite">
-          {message}
+          <Sentences text={message} />
         </p>
         {showRef && (
           <div className="mx-auto mt-1 w-44 overflow-hidden rounded-xl border-4 border-blush-300 shadow-card" style={{ aspectRatio: `${W} / ${H}` }}>

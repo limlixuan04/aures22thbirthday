@@ -504,9 +504,9 @@ export const cake = {
  *  Put the family photo in public/photos/ and change `image`.
  * ------------------------------------------------------------------------- */
 export const modernFamily = {
-  image: '/photos/placeholder-couple.svg',
+  image: '/photos/family-portrait.jpg',
   /** width ÷ height of the photo */
-  aspectRatio: 1,
+  aspectRatio: 1070 / 763,
   /** Stage 1: how much of the mud must be wiped off (0–1). */
   cleanTarget: 0.85,
   /** Stage 2: taps needed to shoo the pigeon out. */
@@ -537,20 +537,12 @@ export const modernFamily = {
  *  The letter itself lives in src/content/letter.ts
  * ------------------------------------------------------------------------- */
 export const finale = {
-  heading: 'Happy 22nd Birthday, Aure!',
+  heading: 'Happy 22nd Birthday!',
   subheading: 'All 11 challenges complete. Final score: 22–0. Champion of the world, and of my heart.',
   envelopeLabel: 'Your trophy comes with a letter. Open me 💌',
   trophyTitle: 'BIRTHDAY CHAMPIONSHIP MVP',
-  galleryTitle: 'A few of my favourite moments',
-  /** ✏️ SAMPLE photos — put your photos in public/photos/ and update these. Leave the list empty [] to hide the gallery. */
-  gallery: [
-    { src: '/photos/gallery-1.svg', caption: '✏️ Our first date' },
-    { src: '/photos/gallery-2.svg', caption: '✏️ The duck champion' },
-    { src: '/photos/gallery-3.svg', caption: '✏️ Sudoku nights' },
-    { src: '/photos/gallery-4.svg', caption: '✏️ Us, always' },
-  ],
   bonusTitle: 'BONUS WORDLE',
-  bonusText: 'One last puzzle… but not yet! Save this one for later on your birthday. 🤫',
+  bonusText: 'One last puzzle. Solve it now!',
   bonusButton: 'Open the Bonus Wordle ✨',
 };
 
@@ -568,15 +560,12 @@ export const wordle = {
   phrase: 'IT’S TIME',
   maxGuesses: 6,
   title: 'The Bonus Wordle',
-  intro: 'One word. Four letters. Six guesses. Any four letters count as a guess, so go wild.',
+  intro: 'One word. Four letters. Six guesses.',
   /** Revealed one at a time when he presses “Give me a clue”. */
-  clues: [
-    'It’s one word, four letters.',
-    'Everyone always wants more of it.',
-    'It’s the thing we never seem to have enough of when we’re together.',
-    'It starts with T… and ends with E.',
-    'T _ _ E',
-  ],
+  clues: ['It’s the thing we never seem to have enough of when we’re together.'],
+  /** Only real English words are accepted, like the original Wordle. */
+  notAWord: 'Not in word list',
+  repeatGuess: 'You already tried that one!',
   successMessage: 'Remember these words. You’ll know when to say them.',
   outOfGuesses: 'Out of guesses! Don’t worry, the board resets and your clues stay. Try again! 💪',
 };

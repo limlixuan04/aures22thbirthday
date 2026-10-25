@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { wordle } from '../content/content';
+import { WORDS4 } from '../content/words4';
 import { keyboardStates, scoreGuess, type LetterState } from '../lib/wordle';
 import { load, save } from '../lib/storage';
 import { sfx } from '../lib/sound';
 import { celebrate } from '../lib/confetti';
 import { navigate } from '../lib/router';
 import { Sparkle } from '../art/Decor';
+import { Sentences } from '../components/Sentences';
 
 const ANSWER = wordle.answer.toUpperCase();
 const LEN = ANSWER.length;
@@ -65,6 +67,18 @@ export function BonusWordle() {
       sfx.error();
       setShakeRow((n) => n + 1);
       flash(`Your guess needs ${LEN} letters${wordle.groups.length > 1 ? ` (${wordle.groups.join(' + ')})` : ''} ✍️`);
+      return;
+    }
+    if (state.guesses.includes(current)) {
+      sfx.error();
+      setShakeRow((n) => n + 1);
+      flash(wordle.repeatGuess);
+      return;
+    }
+    if (current !== ANSWER && !(LEN === 4 ? WORDS4.has(current) : true)) {
+      sfx.error();
+      setShakeRow((n) => n + 1);
+      flash(wordle.notAWord);
       return;
     }
     const guesses = [...state.guesses, current];
@@ -142,7 +156,7 @@ export function BonusWordle() {
       <div className="text-center">
         <span className="chip mb-3">✨ Bonus round</span>
         <h1 className="text-4xl font-bold text-berry-600 sm:text-5xl">{wordle.title}</h1>
-        <p className="mx-auto mt-2 max-w-xl text-berry-500">{wordle.intro}</p>
+        <p className="mx-auto mt-2 max-w-xl text-berry-500"><Sentences text={wordle.intro} /></p>
       </div>
 
       <div className="card mt-6 p-4 sm:p-8">
@@ -223,7 +237,7 @@ export function BonusWordle() {
                   </motion.span>
                 ))}
               </p>
-              <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: (revealRow !== null ? LEN * 0.12 + 0.6 : 0.2) + 2.2 }} className="font-hand text-3xl leading-snug text-berry-500">{wordle.successMessage}</motion.p>
+              <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: (revealRow !== null ? LEN * 0.12 + 0.6 : 0.2) + 2.2 }} className="font-hand text-3xl leading-snug text-berry-500"><Sentences text={wordle.successMessage} /></motion.p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -276,12 +290,12 @@ export function BonusWordle() {
         {!state.solved && (
           <div className="mx-auto mt-6 max-w-lg rounded-3xl border-2 border-dashed border-blush-300 bg-blush-50 p-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="font-display font-semibold text-berry-600">💡 Stuck? Clues: {state.cluesShown}/{wordle.clues.length}</p>
+              <p className="font-display font-semibold text-berry-600">💡 Stuck?</p>
               <button type="button" className="btn-soft px-4 py-1.5 text-base" onClick={showClue} disabled={state.cluesShown >= wordle.clues.length}>
-                Give me a clue
+                {state.cluesShown ? 'Clue shown' : 'Give me a clue'}
               </button>
             </div>
-            <ol className="mt-2 list-decimal space-y-1 pl-6 text-berry-500">
+            <ol className="mt-2 space-y-1 text-berry-500">
               {wordle.clues.slice(0, state.cluesShown).map((c, i) => (
                 <motion.li key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }}>
                   {c}

@@ -23,6 +23,12 @@
   h3 {
     @apply font-display;
   }
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+  p, li {
+    text-wrap: pretty;
+  }
   :focus-visible {
     outline: 3px solid #D2732F;
     outline-offset: 3px;

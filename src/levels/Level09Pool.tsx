@@ -4,6 +4,7 @@ import { sfx } from '../lib/sound';
 import { pick } from '../lib/random';
 import { CUE, EIGHT, FOOT_SPOT, H, HEAD_SPOT, POCKETS, POCKET_R, R, W, aimGuide, isMoving, rack, respot, shoot, step, type Ball } from '../lib/pool';
 import type { LevelProps } from '.';
+import { Sentences } from '../components/Sentences';
 
 const RAIL = 46;
 const TW = W + RAIL * 2;
@@ -468,7 +469,7 @@ export default function Level09Pool({ onComplete }: LevelProps) {
       </div>
 
       <p className="min-h-[2rem] text-center font-hand text-2xl text-berry-500" aria-live="polite">
-        {message}
+        <Sentences text={message} />
       </p>
       <p className="text-center text-sm text-cocoa-500">
         Drag back from the white ball like a slingshot, then let go · Keyboard: ← → aim (hold Shift for fine), ↑ ↓ power, Space to shoot

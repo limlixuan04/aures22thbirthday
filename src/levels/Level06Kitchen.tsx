@@ -5,6 +5,7 @@ import { pick, shuffle } from '../lib/random';
 import { sfx } from '../lib/sound';
 import { Bao, Chef } from '../art/Critters';
 import type { LevelProps } from '.';
+import { Sentences } from '../components/Sentences';
 
 type Status = 'ready' | 'cooking' | 'between' | 'won' | 'lost';
 type Mood = 'neutral' | 'angry' | 'happy';
@@ -161,7 +162,7 @@ export default function Level06Kitchen({ onComplete }: LevelProps) {
                 }`}
                 role="status"
               >
-                {line}
+                <Sentences text={line} />
               </motion.div>
             </AnimatePresence>
           </div>

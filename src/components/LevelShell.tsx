@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import type { ReactNode } from 'react';
 import { scoreboard, type LevelText } from '../content/content';
 import { Sparkle } from '../art/Decor';
+import { Sentences } from './Sentences';
 
 interface Props {
   level: number;
@@ -37,7 +38,7 @@ export function LevelShell({ level, text, done, alreadyBeaten, onNext, onBack, c
           <span aria-hidden="true">{text.emoji}</span> Level {level}
         </span>
         <h1 className="text-3xl font-bold text-berry-600 sm:text-5xl">{text.title}</h1>
-        <p className="mx-auto mt-3 max-w-2xl text-base text-berry-500 sm:text-lg">{text.instructions}</p>
+        <p className="mx-auto mt-3 max-w-2xl text-base text-berry-500 sm:text-lg"><Sentences text={text.instructions} /></p>
         {alreadyBeaten && !done && (
           <p className="mt-2 font-hand text-xl text-blush-500">You’ve already beaten this one — play again just for fun! ✨</p>
         )}
@@ -59,7 +60,7 @@ export function LevelShell({ level, text, done, alreadyBeaten, onNext, onBack, c
               <Sparkle className="absolute -left-3 -top-3 h-7 w-7 animate-wiggle" />
               <Sparkle className="absolute -bottom-2 -right-3 h-5 w-5 animate-wiggle" color="#E2688A" />
               <p className="font-display text-xl font-semibold text-berry-600">Swish! +{scoreboard.pointsPerLevel} points 🏀</p>
-              <p className="mt-1 text-berry-500">{text.success}</p>
+              <p className="mt-1 text-berry-500"><Sentences text={text.success} /></p>
             </motion.div>
           )}
         </AnimatePresence>

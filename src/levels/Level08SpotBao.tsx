@@ -5,6 +5,7 @@ import { shuffle } from '../lib/random';
 import { sfx } from '../lib/sound';
 import { Bao } from '../art/Critters';
 import type { LevelProps } from '.';
+import { Sentences } from '../components/Sentences';
 
 interface Hidden {
   x: number;
@@ -202,7 +203,7 @@ export default function Level08SpotBao({ onComplete }: LevelProps) {
       </div>
 
       <p className="min-h-[2rem] text-center font-hand text-2xl text-berry-500" aria-live="polite">
-        {message}
+        <Sentences text={message} />
       </p>
       {!done && (
         <div className="flex flex-col items-center gap-1">

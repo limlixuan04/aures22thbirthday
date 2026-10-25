@@ -5,6 +5,7 @@ import { useProgress } from '../lib/progress';
 import { sfx } from '../lib/sound';
 import { burst } from '../lib/confetti';
 import { Basketball, Heart, Sparkle } from '../art/Decor';
+import { Sentences } from '../components/Sentences';
 
 export function checkPassword(input: string): boolean {
   const clean = (s: string) => s.toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -61,7 +62,7 @@ export function PasswordGate() {
             {!opening ? (
               <motion.div key="form" exit={{ opacity: 0, scale: 0.9 }}>
                 <h1 className="text-3xl font-bold text-berry-600 sm:text-4xl">{passwordGate.heading}</h1>
-                <p className="mt-3 text-berry-500">{passwordGate.prompt}</p>
+                <p className="mt-3 text-berry-500"><Sentences text={passwordGate.prompt} /></p>
                 <form onSubmit={submit} className="mt-6 flex flex-col gap-3">
                   <label htmlFor="pw" className="sr-only">Secret password</label>
                   <input
@@ -79,7 +80,7 @@ export function PasswordGate() {
                   <button type="submit" className="btn-primary">{passwordGate.button}</button>
                 </form>
                 <p id="pw-error" role="alert" className="mt-4 min-h-[1.5rem] font-display text-blush-500">
-                  {error}
+                  {error && <Sentences text={error} />}
                 </p>
                 <p id="pw-hint" className="mt-2 font-hand text-2xl text-berry-400">{passwordGate.hint}</p>
               </motion.div>

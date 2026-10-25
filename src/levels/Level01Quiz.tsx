@@ -4,6 +4,7 @@ import { quiz } from '../content/content';
 import { sfx } from '../lib/sound';
 import { hearts } from '../lib/confetti';
 import type { LevelProps } from '.';
+import { Sentences } from '../components/Sentences';
 
 const LETTERS = ['a', 'b', 'c', 'd'];
 
@@ -108,7 +109,7 @@ export default function Level01Quiz({ onComplete }: LevelProps) {
       <div className="mt-6 min-h-[3.5rem] text-center" aria-live="polite">
         {feedback && (
           <motion.p key={feedback + wrong.length} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className={`font-hand text-2xl sm:text-3xl ${correct ? 'text-berry-600' : 'text-blush-500'}`}>
-            {feedback}
+            <Sentences text={feedback} />
           </motion.p>
         )}
       </div>

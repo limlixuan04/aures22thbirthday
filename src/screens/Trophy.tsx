@@ -9,6 +9,7 @@ import { Basketball, Heart, Sparkle, Trophy as TrophyArt } from '../art/Decor';
 import { useProgress } from '../lib/progress';
 import { DEV_TOOLS } from '../lib/devmode';
 import { TOTAL_LEVELS } from '../lib/progressCore';
+import { Sentences } from '../components/Sentences';
 
 export default function Trophy() {
   const { isCompleted } = useProgress();
@@ -17,7 +18,6 @@ export default function Trophy() {
     if (!earned) navigate({ name: 'map' });
   }, [earned]);
   const [open, setOpen] = useState(false);
-  const [zoom, setZoom] = useState<number | null>(null);
 
   useEffect(() => {
     const t = window.setTimeout(() => {
@@ -60,7 +60,7 @@ export default function Trophy() {
           {finale.heading}
         </motion.h1>
         <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="mt-3 font-hand text-3xl text-berry-500">
-          {finale.subheading}
+          <Sentences text={finale.subheading} />
         </motion.p>
       </div>
 
@@ -115,47 +115,6 @@ export default function Trophy() {
         </AnimatePresence>
       </div>
 
-      {/* Gallery */}
-      {open && finale.gallery.length > 0 && (
-        <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2 }} className="mt-14">
-          <h2 className="text-center text-3xl font-bold text-berry-600">{finale.galleryTitle}</h2>
-          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-            {finale.gallery.map((photo, i) => (
-              <button
-                key={i}
-                type="button"
-                onClick={() => setZoom(i)}
-                className="group rounded-lg bg-white p-2 pb-3 shadow-card transition hover:z-10 hover:scale-105"
-                style={{ rotate: `${[-3, 2, -1.5, 3][i % 4]}deg` }}
-                aria-label={`View photo: ${photo.caption}`}
-              >
-                <img src={photo.src} alt={photo.caption} className="aspect-square w-full rounded object-cover" loading="lazy" />
-                <p className="mt-2 font-hand text-xl text-berry-600">{photo.caption}</p>
-              </button>
-            ))}
-          </div>
-        </motion.section>
-      )}
-
-      <AnimatePresence>
-        {zoom !== null && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 grid place-items-center bg-berry-800/70 p-4 backdrop-blur-sm"
-            onClick={() => setZoom(null)}
-            role="dialog"
-            aria-label="Photo"
-          >
-            <motion.figure initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="max-w-xl rounded-xl bg-white p-3 pb-4 shadow-2xl">
-              <img src={finale.gallery[zoom].src} alt={finale.gallery[zoom].caption} className="max-h-[70vh] w-full rounded object-contain" />
-              <figcaption className="mt-2 text-center font-hand text-2xl text-berry-600">{finale.gallery[zoom].caption}</figcaption>
-            </motion.figure>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* Bonus link */}
       {open && (
         <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.6 }} className="mt-14">
@@ -163,13 +122,10 @@ export default function Trophy() {
             <Sparkle className="absolute left-4 top-4 h-6 w-6 animate-wiggle" />
             <Sparkle className="absolute bottom-4 right-5 h-8 w-8 animate-wiggle" color="#E2688A" />
             <p className="font-display text-3xl font-bold tracking-wide text-berry-600">✨ {finale.bonusTitle} ✨</p>
-            <p className="mt-2 text-berry-500">{finale.bonusText}</p>
+            <p className="mt-2 text-berry-500"><Sentences text={finale.bonusText} /></p>
             <button type="button" className="btn-primary mt-5" onClick={() => navigate({ name: 'bonus' })} data-testid="bonus-link">
               {finale.bonusButton}
             </button>
-            <p className="mt-3 text-xs text-cocoa-500">
-              Bookmark it: <span className="font-mono">{window.location.origin}{window.location.pathname}#/bonus</span>
-            </p>
           </div>
         </motion.section>
       )}
