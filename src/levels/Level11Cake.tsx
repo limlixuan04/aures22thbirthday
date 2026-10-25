@@ -80,6 +80,16 @@ const CANDLE_STYLES = [
   { id: 'sparkler', label: 'Sparklers', emoji: '🎇' },
   { id: 'neon', label: 'Neon', emoji: '💡' },
 ] as const;
+const FONTS = [
+  { id: 'script', label: 'Script', family: 'Caveat, cursive', weight: 700, size: 24 },
+  { id: 'sporty', label: 'Sporty', family: "'Bebas Neue', Impact, sans-serif", weight: 400, size: 24 },
+  { id: 'clean', label: 'Clean', family: "'Barlow Semi Condensed', sans-serif", weight: 700, size: 19 },
+  { id: 'typewriter', label: 'Typewriter', family: "'Courier New', monospace", weight: 700, size: 17 },
+  { id: 'comic', label: 'Comic', family: "'Comic Sans MS', 'Chalkboard SE', cursive", weight: 700, size: 18 },
+] as const;
+const TEXT_COLOURS = ['#7A1F3D', '#2A1A20', '#D2732F', '#E2688A', '#3FA7F5', '#5E9A66'];
+const MAX_TEXT = 26;
+
 const CANDLE_COLOURS = ['#7EC8E3', '#F6B3C4', '#F5CD6E', '#A9D2A6', '#CDB4E6', '#FFFDF8'];
 
 type Shape = (typeof SHAPES)[number]['id'];
@@ -109,6 +119,9 @@ interface Design {
   stickers: Sticker[];
   candles: Candle[];
   candleStyle: CandleStyle;
+  text: string;
+  font: (typeof FONTS)[number]['id'];
+  textColour: string;
 }
 
 const START: Design = {
@@ -121,6 +134,9 @@ const START: Design = {
   stickers: [],
   candles: [],
   candleStyle: 'classic',
+  text: '',
+  font: 'script',
+  textColour: '#7A1F3D',
 };
 
 /* ---------------------------------------------------------------- geometry */
@@ -330,6 +346,7 @@ export default function Level11Cake({ onComplete }: LevelProps) {
   const tiers = useMemo(() => tiersFor(design.tiers), [design.tiers]);
   const topTier = tiers[tiers.length - 1];
   const flavour = FLAVOURS.find((f) => f.id === design.flavour)!;
+  const font = FONTS.find((f) => f.id === design.font)!;
 
   /** Every change goes through here so it can be undone. */
   // A ref keeps the latest design so drag handlers (attached to window) never use a stale copy.
@@ -633,13 +650,34 @@ export default function Level11Cake({ onComplete }: LevelProps) {
               </g>
             ))}
 
-            {/* plaque on the bottom tier */}
-            <g>
-              <rect x={CX - 88} y={tiers[0].bottom - 46} width="176" height="34" rx="12" fill="#FFFDF8" stroke="#C25B7A" strokeWidth="2.5" />
-              <text x={CX} y={tiers[0].bottom - 23} textAnchor="middle" fontFamily="Caveat, cursive" fontWeight="700" fontSize="22" fill="#7A1F3D">
-                {cake.plaque}
-              </text>
-            </g>
+            {/* optional message plaque on the bottom tier */}
+            {design.text.trim() && (
+              <g data-testid="cake-text">
+                <rect
+                  x={CX - Math.min(tiers[0].w / 2 - 12, 30 + design.text.length * 5.6)}
+                  y={tiers[0].bottom - 46}
+                  width={Math.min(tiers[0].w - 24, 60 + design.text.length * 11.2)}
+                  height="34"
+                  rx="12"
+                  fill="#FFFDF8"
+                  stroke={design.textColour}
+                  strokeWidth="2.5"
+                />
+                <text
+                  x={CX}
+                  y={tiers[0].bottom - 22}
+                  textAnchor="middle"
+                  fontFamily={font.family}
+                  fontWeight={font.weight}
+                  fontSize={font.size}
+                  fill={design.textColour}
+                  textLength={design.text.length > 16 ? Math.min(tiers[0].w - 40, design.text.length * 11) : undefined}
+                  lengthAdjust="spacingAndGlyphs"
+                >
+                  {design.text}
+                </text>
+              </g>
+            )}
 
             {/* stickers */}
             {showStickers.map((s) => (
@@ -845,6 +883,64 @@ export default function Level11Cake({ onComplete }: LevelProps) {
                   ))}
                 </div>
                 <p className="mt-1 text-xs text-cocoa-500">Tap one to add it. Drag a topping off the cake to remove it.</p>
+              </Section>
+
+              <Section title="Add text (optional)">
+                <label htmlFor="cake-text" className="sr-only">
+                  Message on the cake
+                </label>
+                <input
+                  id="cake-text"
+                  type="text"
+                  value={design.text}
+                  maxLength={MAX_TEXT}
+                  placeholder="Write something on the cake…"
+                  onFocus={() => setHistory((h) => [...h.slice(-60), designRef.current])}
+                  onChange={(e) => {
+                    const next = { ...designRef.current, text: e.target.value };
+                    designRef.current = next;
+                    setDesign(next);
+                  }}
+                  className="w-full rounded-2xl border-2 border-blush-300 bg-white px-4 py-2.5 font-display text-lg text-berry-700 placeholder:text-blush-400 focus:border-berry-400 focus:outline-none"
+                  data-testid="cake-text-input"
+                />
+                <p className="mt-1 text-right text-xs text-cocoa-500">
+                  {design.text.length} / {MAX_TEXT}
+                </p>
+                <div className="mt-1 flex flex-wrap gap-2">
+                  {FONTS.map((f) => (
+                    <button
+                      key={f.id}
+                      type="button"
+                      onClick={() => {
+                        sfx.pop();
+                        change((d) => ({ ...d, font: f.id }));
+                      }}
+                      aria-pressed={design.font === f.id}
+                      className={`rounded-2xl border-2 px-3 py-1.5 text-base transition ${design.font === f.id ? 'border-berry-500 bg-blush-200 text-berry-700' : 'border-blush-200 bg-white text-berry-500 hover:bg-blush-50'}`}
+                      style={{ fontFamily: f.family, fontWeight: f.weight }}
+                      data-testid={`cake-font-${f.id}`}
+                    >
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
+                <div className="mt-2 flex gap-2">
+                  {TEXT_COLOURS.map((c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => {
+                        sfx.click();
+                        change((d) => ({ ...d, textColour: c }));
+                      }}
+                      aria-pressed={design.textColour === c}
+                      aria-label={`Text colour ${c}`}
+                      className={`h-7 w-7 rounded-full border-4 ${design.textColour === c ? 'border-berry-600' : 'border-white shadow'}`}
+                      style={{ background: c }}
+                    />
+                  ))}
+                </div>
               </Section>
 
               <Section title={`Candles (${design.candles.length})`}>

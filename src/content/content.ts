@@ -507,8 +507,6 @@ export const poolGame = {
  *  Level 11 — Cake
  * ------------------------------------------------------------------------- */
 export const cake = {
-  /** Written on the plaque on the cake. Keep it short (≈ 18 characters). */
-  plaque: 'Happy 22nd, Aure!',
   maxCandles: 22,
   wishPrompt: 'Make a wish, birthday boy… then blow! 🌬️',
   afterBlow: 'Yay!! Happy birthday!! 🎉',
