@@ -60,7 +60,7 @@ export function LevelShell({ level, text, done, alreadyBeaten, onNext, onBack, c
               <Sparkle className="absolute -left-3 -top-3 h-7 w-7 animate-wiggle" />
               <Sparkle className="absolute -bottom-2 -right-3 h-5 w-5 animate-wiggle" color="#E2688A" />
               <p className="font-display text-xl font-semibold text-berry-600">Swish! +{scoreboard.pointsPerLevel} points 🏀</p>
-              <p className="mt-1 text-berry-500"><Sentences text={text.success} /></p>
+              {text.success && <p className="mt-1 text-berry-500"><Sentences text={text.success} /></p>}
             </motion.div>
           )}
         </AnimatePresence>

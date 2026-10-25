@@ -14,7 +14,7 @@ interface Pop {
 
 const HOLES = WM.gridSize * WM.gridSize;
 
-function FriendFace({ photo, name, hit }: { photo: string; name: string; hit?: boolean }) {
+function EnemyFace({ photo, name, hit }: { photo: string; name: string; hit?: boolean }) {
   return (
     <div className="relative h-full w-full">
       <img
@@ -186,7 +186,7 @@ export default function Level07Whack({ onComplete }: LevelProps) {
                         className="absolute inset-x-[10%] bottom-[10%] top-[8%] cursor-pointer"
                         data-testid="whack-target"
                       >
-                        <FriendFace photo={friend.photo} name={friend.name} hit={pop.hit} />
+                        <EnemyFace photo={friend.photo} name={friend.name} hit={pop.hit} />
                       </motion.button>
                     )}
                   </AnimatePresence>
@@ -218,7 +218,7 @@ export default function Level07Whack({ onComplete }: LevelProps) {
                       <img key={f.photo} src={f.photo} alt={f.name} className="h-14 w-14 rounded-full border-4 border-cream-50 object-cover" />
                     ))}
                   </div>
-                  <p className="mt-2 font-display text-2xl font-semibold text-berry-600">All 3 friends whacked! 🔨</p>
+                  <p className="mt-2 font-display text-2xl font-semibold text-berry-600">All 3 enemies whacked! 🔨</p>
                   <button type="button" className="btn-ghost mt-2" onClick={playAgain}>
                     Play again
                   </button>
@@ -226,7 +226,7 @@ export default function Level07Whack({ onComplete }: LevelProps) {
               ) : status === 'roundWon' ? (
                 <>
                   <p className="font-display text-2xl font-semibold text-berry-600">Mini level {round + 1} cleared! 🎉</p>
-                  <p className="mt-1 text-berry-500">Someone else wants to crash the party…</p>
+                  <p className="mt-1 text-berry-500">Another enemy approaches…</p>
                   <button type="button" className="btn-primary mt-4" onClick={nextRound} data-testid="whack-next">
                     Mini level {round + 2} →
                   </button>

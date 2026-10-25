@@ -145,14 +145,14 @@ export const levels: Record<number, LevelText> = {
   6: {
     title: 'Hell’s Kitchen: Service!',
     emoji: '👨‍🍳',
-    instructions: 'Orders are coming in, Chef! Tap the ingredients in the right order before each ticket runs out. Three services: single orders, combo orders, then allergies.',
-    success: 'Congratulations, Chef Aure. You’ve earned your first Michelin star in making Bao happy.',
+    instructions: 'Orders are coming in, Chef! Tap every ingredient on the ticket (any order) before it runs out. Three services: single orders, combo orders, then allergies.',
+    success: '',
   },
   7: {
-    title: 'Whack-a-Bao: Friends Edition',
+    title: 'Whack-a-Enemy',
     emoji: '🔨',
-    instructions: 'Our friends are trying to crash your birthday! Whack them back into their holes. Score 22 points in each of the 3 mini levels, and it gets faster every time!',
-    success: 'Party crashers handled. They’ll be back for cake though. 🔨😂',
+    instructions: 'Your enemies are trying to crash your birthday! Whack them back into their holes. Score 22 points in each of the 3 mini levels, and it gets faster every time!',
+    success: 'Enemies defeated. They’ll be back for cake though. 🔨😂',
   },
   8: {
     title: 'Spot the Bao',
@@ -346,9 +346,9 @@ export const clawMachine = {
  * Each card shows an emoji, or one of the built-in drawings via `art` ('bao', 'duck' or 'basketball').
  */
 export const memoryCards: { emoji?: string; art?: 'bao' | 'duck' | 'basketball'; label: string }[] = [
-  { emoji: '🦆', label: 'Duck champion' },
+  { emoji: '🦆', label: 'duck champion' },
   { emoji: '👶', label: 'babysitting nights' },
-  { art: 'bao', label: 'Baozers' },
+  { art: 'bao', label: 'baozers' },
   { emoji: '🎵', label: 'WHERE HAVE YOU BEENNNNNN' },
   { emoji: '🎨', label: 'play-dough-off (which i won)' },
   { emoji: '🧋', label: 'fat dates' },
@@ -406,12 +406,13 @@ export const hellsKitchen = {
   wrongPenaltySeconds: 2,
   allergyPenaltySeconds: 5,
   startLine: 'Right, listen up! Orders are coming in. Let’s go, let’s go!',
-  wrongLines: ['WRONG! What is that?!', 'That’s not in the recipe, you donkey!', 'Are you trying to poison them?!', 'Look at the ticket!'],
+  wrongLines: ['WRONG! What is that?!', 'That’s not in the recipe, you donkey!', 'Are you trying to poison them?!', 'Look at the ticket!', 'You absolute idiot sandwich!'],
   allergyLines: ['THEY’RE ALLERGIC! Are you trying to kill them?!', 'Read the ticket! ALLERGY!', 'That’s going straight to A&E!'],
-  timeoutLines: ['IT’S RAAAW!', 'WHERE’S THE LAMB SAUCE?!', 'Too slow! It’s gone cold!', 'Wake up! The customers are starving!'],
+  timeoutLines: ['IT’S RAAAW!', 'This beef is so raw it’s still mooing!', 'Too slow! It’s gone cold!', 'Wake up! The customers are starving!'],
   servedLines: ['Finally, some good food.', 'Beautiful. Stunning.', 'Yes, Chef! Service!', 'Now THAT is a dish.', 'Oh, hello! Lovely.'],
   roundWonLine: 'Not bad. Not bad at all. Next service!',
-  loseLine: 'GET OUT OF MY KITCHEN! …okay fine, try that service again.',
+  loseLine: 'What are you? An IDIOT SANDWICH! Get out of my kitchen! …okay fine, try that service again.',
+  chefName: 'Chef Ramsay',
   winLine: 'Congratulations, Chef Aure. You’ve earned your first Michelin star in making Bao happy.',
 };
 
@@ -428,16 +429,16 @@ export const gameChoices: {
 };
 
 /* ----------------------------------------------------------------------------
- *  Level 7 — Whack-a-Bao: Friends Edition
- *  One friend per mini level. Photos live in public/photos/ (square crops work best).
+ *  Level 7 — Whack-a-Enemy
+ *  One enemy per mini level. Photos live in public/photos/ (square crops work best).
  * ------------------------------------------------------------------------- */
 export const whackAMole = {
   /** 4 × 4 = 16 holes */
   gridSize: 4,
   friends: [
-    { name: 'Friend 1', photo: '/photos/friend-1.jpg' },
-    { name: 'Friend 2', photo: '/photos/friend-2.jpg' },
-    { name: 'Friend 3', photo: '/photos/friend-3.jpg' },
+    { name: 'Enemy 1', photo: '/photos/friend-1.jpg' },
+    { name: 'Enemy 2', photo: '/photos/friend-2.jpg' },
+    { name: 'Enemy 3', photo: '/photos/friend-3.jpg' },
   ],
   /** One entry per mini level. visibleMs = how long a face stays up; spawnEveryMs = how often a new one pops up. */
   rounds: [

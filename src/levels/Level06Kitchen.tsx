@@ -15,8 +15,8 @@ interface Ticket {
   num: number;
   dishes: number[]; // dish indexes, cooked in this order
   allergy: string | null; // ingredient id that must be left out
-  steps: string[]; // the ingredient ids to tap, in order
-  step: number;
+  steps: string[]; // the ingredient ids needed (any order)
+  done: boolean[]; // which of those have been added
   total: number;
   deadline: number;
 }
@@ -42,7 +42,7 @@ function makeTicket(kind: (typeof HK.rounds)[number]['kind'], seconds: number, n
     allergy = pick(HK.dishes[first].steps.slice(1));
   }
   const steps = dishes.flatMap((d) => HK.dishes[d].steps).filter((id) => id !== allergy);
-  return { num, dishes, allergy, steps, step: 0, total: seconds, deadline: Date.now() + seconds * 1000 };
+  return { num, dishes, allergy, steps, done: steps.map(() => false), total: seconds, deadline: Date.now() + seconds * 1000 };
 }
 
 export default function Level06Kitchen({ onComplete }: LevelProps) {
@@ -125,7 +125,8 @@ export default function Level06Kitchen({ onComplete }: LevelProps) {
       say(pick(HK.allergyLines), 'angry');
       return;
     }
-    if (ticket.steps[ticket.step] !== id) {
+    const slot = ticket.steps.findIndex((s, i) => s === id && !ticket.done[i]);
+    if (slot < 0) {
       sfx.error();
       setWrongId((w) => ({ id, n: (w?.n ?? 0) + 1 }));
       setTicket({ ...ticket, deadline: ticket.deadline - HK.wrongPenaltySeconds * 1000 });
@@ -133,9 +134,9 @@ export default function Level06Kitchen({ onComplete }: LevelProps) {
       return;
     }
     sfx.pop();
-    const step = ticket.step + 1;
-    setTicket({ ...ticket, step });
-    if (step < ticket.steps.length) return;
+    const done = ticket.done.map((d, i) => d || i === slot);
+    setTicket({ ...ticket, done });
+    if (!done.every(Boolean)) return;
 
     // order complete
     const s = served + 1;
@@ -174,7 +175,7 @@ export default function Level06Kitchen({ onComplete }: LevelProps) {
           items: HK.dishes[d].steps.map((id) => {
             if (id === ticket.allergy) return { id, state: 'banned' as const };
             const idx = k++;
-            return { id, state: idx < ticket.step ? ('done' as const) : idx === ticket.step ? ('next' as const) : ('todo' as const) };
+            return { id, state: ticket.done[idx] ? ('done' as const) : ('todo' as const) };
           }),
         };
       })
@@ -216,6 +217,7 @@ export default function Level06Kitchen({ onComplete }: LevelProps) {
           <div className="flex items-start gap-2">
             <motion.div key={line} animate={mood === 'angry' ? { rotate: [0, -6, 6, -4, 4, 0] } : { y: [0, -4, 0] }} transition={{ duration: 0.45 }}>
               <Chef className="h-24 w-24 shrink-0 sm:h-28 sm:w-28" mood={mood} />
+              <p className="-mt-1 text-center font-sport text-sm tracking-wider text-berry-500">{HK.chefName}</p>
             </motion.div>
             <AnimatePresence mode="wait">
               <motion.div
@@ -235,7 +237,7 @@ export default function Level06Kitchen({ onComplete }: LevelProps) {
           {/* ticket */}
           <div className="relative rounded-md border border-cocoa-300 bg-[#FFFDF5] px-4 pb-5 pt-3 shadow-card">
             {ticket ? (
-              <div data-testid="hk-ticket" data-next={ticket.steps[ticket.step] ?? ''}>
+              <div data-testid="hk-ticket" data-next={ticket.steps.find((_, i) => !ticket.done[i]) ?? ''}>
                 <div className="flex items-center justify-between border-b-2 border-dashed border-cocoa-300 pb-2">
                   <span className="font-mono text-xs uppercase tracking-widest text-cocoa-500">
                     Order #{ticket.num}
@@ -263,11 +265,13 @@ export default function Level06Kitchen({ onComplete }: LevelProps) {
                       {items.map(({ id, state }) => (
                         <li
                           key={id}
+                          data-id={id}
+                          data-state={state}
                           className={`flex items-center gap-2 font-mono text-sm ${
-                            state === 'done' ? 'text-sage-500 line-through' : state === 'banned' ? 'text-[#C2264B] line-through' : state === 'next' ? 'font-bold text-berry-700' : 'text-berry-600'
+                            state === 'done' ? 'text-sage-500 line-through' : state === 'banned' ? 'text-[#C2264B] line-through' : 'text-berry-700'
                           }`}
                         >
-                          <span className="w-5 text-center">{state === 'done' ? '✓' : state === 'banned' ? '🚫' : state === 'next' ? '▸' : '·'}</span>
+                          <span className="w-5 text-center">{state === 'done' ? '✓' : state === 'banned' ? '🚫' : '·'}</span>
                           <span>{ING[id].emoji}</span>
                           <span>{ING[id].label}</span>
                         </li>
