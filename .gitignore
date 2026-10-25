@@ -5,3 +5,4 @@ dist
 .env
 dist-single
 aure-birthday-site.zip
+*.tsbuildinfo
