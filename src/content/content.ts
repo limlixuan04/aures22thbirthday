@@ -142,7 +142,7 @@ export const levels: Record<number, LevelText> = {
   9: {
     title: 'Our 8-Ball Showdown',
     emoji: '🎱',
-    instructions: 'Pot the balls IN ORDER: 1, 2, 3… all the way to 7, then the black 8-ball. Pot the wrong one and it’s a re-rack! Drag back from the white ball like a slingshot, then let go.',
+    instructions: 'Pot the balls IN ORDER: 1, 2, 3… all the way to 7, then the black 8-ball. Pot the wrong one and it’s a re-rack! Aim on the table, then pull the power stick to shoot.',
     success: '8-ball, corner pocket. Called it. 😎 (I’m still winning the next real one though.)',
   },
   10: {
@@ -477,7 +477,7 @@ export const poolGame = {
   wrongOrder: 'Wrong ball! You potted the {ball} but needed the {next}. RE-RACK! 😈',
   breakRespot: 'Lucky break! The out-of-order balls go back on the table.',
   scratchMessage: 'Scratch! The white ball’s back on the table.',
-  tooSoft: 'Drag back further for more power!',
+  tooSoft: 'Pull the power stick down further!',
   winMessage: 'GAME! You win… this time. 😤🎱',
 };
 

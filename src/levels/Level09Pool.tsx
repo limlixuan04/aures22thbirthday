@@ -9,7 +9,6 @@ import { Sentences } from '../components/Sentences';
 const RAIL = 46;
 const TW = W + RAIL * 2;
 const TH = H + RAIL * 2;
-const PULL = 260; // drag distance (table units) for full power
 
 const BALL_COLOURS: Record<number, string> = {
   1: '#F2C14E',
@@ -68,7 +67,7 @@ function drawBall(ctx: CanvasRenderingContext2D, b: Ball, x = b.x, y = b.y, r = 
 export default function Level09Pool({ onComplete }: LevelProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const balls = useRef<Ball[]>(rack(poolGame.colouredBalls));
-  const aim = useRef({ angle: 0, power: 0.55 });
+  const aim = useRef({ angle: 0, power: 0 });
   const dragging = useRef(false);
   const shotPotted = useRef<number[]>([]);
   const won = useRef(false);
@@ -342,15 +341,27 @@ export default function Level09Pool({ onComplete }: LevelProps) {
     return [((e.clientX - rect.left) / rect.width) * TW - RAIL, ((e.clientY - rect.top) / rect.height) * TH - RAIL] as const;
   };
 
+  /** Step 1 — aim: the cue points from the white ball towards your finger / mouse. */
   const updateAimFromPointer = (e: React.PointerEvent<HTMLCanvasElement>) => {
     const cue = balls.current.find((x) => x.id === CUE)!;
     const [px, py] = toTable(e);
-    const dx = cue.x - px;
-    const dy = cue.y - py;
-    const len = Math.hypot(dx, dy);
-    if (len < 12) return;
-    aim.current.angle = Math.atan2(dy, dx);
-    aim.current.power = Math.min(1, len / PULL);
+    if (Math.hypot(px - cue.x, py - cue.y) < 8) return;
+    aim.current.angle = Math.atan2(py - cue.y, px - cue.x);
+    setTick((t) => t + 1);
+  };
+
+  const nudge = (deg: number) => {
+    aim.current.angle += (deg * Math.PI) / 180;
+    setTick((t) => t + 1);
+  };
+
+  /** Step 2 — power: pull the stick down, let go to shoot. */
+  const pullTrack = useRef<HTMLDivElement>(null);
+  const pulling = useRef<number | null>(null);
+  const updatePull = (clientY: number) => {
+    const rect = pullTrack.current!.getBoundingClientRect();
+    const start = pulling.current ?? rect.top;
+    aim.current.power = Math.max(0, Math.min(1, (clientY - start) / (rect.height * 0.8)));
     setTick((t) => t + 1);
   };
 
@@ -361,6 +372,7 @@ export default function Level09Pool({ onComplete }: LevelProps) {
       return;
     }
     shoot(balls.current, aim.current.angle, aim.current.power);
+    aim.current.power = 0;
     sfx.click();
     setShots((n) => n + 1);
     shotsRef.current += 1;
@@ -389,7 +401,7 @@ export default function Level09Pool({ onComplete }: LevelProps) {
 
   const rerack = () => {
     resetTable(poolGame.startMessage);
-    aim.current = { angle: 0, power: 0.55 };
+    aim.current = { angle: 0, power: 0 };
     setShots(0);
     setFinished(false);
     setMoving(false);
@@ -420,12 +432,48 @@ export default function Level09Pool({ onComplete }: LevelProps) {
         </button>
       </div>
 
-      <div className="w-full max-w-3xl">
+      <div className="flex w-full max-w-3xl items-stretch gap-2 sm:gap-3">
+        <div className="flex w-12 shrink-0 flex-col items-center gap-1 sm:w-14">
+          <span className="font-display text-[10px] font-bold uppercase tracking-widest text-cocoa-500">Power</span>
+          <div
+            ref={pullTrack}
+            className={`relative w-full flex-1 touch-none select-none overflow-hidden rounded-full border-4 border-[#5E2E1C] bg-gradient-to-b from-sage-300 via-honey-300 to-[#C2264B] ${moving || finished ? 'opacity-40' : 'cursor-grab active:cursor-grabbing'}`}
+            onPointerDown={(e) => {
+              if (moving || won.current) return;
+              e.currentTarget.setPointerCapture(e.pointerId);
+              pulling.current = e.clientY;
+              updatePull(e.clientY);
+            }}
+            onPointerMove={(e) => pulling.current !== null && updatePull(e.clientY)}
+            onPointerUp={() => {
+              if (pulling.current === null) return;
+              pulling.current = null;
+              fire();
+            }}
+            onPointerCancel={() => {
+              pulling.current = null;
+              aim.current.power = 0;
+              setTick((t) => t + 1);
+            }}
+            role="slider"
+            aria-label="Power: pull down and let go to shoot"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={Math.round(aim.current.power * 100)}
+            data-testid="pool-power"
+          >
+            <div className="absolute inset-x-0 top-0 bg-[#2A1A20]/70" style={{ height: `${100 - aim.current.power * 100}%` }} />
+            {/* the cue stick handle */}
+            <div className="absolute left-1/2 w-3 -translate-x-1/2 rounded-full bg-gradient-to-b from-[#7EC8E3] via-[#E8C48E] to-berry-600 shadow" style={{ top: `${aim.current.power * 80}%`, height: '60%' }} />
+          </div>
+          <span className="font-display text-xs font-bold tabular-nums text-berry-600">{Math.round(aim.current.power * 100)}%</span>
+        </div>
+        <div className="min-w-0 flex-1">
         <canvas
           ref={canvasRef}
           className="block w-full cursor-crosshair touch-none select-none rounded-[26px] shadow-pop"
           style={{ aspectRatio: `${TW} / ${TH}` }}
-          aria-label="Pool table. Drag back from the white ball to aim and set power, then let go to shoot. Keyboard: left and right arrows aim, up and down arrows set power, Space shoots."
+          aria-label="Pool table. Drag on the table to aim. Then pull the power stick down and let go to shoot. Keyboard: left and right arrows aim, up and down arrows set power, Space shoots."
           role="img"
           data-testid="pool-table"
           onPointerDown={(e) => {
@@ -435,13 +483,18 @@ export default function Level09Pool({ onComplete }: LevelProps) {
             updateAimFromPointer(e);
           }}
           onPointerMove={(e) => dragging.current && updateAimFromPointer(e)}
-          onPointerUp={() => {
-            if (!dragging.current) return;
-            dragging.current = false;
-            fire();
-          }}
+          onPointerUp={() => (dragging.current = false)}
           onPointerCancel={() => (dragging.current = false)}
         />
+        <div className="mt-2 flex items-center justify-center gap-2">
+          <button type="button" className="btn-ghost px-3 py-1 text-sm" onClick={() => nudge(-0.4)} disabled={moving || finished} aria-label="Fine-tune aim left">
+            ⟲ fine
+          </button>
+          <button type="button" className="btn-ghost px-3 py-1 text-sm" onClick={() => nudge(0.4)} disabled={moving || finished} aria-label="Fine-tune aim right">
+            fine ⟳
+          </button>
+        </div>
+        </div>
       </div>
 
       <div className="flex w-full max-w-3xl flex-wrap items-center justify-between gap-3">
@@ -457,22 +510,14 @@ export default function Level09Pool({ onComplete }: LevelProps) {
             </span>
           ))}
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-cocoa-500">Power</span>
-          <div className="h-3 w-32 overflow-hidden rounded-full bg-blush-100" aria-hidden="true">
-            <div className="h-full rounded-full bg-gradient-to-r from-honey-300 via-ball-400 to-berry-500" style={{ width: `${aim.current.power * 100}%` }} />
-          </div>
-          <button type="button" className="btn-soft px-4 py-1.5 text-base" onClick={fire} disabled={moving || finished}>
-            Shoot
-          </button>
-        </div>
       </div>
 
       <p className="min-h-[2rem] text-center font-hand text-2xl text-berry-500" aria-live="polite">
         <Sentences text={message} />
       </p>
       <p className="text-center text-sm text-cocoa-500">
-        Drag back from the white ball like a slingshot, then let go · Keyboard: ← → aim (hold Shift for fine), ↑ ↓ power, Space to shoot
+        <span className="block">1. Drag on the table to aim.</span>
+        <span className="block">2. Pull the power stick down, then let go to shoot.</span>
       </p>
     </div>
   );
