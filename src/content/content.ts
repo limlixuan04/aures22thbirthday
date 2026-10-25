@@ -118,7 +118,7 @@ export const levels: Record<number, LevelText> = {
   5: {
     title: 'Put Us Back Together',
     emoji: '🧩',
-    instructions: 'Oh no, we’ve been scrambled into 30 pieces! Click a piece, then click where it goes on the board. Pieces only fit in their real spot.',
+    instructions: 'Oh no, we’ve been scrambled into 30 pieces! Drag each piece onto the board (or click it, then click its spot). Pieces only fit where they belong.',
     success: 'Back together, just how we should be. 🥰',
   },
   6: {

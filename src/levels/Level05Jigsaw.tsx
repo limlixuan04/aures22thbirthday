@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { jigsaw } from '../content/content';
 import { makeEdges, piecePath } from '../lib/jigsaw';
@@ -48,6 +48,14 @@ export default function Level05Jigsaw({ onComplete }: LevelProps) {
   const [message, setMessage] = useState('Pick a piece from the pile to start.');
   const done = placed.size === TOTAL;
 
+  const [drag, setDrag] = useState<{ piece: number; x: number; y: number; size: number } | null>(null);
+  const dragStart = useRef<{ piece: number; x: number; y: number } | null>(null);
+  /** Ghost piece size = how big a piece is on the board (incl. room for its tabs). */
+  const ghostSize = () => {
+    const slot = document.querySelector('[data-slot]') as HTMLElement | null;
+    return slot ? (slot.getBoundingClientRect().width * (CELL + 2 * M)) / CELL : 110;
+  };
+
   const pickUp = (i: number) => {
     if (done) return;
     sfx.click();
@@ -56,13 +64,14 @@ export default function Level05Jigsaw({ onComplete }: LevelProps) {
     setMessage('Now click where it goes on the board.');
   };
 
-  const tryPlace = (slot: number) => {
+  const tryPlace = (slot: number, piece: number | null = selected) => {
     if (done || placed.has(slot)) return;
-    if (selected === null) {
+    if (piece === null) {
       setMessage('Pick a piece from the pile first! 🧩');
       return;
     }
-    if (selected !== slot) {
+    if (piece !== slot) {
+      setSelected(piece);
       sfx.bonk();
       setShake((n) => n + 1);
       setMessage('Hmm, doesn’t fit there! 🤔');
@@ -154,6 +163,7 @@ export default function Level05Jigsaw({ onComplete }: LevelProps) {
                     style={{ left: pct(M + c * CELL, W + 2 * M), top: pct(M + r * CELL, H + 2 * M), width: pct(CELL, W + 2 * M), height: pct(CELL, H + 2 * M) }}
                     aria-label={`Board space: row ${r + 1}, column ${c + 1}`}
                     data-testid={`jigsaw-slot-${i}`}
+                    data-slot={i}
                   />
                 );
               })}
@@ -197,10 +207,38 @@ export default function Level05Jigsaw({ onComplete }: LevelProps) {
                   role="option"
                   aria-selected={isSel}
                   aria-label={`Puzzle piece ${pile.indexOf(i) + 1}`}
-                  onClick={() => pickUp(i)}
+                  onPointerDown={(e) => {
+                    if (e.button !== 0) return;
+                    e.currentTarget.setPointerCapture(e.pointerId);
+                    dragStart.current = { piece: i, x: e.clientX, y: e.clientY };
+                  }}
+                  onPointerMove={(e) => {
+                    const d = dragStart.current;
+                    if (!d || d.piece !== i) return;
+                    if (!drag && Math.hypot(e.clientX - d.x, e.clientY - d.y) < 6) return;
+                    setDrag({ piece: i, x: e.clientX, y: e.clientY, size: ghostSize() });
+                  }}
+                  onPointerUp={(e) => {
+                    const d = dragStart.current;
+                    dragStart.current = null;
+                    if (!d) return;
+                    if (!drag) return pickUp(i);
+                    setDrag(null);
+                    const el = document.elementFromPoint(e.clientX, e.clientY)?.closest('[data-slot]') as HTMLElement | null;
+                    if (el) tryPlace(Number(el.dataset.slot), i);
+                    else {
+                      setSelected(i);
+                      setMessage('Drop it on the board! (or click where it goes)');
+                    }
+                  }}
+                  onPointerCancel={() => {
+                    dragStart.current = null;
+                    setDrag(null);
+                  }}
+                  onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), pickUp(i))}
                   animate={isSel && shake ? { x: shake % 2 ? [0, -6, 6, -4, 4, 0] : [0, 6, -6, 4, -4, 0] } : { x: 0 }}
                   transition={{ duration: 0.35 }}
-                  className={`relative h-[76px] w-[76px] shrink-0 rounded-xl p-0.5 transition ${
+                  className={`relative h-[76px] w-[76px] shrink-0 cursor-grab touch-pan-x rounded-xl p-0.5 transition active:cursor-grabbing lg:touch-none ${drag?.piece === i ? 'opacity-30' : ''} ${
                     isSel ? 'z-10 -translate-y-1 scale-110 bg-honey-200 ring-4 ring-honey-400' : 'hover:scale-105 hover:bg-cream-50'
                   }`}
                   style={{ rotate: isSel ? '0deg' : `${tilts[i]}deg` }}
@@ -215,6 +253,16 @@ export default function Level05Jigsaw({ onComplete }: LevelProps) {
             })}
           </div>
           <p className="mt-2 text-center text-xs text-cocoa-500 lg:text-left">Tip: pieces with a flat side go around the edge. Start with the corners!</p>
+        </div>
+      )}
+
+      {drag && (
+        <div
+          className="pointer-events-none fixed z-50 drop-shadow-[0_10px_10px_rgba(94,22,48,0.45)]"
+          style={{ left: drag.x - drag.size / 2, top: drag.y - drag.size / 2, width: drag.size, height: drag.size }}
+          aria-hidden="true"
+        >
+          <LoosePiece i={drag.piece} />
         </div>
       )}
     </div>

@@ -26,6 +26,26 @@ export default function Level02Sudoku({ onComplete }: LevelProps) {
   const resetTimer = useRef<number>();
   useEffect(() => () => window.clearTimeout(resetTimer.current), []);
 
+  const [history, setHistory] = useState<Grid[]>([]);
+  /** Numbers whose every copy is correctly placed — they can't be chosen any more. */
+  const completeNumbers = useMemo(() => {
+    const done = new Set<number>();
+    for (let n = 1; n <= size; n++) {
+      let count = 0;
+      grid.forEach((row, r) => row.forEach((v, c) => v === n && sudoku.solution[r][c] === n && count++));
+      if (count === size) done.add(n);
+    }
+    return done;
+  }, [grid, size]);
+
+  const undo = () => {
+    if (!history.length || solved) return;
+    sfx.click();
+    setGrid(history[history.length - 1]);
+    setHistory((h) => h.slice(0, -1));
+    setMessage(null);
+  };
+
   const setCell = useCallback(
     (v: number) => {
       if (!sel || solved) return;
@@ -35,8 +55,15 @@ export default function Level02Sudoku({ onComplete }: LevelProps) {
         setMessage('That one’s pre-filled — it can’t be changed! 🔒');
         return;
       }
+      if (v && completeNumbers.has(v)) {
+        sfx.bonk();
+        setMessage(`All the ${v}s are already in! ✅`);
+        return;
+      }
+      if (grid[r][c] === v) return;
       const next = clone(grid);
       next[r][c] = v;
+      setHistory((h) => [...h, grid]);
       setGrid(next);
       if (v === 0) {
         sfx.click();
@@ -51,6 +78,7 @@ export default function Level02Sudoku({ onComplete }: LevelProps) {
           setMessage(`${m} mistakes! The board resets… 😈`);
           resetTimer.current = window.setTimeout(() => {
             setGrid(clone(sudoku.puzzle));
+            setHistory([]);
             setSel(null);
             setMistakes(0);
             setMessage('Fresh board. You got this! 💪');
@@ -68,12 +96,17 @@ export default function Level02Sudoku({ onComplete }: LevelProps) {
         onComplete();
       }
     },
-    [sel, solved, grid, given, mistakes, onComplete],
+    [sel, solved, grid, given, mistakes, onComplete, completeNumbers],
   );
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (solved) return;
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+        e.preventDefault();
+        undo();
+        return;
+      }
       const n = Number(e.key);
       if (Number.isInteger(n) && n >= 1 && n <= size) {
         setCell(n);
@@ -95,7 +128,7 @@ export default function Level02Sudoku({ onComplete }: LevelProps) {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [setCell, size, solved]);
+  }, [setCell, size, solved, history]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const reset = () => {
     sfx.whoosh();
@@ -104,6 +137,7 @@ export default function Level02Sudoku({ onComplete }: LevelProps) {
     setMistakes(0);
     setSolved(false);
     setMessage(null);
+    setHistory([]);
   };
 
   const cellPx = size <= 4 ? 'h-16 w-16 text-3xl sm:h-20 sm:w-20 sm:text-4xl' : size <= 6 ? 'h-12 w-12 text-2xl sm:h-14 sm:w-14' : 'h-9 w-9 text-lg sm:h-12 sm:w-12 sm:text-2xl';
@@ -154,8 +188,8 @@ export default function Level02Sudoku({ onComplete }: LevelProps) {
       <div className="flex w-full max-w-xs flex-col items-center gap-4">
         <div className="grid w-full grid-cols-5 gap-2">
           {Array.from({ length: size }, (_, i) => i + 1).map((n) => (
-            <button key={n} type="button" className="btn-soft aspect-square p-0 text-2xl" onClick={() => setCell(n)} disabled={!sel || solved} aria-label={`Enter ${n}`}>
-              {n}
+            <button key={n} type="button" className="btn-soft aspect-square p-0 text-2xl" onClick={() => setCell(n)} disabled={!sel || solved || completeNumbers.has(n)} aria-label={`Enter ${n}${completeNumbers.has(n) ? ' (all placed)' : ''}`} data-testid={`sudoku-num-${n}`}>
+              {completeNumbers.has(n) ? <span className="text-sage-500">✓</span> : n}
             </button>
           ))}
           <button type="button" className="btn-soft aspect-square p-0 text-xl" onClick={() => setCell(0)} disabled={!sel || solved} aria-label="Erase">
@@ -165,6 +199,9 @@ export default function Level02Sudoku({ onComplete }: LevelProps) {
         <p className="text-center text-sm text-cocoa-500">{sel ? `Selected: row ${sel[0] + 1}, column ${sel[1] + 1}` : 'Tap an empty cell to begin.'}</p>
         <div className="flex items-center gap-3">
           <span className="chip">❌ Mistakes: {mistakes} / {sudoku.maxMistakes}</span>
+          <button type="button" className="btn-ghost" onClick={undo} disabled={!history.length || solved} data-testid="sudoku-undo">
+            ↶ Undo
+          </button>
           <button type="button" className="btn-ghost" onClick={reset}>↺ Reset</button>
         </div>
         <p className="min-h-[3rem] text-center font-display text-blush-500" aria-live="polite">
