@@ -42,7 +42,7 @@ Keep photos under about 1–2 MB each so the site loads quickly. Phone photos ca
 - Claw machine: `duckSpeed` / `rainbowSpeed` (smaller = easier), `catchTolerance` (bigger = easier), `rainbowDuck` (which duck is the rainbow one) and `clawSpeed`.
 - Jigsaw: `jigsaw.cols` × `jigsaw.rows` pieces (6 × 5 = 30; 4 × 3 = 12 is gentle).
 - Hell's Kitchen: `hellsKitchen.ingredients` (the pass), `dishes` (recipes as ingredient ids, in order), `rounds` (the 3 mini levels: orders and seconds per ticket), `maxSentBack` and the chef's lines.
-- Pool: `poolGame.colouredBalls` (balls 1…N go in order, then the 8; fewer = easier).
+- Pool (9-ball): `poolGame.maxFouls` and all the messages.
 - Memory card style: `gameChoices.memoryCards` picks poker cards or the classic look.
 
 ### Spot the Bao (Level 8)

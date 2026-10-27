@@ -159,10 +159,10 @@ export const levels: Record<number, LevelText> = {
     success: 'Bao radar: fully operational. (The best Bao is right here though. 🥰)',
   },
   9: {
-    title: 'Our 8-Ball Showdown',
+    title: 'Our 9-Ball Showdown',
     emoji: '🎱',
-    instructions: 'Pot the balls IN ORDER: 1, 2, 3… all the way to 7, then the black 8-ball. Potting the 8 early (or with the white) is game over, and 3 fouls means a re-rack! Aim on the table, then pull the power stick to shoot.',
-    success: '8-ball, corner pocket. Called it. 😎 (I’m still winning the next real one though.)',
+    instructions: 'Always hit the lowest ball first, and sink the 9 to win. Balls can go in any order! Three fouls means a re-rack, and potting the 9 on a foul is game over. Aim on the table, then pull the power stick to shoot.',
+    success: '9-ball, corner pocket. Called it. 😎 (I’m still winning the next real one though.)',
   },
   10: {
     title: 'Modern Family: The Family Portrait',
@@ -484,29 +484,25 @@ export const spotTheBao = {
 };
 
 /* ----------------------------------------------------------------------------
- *  Level 9 — 8-ball pool
+ *  Level 9 — 9-ball pool
  * ------------------------------------------------------------------------- */
 export const poolGame = {
-  /** Balls 1…N must be potted in order, then the 8-ball. 7 = a full set. Fewer = easier. */
-  colouredBalls: 7,
   /** Fouls allowed before the table is re-racked. */
   maxFouls: 3,
-  startMessage: 'Break shot! Then pot them in order: 1, 2, 3… then the 8. 💪',
+  startMessage: 'Break! Always hit the lowest ball first. Sink the 9 to win. 💪',
   potMessages: ['Nice shot! 🎯', 'In the pocket! 😎', 'Ooh, smooth. 💗', 'Show-off. 🙄💕', 'Pool shark alert! 🦈'],
   missMessages: ['So close!', 'Unlucky! Try again.', 'Hmm, the pockets are over there. 😜', 'Line up the dotted line with a pocket!'],
-  nowTheEight: 'All in order! Now sink the 8-ball. 🎱',
-  breakRespot: 'Lucky break! The out-of-order balls go back on the table.',
-  /** Fouls — {hit} = ball touched first, {next} = the ball he needed, {ball} = a ball potted out of order. */
+  nowTheNine: 'Only the 9 left! Sink it to win. 🎱',
+  /** Fouls — {hit} = ball touched first, {next} = the lowest ball he had to hit. */
   foulScratch: 'Foul! The white went in.',
   foulNoHit: 'Foul! The white didn’t touch any ball.',
-  foulWrongFirst: 'Foul! You hit the {hit} first but needed the {next}.',
-  foulWrongPot: 'Foul! The {ball} went in out of order, so it goes back on the table.',
+  foulWrongFirst: 'Foul! You hit the {hit} first but had to hit the {next}.',
   threeFouls: 'Three fouls! RE-RACK! 😈',
-  /** Instant game over (re-rack). */
-  eightEarly: 'The 8-ball went in too early! Game over, RE-RACK! 🎱',
-  eightScratch: 'The white AND the 8-ball went in! Game over, RE-RACK! 😱',
+  /** Potting the 9 on a foul loses straight away. */
+  nineOnFoul: 'And the 9 went in on a foul… that’s game over! RE-RACK! 😱',
   tooSoft: 'Pull the power stick down further!',
   winMessage: 'GAME! You win… this time. 😤🎱',
+  comboWin: 'COMBO ON THE 9! GAME! You win… this time. 😤🎱',
 };
 
 /* ----------------------------------------------------------------------------

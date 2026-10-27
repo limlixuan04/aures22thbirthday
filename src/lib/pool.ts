@@ -18,6 +18,7 @@ export const POCKETS: [number, number][] = [
 
 export const CUE = 0;
 export const EIGHT = 8;
+export const NINE = 9;
 export const HEAD_SPOT: [number, number] = [W * 0.25, H / 2];
 export const FOOT_SPOT: [number, number] = [W * 0.72, H / 2];
 
@@ -34,6 +35,32 @@ export interface Ball {
   vx: number;
   vy: number;
   potted: boolean;
+}
+
+/** 9-ball diamond rack: the 1 at the front, the 9 in the middle, 2–8 shuffled around them. */
+export function rack9(rng: () => number = Math.random): Ball[] {
+  const rows = [1, 2, 3, 2, 1];
+  const others = [2, 3, 4, 5, 6, 7, 8];
+  for (let i = others.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [others[i], others[j]] = [others[j], others[i]];
+  }
+  const balls: Ball[] = [{ id: CUE, x: HEAD_SPOT[0], y: HEAD_SPOT[1], vx: 0, vy: 0, potted: false }];
+  let k = 0;
+  rows.forEach((n, ri) => {
+    for (let j = 0; j < n; j++) {
+      const id = ri === 0 ? 1 : ri === 2 && j === 1 ? NINE : others[k++];
+      balls.push({
+        id,
+        x: FOOT_SPOT[0] + ri * (R * Math.sqrt(3) + 0.5),
+        y: FOOT_SPOT[1] + (j - (n - 1) / 2) * (2 * R + 0.5),
+        vx: 0,
+        vy: 0,
+        potted: false,
+      });
+    }
+  });
+  return balls;
 }
 
 /** Triangle rack: cue ball plus `colours` numbered balls and the 8-ball in the middle of the back row. */

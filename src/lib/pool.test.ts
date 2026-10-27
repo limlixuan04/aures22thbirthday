@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CUE, EIGHT, H, R, W, aimGuide, isMoving, rack, respot, shoot, step, type Ball } from './pool';
+import { CUE, EIGHT, FOOT_SPOT, H, NINE, R, W, aimGuide, isMoving, rack, rack9, respot, shoot, step, type Ball } from './pool';
 
 const settle = (balls: Ball[]) => {
   const potted: number[] = [];
@@ -8,6 +8,18 @@ const settle = (balls: Ball[]) => {
 };
 
 describe('pool physics', () => {
+  it('racks a 9-ball diamond: 1 at the front, 9 in the middle, no overlaps', () => {
+    const b = rack9();
+    expect(b.map((x) => x.id).sort((a, c) => a - c)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    const one = b.find((x) => x.id === 1)!;
+    const nine = b.find((x) => x.id === NINE)!;
+    expect(one.x).toBeCloseTo(FOOT_SPOT[0]);
+    expect(nine.x).toBeGreaterThan(one.x);
+    expect(nine.y).toBeCloseTo(FOOT_SPOT[1]);
+    for (let i = 0; i < b.length; i++)
+      for (let j = i + 1; j < b.length; j++) expect(Math.hypot(b[i].x - b[j].x, b[i].y - b[j].y)).toBeGreaterThanOrEqual(2 * R);
+  });
+
   it('racks a full set (7 colours + 8-ball) without overlaps', () => {
     const full = rack(7);
     expect(full).toHaveLength(9);
