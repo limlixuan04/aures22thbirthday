@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { cake, people } from '../content/content';
+import { cake } from '../content/content';
 import { sfx } from '../lib/sound';
 import { celebrate } from '../lib/confetti';
 import { seeded } from '../lib/random';
@@ -987,7 +987,7 @@ export default function Level11Cake({ onComplete }: LevelProps) {
                 </>
               ) : (
                 <>
-                  <p className="font-sport text-4xl tracking-wide text-berry-600">Happy birthday, {people.nickname}! 🎂</p>
+                  <p className="font-sport text-4xl tracking-wide text-berry-600">Happy birthday, Bao Bao! 🎂</p>
                   <button type="button" className="btn-ghost" onClick={redo}>
                     Decorate again
                   </button>

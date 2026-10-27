@@ -57,6 +57,18 @@ describe('pool physics', () => {
     expect(g.ghost![0]).toBeCloseTo(500 - 2 * R);
   });
 
+  it('records the first ball the cue ball hits', () => {
+    const b: Ball[] = [
+      { id: CUE, x: 200, y: 250, vx: 0, vy: 0, potted: false },
+      { id: 3, x: 500, y: 250, vx: 0, vy: 0, potted: false },
+      { id: 1, x: 700, y: 250, vx: 0, vy: 0, potted: false },
+    ];
+    const ev = { firstHit: null as number | null };
+    shoot(b, 0, 0.7);
+    for (let i = 0; i < 600 && isMoving(b); i++) step(b, 1 / 60, 8, ev);
+    expect(ev.firstHit).toBe(3);
+  });
+
   it('respots a ball onto a free space', () => {
     const b = rack(5);
     const cue = b[0];

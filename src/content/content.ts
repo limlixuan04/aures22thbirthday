@@ -45,21 +45,20 @@ export const scoreboard = {
  *  Password gate
  * ------------------------------------------------------------------------- */
 export const passwordGate = {
-  /** Case-insensitive. Spaces are ignored, so "rainbow unicorn" also works. */
+  /** Case-insensitive, and spaces are ignored. */
   answer: 'RAINBOWUNICORN',
   heading: 'Halt! Who goes there? 💌',
   prompt:
     'This little corner of the internet is for one very special birthday boy only. Prove it’s really you:',
-  hint: '14 songs. 14 first letters. One secret word. 🎶',
+  hint: 'Think about the past 14 emails 💌',
   placeholder: 'Type the secret password…',
   button: 'Unlock 🔓',
   /** One of these is shown (in order, looping) after a wrong guess. */
   errorMessages: [
-    'Hmm, not quite! Did you listen to every song? 🎧',
+    'Hmm, not quite! Try again. 🤔',
     'Nope! Baozers is giving you a very suspicious look right now 👀',
-    'Close? Maybe? Try writing down the first letter of each song 📝',
     'Still no! Are you SURE you’re Aure? 🕵️‍♀️',
-    'Hint: it’s something magical and very colourful 🌈',
+    'Think harder, birthday boy. The answer is closer than you think. 💭',
   ],
   successMessage: 'Welcome, birthday boy! 💖',
 };
@@ -145,7 +144,7 @@ export const levels: Record<number, LevelText> = {
     title: 'Hell’s Kitchen: Service!',
     emoji: '👨‍🍳',
     instructions: 'Orders are coming in, Chef! Tap every ingredient on the ticket (any order) before it runs out. Three services: single orders, combo orders, then allergies.',
-    success: '',
+    success: 'Don’t forget we still need to do our scallop-off! 🐚',
   },
   7: {
     title: 'Whack-a-Enemy',
@@ -162,7 +161,7 @@ export const levels: Record<number, LevelText> = {
   9: {
     title: 'Our 8-Ball Showdown',
     emoji: '🎱',
-    instructions: 'Pot the balls IN ORDER: 1, 2, 3… all the way to 7, then the black 8-ball. Pot the wrong one and it’s a re-rack! Aim on the table, then pull the power stick to shoot.',
+    instructions: 'Pot the balls IN ORDER: 1, 2, 3… all the way to 7, then the black 8-ball. Potting the 8 early (or with the white) is game over, and 3 fouls means a re-rack! Aim on the table, then pull the power stick to shoot.',
     success: '8-ball, corner pocket. Called it. 😎 (I’m still winning the next real one though.)',
   },
   10: {
@@ -207,17 +206,17 @@ export const quiz: QuizQuestion[] = [
     wrongFeedback: 'NUH UH boooooooo',
   },
   {
-    question: 'If Aure were an animal, which would Baozers say he is?',
+    question: 'If Aure was an animal, which would Baozers say he is?',
     options: ['a sleepy cat', 'zesty unicorn', 'goofy retriever', 'pouty duck'],
     correctIndex: 2,
-    correctFeedback: 'Correct! As zesty as you are, i still think youre my fluffy dog',
+    correctFeedback: 'Correct! As zesty as you are, I still think you’re my fluffy dog',
     wrongFeedback: 'NUH UH boooooooo',
   },
   {
     question: 'What is Aure’s superpower?',
     options: ['making her laugh at the worst moments', 'taking care of everything', 'incredibly big muscles', 'being impossibly comforting'],
     correctIndex: 3,
-    correctFeedback: 'Correct! i know you wish c was the answer but sorry man youre just my favourite safe place',
+    correctFeedback: 'Correct! I know you wish c was the answer but sorry man you’re just my favourite safe place',
     wrongFeedback: 'NUH UH boooooooo',
   },
 ];
@@ -350,7 +349,7 @@ export const memoryCards: { emoji?: string; art?: 'bao' | 'duck' | 'basketball';
   { art: 'bao', label: 'baozers' },
   { emoji: '🎵', label: 'WHERE HAVE YOU BEENNNNNN' },
   { emoji: '🎨', label: 'play-dough-off (which i won)' },
-  { emoji: '🧋', label: 'fat dates' },
+  { emoji: '🤝', label: 'secret handshake' },
 ];
 /** Milliseconds a mismatched pair stays face-up before flipping back. */
 export const memoryFlipBackDelay = 900;
@@ -490,14 +489,22 @@ export const spotTheBao = {
 export const poolGame = {
   /** Balls 1…N must be potted in order, then the 8-ball. 7 = a full set. Fewer = easier. */
   colouredBalls: 7,
+  /** Fouls allowed before the table is re-racked. */
+  maxFouls: 3,
   startMessage: 'Break shot! Then pot them in order: 1, 2, 3… then the 8. 💪',
   potMessages: ['Nice shot! 🎯', 'In the pocket! 😎', 'Ooh, smooth. 💗', 'Show-off. 🙄💕', 'Pool shark alert! 🦈'],
   missMessages: ['So close!', 'Unlucky! Try again.', 'Hmm, the pockets are over there. 😜', 'Line up the dotted line with a pocket!'],
   nowTheEight: 'All in order! Now sink the 8-ball. 🎱',
-  /** {ball} = the ball he potted, {next} = the one he needed. */
-  wrongOrder: 'Wrong ball! You potted the {ball} but needed the {next}. RE-RACK! 😈',
   breakRespot: 'Lucky break! The out-of-order balls go back on the table.',
-  scratchMessage: 'Scratch! The white ball’s back on the table.',
+  /** Fouls — {hit} = ball touched first, {next} = the ball he needed, {ball} = a ball potted out of order. */
+  foulScratch: 'Foul! The white went in.',
+  foulNoHit: 'Foul! The white didn’t touch any ball.',
+  foulWrongFirst: 'Foul! You hit the {hit} first but needed the {next}.',
+  foulWrongPot: 'Foul! The {ball} went in out of order, so it goes back on the table.',
+  threeFouls: 'Three fouls! RE-RACK! 😈',
+  /** Instant game over (re-rack). */
+  eightEarly: 'The 8-ball went in too early! Game over, RE-RACK! 🎱',
+  eightScratch: 'The white AND the 8-ball went in! Game over, RE-RACK! 😱',
   tooSoft: 'Pull the power stick down further!',
   winMessage: 'GAME! You win… this time. 😤🎱',
 };

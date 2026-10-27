@@ -77,8 +77,14 @@ export function isMoving(balls: Ball[]): boolean {
   return balls.some((b) => !b.potted && (b.vx !== 0 || b.vy !== 0));
 }
 
+/** Things that happened during a shot (filled in by `step`). */
+export interface ShotEvents {
+  /** The first ball the cue ball touched, or null if it hasn't hit one yet. */
+  firstHit: number | null;
+}
+
 /** Advance the simulation by dt seconds. Returns ids of balls potted during this step. */
-export function step(balls: Ball[], dt: number, substeps = 8): number[] {
+export function step(balls: Ball[], dt: number, substeps = 8, events?: ShotEvents): number[] {
   const potted: number[] = [];
   const h = dt / substeps;
   for (let s = 0; s < substeps; s++) {
@@ -131,6 +137,7 @@ export function step(balls: Ball[], dt: number, substeps = 8): number[] {
         const dy = b.y - a.y;
         const d = Math.hypot(dx, dy);
         if (d === 0 || d >= 2 * R) continue;
+        if (events && events.firstHit === null && (a.id === CUE || b.id === CUE)) events.firstHit = a.id === CUE ? b.id : a.id;
         const nx = dx / d;
         const ny = dy / d;
         const overlap = 2 * R - d;

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { poolGame } from '../content/content';
 import { sfx } from '../lib/sound';
 import { pick } from '../lib/random';
-import { CUE, EIGHT, FOOT_SPOT, H, HEAD_SPOT, POCKETS, POCKET_R, R, W, aimGuide, isMoving, rack, respot, shoot, step, type Ball } from '../lib/pool';
+import { CUE, EIGHT, FOOT_SPOT, H, HEAD_SPOT, POCKETS, POCKET_R, R, W, aimGuide, isMoving, rack, respot, shoot, step, type Ball, type ShotEvents } from '../lib/pool';
 import type { LevelProps } from '.';
 import { Sentences } from '../components/Sentences';
 
@@ -72,6 +72,10 @@ export default function Level09Pool({ onComplete }: LevelProps) {
   const shotPotted = useRef<number[]>([]);
   const won = useRef(false);
   const expected = useRef(0);
+  const shotTarget = useRef<number>(1);
+  const shotEvents = useRef<ShotEvents>({ firstHit: null });
+  const foulsRef = useRef(0);
+  const [fouls, setFouls] = useState(0);
   const shotsRef = useRef(0);
   const [nextBall, setNextBall] = useState(ORDER[0]);
   const [moving, setMoving] = useState(false);
@@ -92,6 +96,8 @@ export default function Level09Pool({ onComplete }: LevelProps) {
   const resetTable = (msg: string) => {
     balls.current = rack(poolGame.colouredBalls);
     expected.current = 0;
+    foulsRef.current = 0;
+    setFouls(0);
     shotsRef.current = 0;
     shotPotted.current = [];
     setNextBall(ORDER[0]);
@@ -104,50 +110,82 @@ export default function Level09Pool({ onComplete }: LevelProps) {
     const sunk = shotPotted.current;
     shotPotted.current = [];
     const isBreak = shotsRef.current === 1;
-    const msgs: string[] = [];
-    const wrong: number[] = [];
-    let goodPots = 0;
-    for (const id of sunk) {
-      if (id === CUE) continue;
-      if (!wrong.length && id === ORDER[expected.current]) {
-        expected.current += 1;
-        goodPots += 1;
-      } else wrong.push(id);
-    }
-
-    if (wrong.length && !isBreak) {
-      sfx.bonk();
-      resetTable(poolGame.wrongOrder.replace('{ball}', String(wrong[0])).replace('{next}', String(ORDER[expected.current])));
+    const target = shotTarget.current;
+    const firstHit = shotEvents.current.firstHit;
+    const cueIn = sunk.includes(CUE);
+    const finish = (msg: string) => {
+      setMessage(msg);
+      setNextBall(ORDER[Math.min(expected.current, ORDER.length - 1)]);
+      setPotted(b.filter((x) => x.potted && x.id !== CUE).map((x) => x.id));
       setMoving(false);
       syncTestData();
-      return;
-    }
-    if (wrong.length) {
-      wrong.forEach((id) => respot(b, id, FOOT_SPOT));
-      msgs.push(poolGame.breakRespot);
-    }
-    if (sunk.includes(CUE)) {
-      respot(b, CUE, HEAD_SPOT);
-      msgs.push(poolGame.scratchMessage);
-      sfx.bonk();
-    }
-    if (expected.current >= ORDER.length) {
-      setFinished(true);
-      msgs.length = 0;
-      msgs.push(poolGame.winMessage);
-      if (!won.current) {
-        won.current = true;
-        onComplete();
+    };
+
+    // --- the 8-ball: instant game over if it's early or goes in with the white
+    if (sunk.includes(EIGHT)) {
+      if (target === EIGHT && !cueIn) {
+        expected.current = ORDER.length;
+        setFinished(true);
+        if (!won.current) {
+          won.current = true;
+          onComplete();
+        }
+        return finish(poolGame.winMessage);
       }
-    } else if (goodPots) {
-      msgs.unshift(ORDER[expected.current] === EIGHT ? poolGame.nowTheEight : pick(poolGame.potMessages));
+      if (isBreak && !cueIn) {
+        respot(b, EIGHT, FOOT_SPOT); // a break is forgiven
+      } else {
+        sfx.bonk();
+        resetTable(cueIn ? poolGame.eightScratch : poolGame.eightEarly);
+        setMoving(false);
+        syncTestData();
+        return;
+      }
     }
-    if (!sunk.length) msgs.push(pick(poolGame.missMessages));
-    if (msgs.length) setMessage(msgs.join(' '));
-    setNextBall(ORDER[Math.min(expected.current, ORDER.length - 1)]);
-    setPotted(b.filter((x) => x.potted && x.id !== CUE).map((x) => x.id));
-    setMoving(false);
-    syncTestData();
+
+    // --- coloured balls in order; out-of-order ones go back
+    const fouls: string[] = [];
+    let goodPots = 0;
+    let respotted = false;
+    for (const id of sunk) {
+      if (id === CUE || id === EIGHT) continue;
+      if (id === ORDER[expected.current]) {
+        expected.current += 1;
+        goodPots += 1;
+      } else {
+        respot(b, id, FOOT_SPOT);
+        if (isBreak) respotted = true;
+        else fouls.push(poolGame.foulWrongPot.replace('{ball}', String(id)));
+      }
+    }
+
+    // --- other fouls
+    if (cueIn) {
+      respot(b, CUE, HEAD_SPOT);
+      fouls.unshift(poolGame.foulScratch);
+    }
+    if (firstHit === null) fouls.unshift(poolGame.foulNoHit);
+    else if (!isBreak && firstHit !== target) fouls.unshift(poolGame.foulWrongFirst.replace('{hit}', String(firstHit)).replace('{next}', String(target)));
+
+    if (fouls.length) {
+      sfx.bonk();
+      const n = foulsRef.current + 1;
+      if (n >= poolGame.maxFouls) {
+        resetTable(`${fouls[0]} ${poolGame.threeFouls}`);
+        setMoving(false);
+        syncTestData();
+        return;
+      }
+      foulsRef.current = n;
+      setFouls(n);
+      return finish(`${fouls[0]} (Foul ${n}/${poolGame.maxFouls})`);
+    }
+
+    const msgs: string[] = [];
+    if (respotted) msgs.push(poolGame.breakRespot);
+    if (goodPots) msgs.unshift(ORDER[expected.current] === EIGHT ? poolGame.nowTheEight : pick(poolGame.potMessages));
+    else if (!sunk.length) msgs.push(pick(poolGame.missMessages));
+    finish(msgs.join(' ') || pick(poolGame.missMessages));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onComplete]);
 
@@ -161,7 +199,7 @@ export default function Level09Pool({ onComplete }: LevelProps) {
       last = t;
       const b = balls.current;
       if (isMoving(b)) {
-        const sunk = step(b, dt);
+        const sunk = step(b, dt, 8, shotEvents.current);
         if (sunk.length) {
           shotPotted.current.push(...sunk);
           sunk.forEach(() => sfx.pop());
@@ -371,6 +409,8 @@ export default function Level09Pool({ onComplete }: LevelProps) {
       setMessage(poolGame.tooSoft);
       return;
     }
+    shotTarget.current = ORDER[Math.min(expected.current, ORDER.length - 1)];
+    shotEvents.current = { firstHit: null };
     shoot(balls.current, aim.current.angle, aim.current.power);
     aim.current.power = 0;
     sfx.click();
@@ -427,6 +467,9 @@ export default function Level09Pool({ onComplete }: LevelProps) {
           </span>
         )}
         <span className="chip">Shots: {shots}</span>
+        <span className={`chip ${fouls ? 'bg-[#FFE3E8] text-[#C2264B]' : ''}`} data-testid="pool-fouls">
+          Fouls: {fouls} / {poolGame.maxFouls}
+        </span>
         <button type="button" className="btn-ghost" onClick={rerack}>
           ↺ Re-rack
         </button>
