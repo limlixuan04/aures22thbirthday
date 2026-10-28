@@ -161,7 +161,7 @@ export const levels: Record<number, LevelText> = {
   9: {
     title: 'Our 9-Ball Showdown',
     emoji: '🎱',
-    instructions: 'Always hit the lowest ball first, and sink the 9 to win. Balls can go in any order! Three fouls means a re-rack, and potting the 9 on a foul is game over. Aim on the table, then pull the power stick to shoot.',
+    instructions: 'Always hit the lowest ball first, and sink the 9 to win. Balls can go in any order! Five fouls means a re-rack, and potting the 9 on a foul is game over. Aim on the table, then pull the power stick to shoot.',
     success: '9-ball, corner pocket. Called it. 😎 (I’m still winning the next real one though.)',
   },
   10: {
@@ -488,7 +488,7 @@ export const spotTheBao = {
  * ------------------------------------------------------------------------- */
 export const poolGame = {
   /** Fouls allowed before the table is re-racked. */
-  maxFouls: 3,
+  maxFouls: 5,
   startMessage: 'Break! Always hit the lowest ball first. Sink the 9 to win. 💪',
   potMessages: ['Nice shot! 🎯', 'In the pocket! 😎', 'Ooh, smooth. 💗', 'Show-off. 🙄💕', 'Pool shark alert! 🦈'],
   missMessages: ['So close!', 'Unlucky! Try again.', 'Hmm, the pockets are over there. 😜', 'Line up the dotted line with a pocket!'],
@@ -497,7 +497,7 @@ export const poolGame = {
   foulScratch: 'Foul! The white went in.',
   foulNoHit: 'Foul! The white didn’t touch any ball.',
   foulWrongFirst: 'Foul! You hit the {hit} first but had to hit the {next}.',
-  threeFouls: 'Three fouls! RE-RACK! 😈',
+  threeFouls: 'Five fouls! RE-RACK! 😈',
   /** Potting the 9 on a foul loses straight away. */
   nineOnFoul: 'And the 9 went in on a foul… that’s game over! RE-RACK! 😱',
   tooSoft: 'Pull the power stick down further!',

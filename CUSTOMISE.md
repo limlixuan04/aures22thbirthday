@@ -35,6 +35,7 @@ In `content.ts` → `quiz`. Use 3–5 questions. Each one has 4 `options`, and `
 Keep photos under about 1–2 MB each so the site loads quickly. Phone photos can be shrunk at https://squoosh.app.
 
 ### The letter (the trophy screen)
+The letter is a scanned image: replace `public/photos/letter.jpg` (or change `image` in `src/content/letter.ts`).
 `src/content/letter.ts`: each string in `paragraphs` is one paragraph. Use `\n` inside a string for a line break. Apostrophes are fine inside `'…'` strings if you use the curly kind (’). For a straight one, write `\'`.
 
 ### Difficulty

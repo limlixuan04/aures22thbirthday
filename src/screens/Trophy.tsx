@@ -87,30 +87,24 @@ export default function Trophy() {
               <span className="absolute inset-x-0 bottom-5 text-center font-hand text-2xl font-bold text-berry-600 sm:text-3xl">{finale.envelopeLabel}</span>
             </motion.button>
           ) : (
-            <motion.article
+            <motion.figure
               key="letter"
-              initial={{ opacity: 0, y: 40, rotateX: -25 }}
-              animate={{ opacity: 1, y: 0, rotateX: 0 }}
+              initial={{ opacity: 0, y: 40, rotate: -2 }}
+              animate={{ opacity: 1, y: 0, rotate: -1 }}
               transition={{ duration: 0.8, ease: 'easeOut' }}
-              className="letter-paper relative mx-auto max-w-2xl rounded-[24px] border-2 border-blush-200 px-6 py-10 shadow-card sm:px-14 sm:py-14"
+              className="relative mx-auto max-w-xl"
               data-testid="letter"
             >
-              <Basketball className="absolute -top-6 left-1/2 h-12 w-12 -translate-x-1/2" />
-              <div className="absolute bottom-0 left-8 top-0 w-px bg-blush-300/60 sm:left-10" aria-hidden="true" />
-              <p className="font-hand text-4xl font-bold text-berry-600">{letter.greeting}</p>
-              <div className="mt-4 space-y-5 font-hand text-[1.7rem] leading-[36px] text-berry-700">
-                {letter.paragraphs.map((p, i) => (
-                  <motion.p key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 + i * 0.35 }} className="whitespace-pre-line">
-                    {p}
-                  </motion.p>
-                ))}
-              </div>
-              <div className="mt-8 text-right font-hand text-3xl text-berry-600">
-                <p>{letter.closing}</p>
-                <p className="mt-1 text-5xl font-bold text-blush-500">{letter.signature} 💗</p>
-              </div>
-              {letter.postscript && <p className="mt-6 font-hand text-2xl text-berry-400">{letter.postscript}</p>}
-            </motion.article>
+              <Basketball className="absolute -top-6 left-1/2 z-10 h-12 w-12 -translate-x-1/2" />
+              <a href={letter.image} target="_blank" rel="noreferrer" aria-label="Open the letter full size">
+                <img
+                  src={letter.image}
+                  alt={letter.imageAlt}
+                  className="block w-full rounded-md bg-white shadow-[0_18px_40px_-12px_rgba(94,22,48,0.45)] ring-1 ring-black/5"
+                />
+              </a>
+              <figcaption className="mt-3 text-center text-sm text-cocoa-500">Tap the letter to see it full size</figcaption>
+            </motion.figure>
           )}
         </AnimatePresence>
       </div>
